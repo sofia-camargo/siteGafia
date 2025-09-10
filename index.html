@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAFIA</title>
+  <!-- Importa o CSS externo -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== CABEÇALHO ===== -->
+<header class="site-header">
+  <div class="header-container">
+    <div class="logo">GAFIA</div>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#projeto">Projeto</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+      <nav class="auth-links">
+       <ul>
+        <li><a href="#cadastrar">Cadastrar</a></li>
+        <li><a href="#login">Login</a></li>
+      </ul>
+      </nav>
+    </div>
+  </div>
+  </header>
+
+
+  
+
+  <!-- ===== CARDS ===== -->
+  <section class="cards" aria-label="Recursos principais">
+    <article class="card">
+      <figure>
+        <img src="terra.jpg" alt="Planeta Terra — sustentabilidade" />
+        <figcaption>
+          <h3> Sustentabilidade</h3>
+          <p>Preservando o planeta com rotas de energia consciente.</p>
+        </figcaption>
+      </figure>
+    </article>
+
+    <article class="card">
+      <figure>
+        <img src="carro.jpg" alt="Carro — mobilidade" />
+        <figcaption>
+          <h3> Mobilidade</h3>
+          <p>Planejamento de viagens para carros elétricos e combustão.</p>
+        </figcaption>
+      </figure>
+    </article>
+
+    <article class="card">
+      <figure>
+        <img src="painel.jpg" alt="Painel tecnológico — dados e análises" />
+        <figcaption>
+          <h3>Tecnologia</h3>
+          <p>Comparações de custos, pontos de recarga e impacto.</p>
+        </figcaption>
+      </figure>
+    </article>
+  </section>
+
+  <!-- ===== SOBRE ===== -->
+  <section id="sobre" class="sobre">
+    <h2>Sobre o GAFIA</h2>
+    <p>O GAFIA ajuda motoristas a entenderem autonomia, custos e emissões, usando dados reais para sugerir rotas e paradas de recarga.</p>
+  </section>
+
+  <!-- ===== PROJETO ===== -->
+  <section id="projeto" class="projeto">
+    <h2>Nosso Projeto</h2>
+    <p>Integramos consumo, mapas de recarga e preços para gerar análises úteis e práticas para quem dirige.</p>
+  </section>
+
+  <!-- ===== CONTATO ===== -->
+  <section id="contato" class="contato">
+    <h2>Contato</h2>
+    <form class="contact-form" novalidate>
+      <input type="text" placeholder="Seu nome" required />
+      <input type="email" placeholder="Seu e-mail" required />
+      <textarea placeholder="Sua mensagem" rows="4" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> GAFIA — Mobilidade e energia inteligente</p>
+  </footer>
+
+  <script>
+    // ano no rodapé
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
