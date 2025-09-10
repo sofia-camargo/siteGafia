@@ -1,5 +1,7 @@
 
 
+
+
 /* ===== RESET ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html,body { height: 100%; }
@@ -36,15 +38,17 @@ body {
   font-size: 18px;
   font-weight: bold;
   color: white;
+  top: 15px;
+  right: 30px;
 }
 
 .nav-menu ul {
-  justify-content: center;
+  justify-content: left;
   position: absolute;
-  top: 0;
-  left: 47%;
+  top: 15px;
+  left: 90px;
   display:flex;
-  gap: 20px; /* espaçamento entre os links */
+  gap: 40px; /* espaçamento entre os links */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -59,27 +63,29 @@ body {
   text-shadow: 2px 2px 5px #4e0563
 }
 
-.auth-links a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: white;
-  font-weight: 600;
-  font-size: 18px;
-  left: 80%;
-  position: absolute;
-  gap: 20px;
-
-}
 .auth-links ul {
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 87%;
-  display:flex;
-  gap: 40px; /* espaçamento entre os links */
-  list-style: none;
+  display: flex;      /* coloca os links lado a lado */
+  list-style: none;   /* tira as bolinhas da lista */
   margin: 0;
   padding: 0;
+  gap: 40px;          /* espaço entre os links */
+
+ /* Posicionamento do menu da pagina */
+  position: absolute;
+  top: 15px;
+  right: 30px;
+}
+
+.auth-links a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-size: 18px;
+  font-weight: 500;
+  text-shadow: 2px 2px 5px #61067a
+}
+
+.auth-links a:hover {
+  color: #ddd;        /* cor no hover */
 }
 
 
@@ -287,3 +293,4 @@ a:focus, button:focus, input:focus, textarea:focus {
 #g{
     color: #a259ff;
 }
+
