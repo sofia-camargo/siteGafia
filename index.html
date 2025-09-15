@@ -1,181 +1,158 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GAFIA</title>
-  <!-- Importa o CSS externo -->
-
-  <link rel="stylesheet" href="src/style/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAFIA - Automação e Geolocalização</title>
+    <link rel="stylesheet" href="src/style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+<body class="light">
 
-<body>
+    <div id="transition-overlay" class="mode-transition"></div>
 
-  <!-- ===== CABEÇALHO ===== -->
-  <section id="inicio">
-    <header class="site-header">
-      <div class="black-bar"></div>
-      <div class="header-container">
-        <div class="logo">GAFIA</div>
-        <nav class="nav-menu">
-          <ul>
-            <li><a href="#inicio">Início</a></li>
-            <li><a href="#projeto">Projeto</a></li>
-            <li><a href="#contato">Contato</a></li>
-          </ul>
-        </nav>
-        <nav class="auth-links">
-          <ul>
-            <li><a href="#cadastrar">Cadastrar</a></li>
-            <li><a href="#login">Login</a></li>
-          </ul>
-        </nav>
-      </div>
-      </div>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">GAFIA</a>
+            <nav>
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#projeto">Projeto</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                    <li><a href="#mapa">Mapa</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button id="mode-toggle" class="mode-toggle-button" aria-label="Alternar modo claro/escuro">
+                  <!-- Ícone do Sol (inicia escondido no modo claro) -->
+                  <svg class="sun-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 18a6 6 0 100-12 6 6 0 000 12zm0 4a1 1 0 011-1h0a1 1 0 110 2h0a1 1 0 01-1-1zm0-20a1 1 0 011-1h0a1 1 0 110 2h0a1 1 0 01-1-1zm10 10a1 1 0 01-1 1h0a1 1 0 110-2h0a1 1 0 011 1zM4 12a1 1 0 01-1 1h0a1 1 0 110-2h0a1 1 0 011 1zm14.95 7.071a1 1 0 01-1.414 0h0a1 1 0 011.414-1.414h0a1 1 0 010 1.414zM6.464 6.464a1 1 0 01-1.414 0h0a1 1 0 011.414-1.414h0a1 1 0 010 1.414zm0 11.072a1 1 0 01-1.414 1.414h0a1 1 0 111.414-1.414zm11.072-11.072a1 1 0 01-1.414-1.414h0a1 1 0 111.414 1.414z"/>
+                  </svg>
+
+                  <!-- Ícone da Lua (visível no modo claro) -->
+                  <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M21.752 15.002A9.718 9.718 0 0112.002 22C6.477 22 2 17.523 2 12S6.477 2 12.002 2a9.718 9.718 0 019.75 6.998c.216.724-.478 1.402-1.21 1.195a7.5 7.5 0 00-9.735 9.735c-.207.732.471 1.426 1.195 1.21a9.718 9.718 0 009.75-6.998z" clip-rule="evenodd"/>
+                  </svg>
+              </button>
+                <a href="#" class="btn-login">Login</a>
+                <a href="#" class="btn-register">Cadastre-se</a>
+            </div>
+        </div>
     </header>
-  </section>
 
+    <main>
+        <section class="hero" id="inicio">
+            <div class="hero-content">
+                <h1>Planeje sua viagem com GAFIA</h1>
+                <p>O futuro da mobilidade elétrica está aqui. Use nossa plataforma para calcular rotas, otimizar custos e reduzir emissões de CO2.</p>
+                <form class="route-form">
+                    <input type="text" placeholder="Ponto de partida">
+                    <input type="text" placeholder="Ponto de chegada">
+                    <button type="submit" class="btn-purple">Calcular Viagem</button>
+                </form>
+            </div>
+        </section>
 
+        <section class="highlights">
+            <div class="container">
+                <h2>O GAFIA vai transformar sua forma de dirigir</h2>
+                <div class="highlight-cards">
+                    <div class="card">
+                        <h3>Economia</h3>
+                        <p>Compare os custos de carros elétricos e a combustão e veja a diferença no seu bolso.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Sustentabilidade</h3>
+                        <p>Reduza sua pegada de carbono e contribua para um planeta mais verde.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Conveniência</h3>
+                        <p>Planeje rotas otimizadas com paradas estratégicas para recarga.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about-section" id="projeto">
+            <div class="container">
+                <div class="about-content">
+                    <h2>Sobre o GAFIA</h2>
+                    <p>O GAFIA ajuda motoristas a entenderem autonomia, custos e emissões, usando dados reais para sugerir rotas e paradas de recarga. Lorem ipsum dolor sit amet. Qui nihil voluptatum eum esse ducimus non obcaecati aperiam hic alias molestiae non consectetur esse et laboriosam sapiente a asperiores sunt. Eum galisum consequuntur qui tempora asperiores ut voluptates recusandae est possimus temporibus. Sed doloremque porro rem quia dolore sit reiciendis magni aut similique consequatur eos animi officiis.</p>
+                    <p>Nam rerum dolor sit rerum consectetur eos excepturi vero. Ab quod dolorum et odit reprehenderit ea fugiat explicabo et rerum galisum non perspiciatis nesciunt est recusandae mollitia et quidem voluptates. 33 laudantium quam qui minus laborum sed quas temporibus sit rerum animi et rerum neque. Eum dicta totam ut omnis dolor aut voluptatum fugit.</p>
+                    <p>Non repudiandae asperiores ea nisi enim sit iusto dolorem aut laboriosam rerum. Est rerum accusantium ut quibusdam autem et vitae maxime. Nam voluptas autem in consequatur molestias et dolorum odit qui reiciendis veritatis id earum unde? Quo odio galisum et enim necessitatibus non fugit reprehenderit!</p>
+                </div>
+                <div class="about-content">
+                    <h2>Nosso Projeto</h2>
+                    <section class="sobre-gafia">
+                        <h1>Conheça a <strong>Gafia</strong>: Sua Jornada Sustentável Começa Aqui</h1>
+                        <p>Planejar uma viagem com <strong>carro elétrico</strong> nunca foi tão fácil. Criada no início de <strong>2025</strong> por estudantes de <em>Sistemas de Informação</em> da <strong>Fundação Hermínio Ometto</strong>, a Gafia é uma ferramenta que veio para transformar a maneira como você se locomove.</p>
+                        <p>Nossa equipe, composta por <strong>Giovanna Jacobucci</strong>, <strong>Kaio Eduardo Bueno de Camargo</strong>, <strong>Kael Vicente Dipres</strong>, <strong>Rafael Cauã Delariva de Lima</strong>, <strong>Sofia Camargo Nunes</strong> e <strong>Virna Karina Amaral</strong>, desenvolveu um software completo para te ajudar a planejar viagens e tomar decisões mais inteligentes sobre seu veículo.</p>
+                        
+                        <h3>Por que usar a Gafia?</h3>
+                        <p>Com o crescimento exponencial de <strong>carros elétricos no Brasil</strong> — de <strong>428 unidades em 2020</strong> para aproximadamente <strong>400 mil em 2025</strong> —, a transição para a <strong>mobilidade sustentável</strong> é uma realidade. E por boas razões: os veículos elétricos oferecem um excelente <strong>custo-benefício</strong> e, principalmente, contribuem para um <strong>futuro mais sustentável</strong>.</p>
+                        <p>Enquanto os <strong>carros a combustão</strong>, movidos por fontes não renováveis, são responsáveis por mais de <strong>75% das emissões globais de gases de efeito estufa</strong>, a Gafia te mostra o impacto positivo de sua escolha. Alinhado ao <strong>Objetivo de Desenvolvimento Sustentável n° 7: Energia Limpa e Acessível</strong>, nosso sistema calcula a quantidade de <strong>CO<sub>2</sub></strong> que você deixa de emitir ao optar por uma viagem elétrica.</p>
+                        
+                        <h3>Nossas Principais Funções</h3>
+                        <ul>
+                            <li><strong>Planejamento de Viagem:</strong> Calcule a rota ideal para seu carro elétrico, identificando pontos de recarga e estimando o tempo de percurso.</li>
+                            <li><strong>Comparador de Veículos:</strong> Compare a autonomia e os gastos de carros a combustão, híbridos e elétricos.</li>
+                            <li><strong>Impacto Ambiental:</strong> Veja o <strong>CO<sub>2</sub> economizado</strong> em suas viagens, reforçando sua contribuição para a sustentabilidade do planeta.</li>
+                            <li><strong>Valores:</strong> Acesse preços de combustíveis e tarifas de energia elétrica atualizados por estado. Assim, você planeja sua viagem sabendo exatamente quanto irá gastar.</li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </section>
 
+        <section class="map-section" id="mapa">
+            <div class="container">
+                <h2>Mapa e Roteiro Interativo</h2>
+                <p>Planeje sua viagem de forma visual. Insira seu ponto de partida e chegada para traçar a melhor rota, com paradas para recarga e tempo estimado.</p>
+                <div class="map-placeholder">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.296180356597!2d-47.3888359247192!3d-22.90692793867086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c892f3f4e2f9d1%3A0xc3f1a0b3f545464!2sAraras%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1700257774900!5m2!1spt-BR!2sbr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <button class="btn-purple">Calcular Rota Completa</button>
+            </div>
+        </section>
+        
+    </main>
 
+    <footer id="contato">
+        <div class="container">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>GAFIA</h4>
+                    <ul>
+                        <li><a href="#">Sobre nós</a></li>
+                        <li><a href="#">Equipe</a></li>
+                        <li><a href="#">Termos de uso</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Serviços</h4>
+                    <ul>
+                        <li><a href="#">Planejamento de Viagem</a></li>
+                        <li><a href="#">Comparador de Carros</a></li>
+                        <li><a href="#">Impacto Ambiental</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Ajuda</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Suporte</a></li>
+                        <li><a href="#">Relatar um problema</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; <span id="year"></span> GAFIA. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
-  <!-- ===== CARDS ===== -->
-  <section class="cards" aria-label="Recursos principais">
-    <article class="card">
-      <figure>
-        <img src="src/img/terra.jpg" alt="Planeta Terra — sustentabilidade" />
-        <figcaption>
-          <h3> Sustentabilidade</h3>
-          <p>Preservando o planeta com rotas de energia consciente.</p>
-        </figcaption>
-      </figure>
-    </article>
-
-    <article class="card">
-      <figure>
-        <img src="src/img/carro.jpg" alt="Carro — mobilidade" />
-        <figcaption>
-          <h3> Mobilidade</h3>
-          <p>Planejamento de viagens para carros elétricos e combustão.</p>
-        </figcaption>
-      </figure>
-    </article>
-
-    <article class="card">
-      <figure>
-        <img src="src/img/painel.jpg" alt="Painel tecnológico — dados e análises" />
-        <figcaption>
-          <h3>Tecnologia</h3>
-          <p>Comparações de custos, pontos de recarga e impacto.</p>
-        </figcaption>
-      </figure>
-    </article>
-  </section>
-
-  <!-- ===== SOBRE ===== 
-  <section id="sobre" class="sobre">
-    <h2>Sobre o GAFIA</h2>
-    <p>O GAFIA ajuda motoristas a entenderem autonomia, custos e emissões, usando dados reais para sugerir rotas e
-      paradas de recarga. Lorem ipsum dolor sit amet. Qui nihil voluptatum eum esse ducimus non obcaecati aperiam hic
-      alias molestiae non consectetur esse et laboriosam sapiente a asperiores sunt. Eum galisum consequuntur qui
-      tempora asperiores ut voluptates recusandae est possimus temporibus. Sed doloremque porro rem quia dolore sit
-      reiciendis magni aut similique consequatur eos animi officiis.
-
-      Nam rerum dolor sit rerum consectetur eos excepturi vero. Ab quod dolorum et odit reprehenderit ea fugiat
-      explicabo et rerum galisum non perspiciatis nesciunt est recusandae mollitia et quidem voluptates. 33 laudantium
-      quam qui minus laborum sed quas temporibus sit rerum animi et rerum neque. Eum dicta totam ut omnis dolor aut
-      voluptatum fugit.
-
-      Non repudiandae asperiores ea nisi enim sit iusto dolorem aut laboriosam rerum. Est rerum accusantium ut quibusdam
-      autem et vitae maxime. Nam voluptas autem in consequatur molestias et dolorum odit qui reiciendis veritatis id
-      earum unde? Quo odio galisum et enim necessitatibus non fugit reprehenderit!</p>
-  </section>-->
-
-  <!-- ===== PROJETO ===== -->
-  <section id="projeto" class="projeto">
-    <h2>Nosso Projeto</h2>
-    <section class="sobre-gafia">
-      <h1>Conheça a <strong>Gafia</strong>: Sua Jornada Sustentável Começa Aqui</h1>
-      
-      <p>
-        Planejar uma viagem com <strong>carro elétrico</strong> nunca foi tão fácil.  
-        Criada no início de <strong>2025</strong> por estudantes de <em>Sistemas de Informação</em> da 
-        <strong>Fundação Hermínio Ometto</strong>, a Gafia é uma ferramenta que veio para transformar 
-        a maneira como você se locomove.
-      </p>
-    
-      <p>
-        Nossa equipe, composta por 
-        <strong>Giovanna Jacobucci</strong>, 
-        <strong>Kaio Eduardo Bueno de Camargo</strong>, 
-        <strong>Kael Vicente Dipres</strong>, 
-        <strong>Rafael Cauã Delariva de Lima</strong>, 
-        <strong>Sofia Camargo Nunes</strong> e 
-        <strong>Virna Karina Amaral</strong>, 
-        desenvolveu um software completo para te ajudar a planejar viagens e tomar decisões mais inteligentes sobre seu veículo.
-      </p>
-    
-      <h2>Por que usar a Gafia?</h2>
-      
-      <p>
-        Com o crescimento exponencial de <strong>carros elétricos no Brasil</strong> — de 
-        <strong>428 unidades em 2020</strong> para aproximadamente 
-        <strong>400 mil em 2025</strong> —, a transição para a <strong>mobilidade sustentável</strong> é uma realidade.  
-        E por boas razões: os veículos elétricos oferecem um excelente <strong>custo-benefício</strong> e, principalmente, 
-        contribuem para um <strong>futuro mais sustentável</strong>.
-      </p>
-    
-      <p>
-        Enquanto os <strong>carros a combustão</strong>, movidos por fontes não renováveis, são responsáveis por mais de 
-        <strong>75% das emissões globais de gases de efeito estufa</strong>, a Gafia te mostra o impacto positivo de sua escolha.  
-        Alinhado ao <strong>Objetivo de Desenvolvimento Sustentável n° 7: Energia Limpa e Acessível</strong>, nosso sistema 
-        calcula a quantidade de <strong>CO<sub>2</sub></strong> que você deixa de emitir ao optar por uma viagem elétrica.
-      </p>
-    
-      <h2>Nossas Principais Funções</h2>
-      <ul>
-        <li>
-          <strong>Planejamento de Viagem:</strong> Calcule a rota ideal para seu carro elétrico, 
-          identificando pontos de recarga e estimando o tempo de percurso.
-        </li>
-        <li>
-          <strong>Comparador de Veículos:</strong> Compare a autonomia e os gastos de carros 
-          a combustão, híbridos e elétricos.
-        </li>
-        <li>
-          <strong>Impacto Ambiental:</strong> Veja o <strong>CO<sub>2</sub> economizado</strong> em suas viagens, 
-          reforçando sua contribuição para a sustentabilidade do planeta.
-        </li>
-        <li>
-          <strong>Valores:</strong> Acesse preços de combustíveis e tarifas de energia elétrica atualizados por estado.  
-          Assim, você planeja sua viagem sabendo exatamente quanto irá gastar.
-        </li>
-      </ul>
-    </section>
-    
-  </section>
-
-  <!-- ===== CONTATO ===== -->
-  <section id="contato" class="contato">
-    <h2>Contato</h2>
-    <form class="contact-form" novalidate>
-      <input type="text" placeholder="Seu nome" required />
-      <input type="email" placeholder="Seu e-mail" required />
-      <textarea placeholder="Sua mensagem" rows="4" required></textarea>
-      <button type="submit">Enviar</button>
-    </form>
-  </section>
-
-  <footer class="site-footer">
-    <p>© <span id="year"></span> GAFIA — Mobilidade e energia inteligente</p>
-  </footer>
-
-  <script>
-    // ano no rodapé
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+    <script src="src/script/main.js"></script>
 </body>
-
 </html>
