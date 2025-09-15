@@ -23,6 +23,7 @@ Com o rápido crescimento dos carros elétricos no Brasil, a Gafia surge como a 
 * Back-end: inicialmente desenvolvido com programação orientada a objeto (POO) com Java, atualmente está desenvolvido em PHP.
 * Front-end: HTML e CSS
 * SGBD: PostgreSQL
+qualquer coisa
 ---
 
 A Gafia é mais do que um aplicativo de planejamento de rotas; é sua parceira na construção de um futuro mais verde, oferecendo inteligência e sustentabilidade para cada quilômetro da sua jornada.
