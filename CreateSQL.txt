@@ -1,0 +1,112 @@
+
+--Legal ver depois, criae um tipo personalizado (DOMAIN) que já vem com NOT NULL.
+--Para nao precisar ficar repetindo o NOT NULL sempre
+
+-- TABELA ESTADOS
+CREATE TABLE estados(
+
+	id_estado SERIAL PRIMARY KEY,
+    nm_estado VARCHAR(50) NOT NULL,
+    uf_estado CHAR(2) NOT NULL UNIQUE -- O UNIQUE evita que gere duplicidade nas UF
+);
+
+-- TABELA MARCA
+CREATE TABLE marca(
+
+	id_marca SERIAL PRIMARY KEY,
+    nm_marca VARCHAR(50) NOT NULL
+);
+
+-- TABELA MODELOS
+CREATE TABLE modelo(
+
+	id_modelo SERIAL PRIMARY KEY,
+    nm_modelo VARCHAR(50) NOT NULL
+);
+
+-- TABELA COMBUSTIVEL
+CREATE TABLE combustivel(
+
+	id_combust SERIAL PRIMARY KEY,
+    nm_combust VARCHAR(30) NOT NULL
+);
+
+-- TABELA VALOR COMBUSTIVEL
+CREATE TABLE valor_combustivel(
+
+	id_valor_combust SERIAL PRIMARY KEY,
+    valor_dig NUMERIC(10,2) NOT NULL,
+	id_combust INT NOT NULL,
+    id_estado INT NOT NULL,
+
+    CONSTRAINT fk_combust FOREIGN KEY (id_combust) REFERENCES combustivel(id_combust),
+    CONSTRAINT fk_estado FOREIGN KEY (id_estado) REFERENCES estados(id_estado)
+);
+
+-- TABELA CARRO COMBUSTAO
+CREATE TABLE carro_combustao(
+
+	id_carro_c SERIAL PRIMARY KEY,
+    ano_carro_c INT NOT NULL,
+    qnt_co2 INT NOT NULL,
+    id_marca INT NOT NULL,
+    id_modelo INT NOT NULL,
+
+    CONSTRAINT fk_marca FOREIGN KEY (id_marca) REFERENCES marca(id_marca),
+    CONSTRAINT fk_modelo FOREIGN KEY (id_modelo) REFERENCES modelo(id_modelo)
+);
+
+-- TABELA CARRO ELETRICO
+CREATE TABLE carro_eletrico(
+
+	id_carro_e SERIAL PRIMARY KEY,
+    ano_carro_e INT NOT NULL,
+    dur_bat INT NOT NULL,
+    id_marca INT NOT NULL,
+    id_modelo INT NOT NULL,
+
+    CONSTRAINT fk_marca FOREIGN KEY (id_marca) REFERENCES marca(id_marca),
+    CONSTRAINT fk_modelo FOREIGN KEY (id_modelo) REFERENCES modelo(id_modelo)
+);
+
+-- TABELA CARRO COMBUSTIVEL
+CREATE TABLE carro_combustivel(
+
+	id_carro_combust SERIAL PRIMARY KEY,
+	id_combust INT NOT NULL,
+    id_carro_e INT NOT NULL,
+    id_carro_c INT NOT NULL,
+
+    CONSTRAINT fk_combust FOREIGN KEY (id_combust) REFERENCES combustivel(id_combust),
+    CONSTRAINT fk_carro_e FOREIGN KEY (id_carro_e) REFERENCES carro_eletrico(id_carro_e),
+    CONSTRAINT fk_carro_c FOREIGN KEY (id_carro_c) REFERENCES carro_combustao(id_carro_c)    
+);
+
+-- TABELA USUARIO
+CREATE TABLE usuario(
+
+	id_usuario SERIAL PRIMARY KEY,
+    nm_usuario VARCHAR(100) NOT NULL,
+    sobrenome_usuario VARCHAR(100) NOT NULL,
+    cpf_usuario VARCHAR(11) NOT NULL, --INT remove zeros à esquerda, e CPF/telefone podem ter zeros ou símbolos usar varchar neles
+    dt_nasc_usuario DATE NOT NULL,
+    email_usuario VARCHAR(100) NOT NULL,
+    senha_usuario VARCHAR(100) NOT NULL, -- verificar depois, colocar o txt hash da senha "codificado" para noa ter acesso
+    tel_usuario VARCHAR(15) NOT NULL,--INT remove zeros à esquerda, e CPF/telefone podem ter zeros ou símbolos usar varchar neles
+    id_estado INT NOT NULL,
+    
+    CONSTRAINT fk_estado FOREIGN KEY (id_estado) REFERENCES estados(id_estado)
+);
+
+-- TABELA USUARIO CARRO, mudei para GARAGEM para faciliar
+CREATE TABLE garagem( 
+
+	id_garagem SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_carro_e INT NOT NULL,
+    id_carro_c INT NOT NULL,
+
+    CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+    CONSTRAINT fk_carro_e FOREIGN KEY (id_carro_e) REFERENCES carro_eletrico(id_carro_e),
+    CONSTRAINT fk_carro_c FOREIGN KEY (id_carro_c) REFERENCES carro_combustao(id_carro_c)   
+);
