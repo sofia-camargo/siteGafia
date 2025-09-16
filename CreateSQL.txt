@@ -110,3 +110,5 @@ CREATE TABLE garagem(
     CONSTRAINT fk_carro_e FOREIGN KEY (id_carro_e) REFERENCES carro_eletrico(id_carro_e),
     CONSTRAINT fk_carro_c FOREIGN KEY (id_carro_c) REFERENCES carro_combustao(id_carro_c)   
 );
+--oi
+--oi2
