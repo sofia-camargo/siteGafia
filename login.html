@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Planejamento de Viagens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #7b2cbf, #9d4edd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .login-container img {
+      width: 70px;
+      margin-bottom: 15px;
+    }
+    .login-container h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .login-container p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: #9d4edd;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-container button:hover {
+      background: #b866ff;
+      transform: translateY(-3px);
+    }
+    .login-container a {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #7b2cbf;
+      text-decoration: none;
+    }
+    .login-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- Ícone do carro no lugar do ícone de energia -->
+    <img src="../src/img/GAFIA (1).png" alt="Carro elétrico"> <!-- coloque sua imagem aqui -->
+    
+    <h1>Planeje sua viagem</h1>
+    <p>Acesse sua conta e calcule rotas inteligentes para seu carro elétrico</p>
+    
+    <form>
+      <input type="email" placeholder="Digite seu e-mail" required>
+      <input type="password" placeholder="Digite sua senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+    
+    <a href="#">Não tem conta? Cadastre-se</a>
+  </div>
+</body>
+</html>

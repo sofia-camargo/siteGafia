@@ -1,0 +1,101 @@
+/* Estilo geral */
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #9b4de0, #b37cf5); /* Roxo claro estilo Nubank */
+}
+
+/* Container do login */
+.login-container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  width: 360px;
+  text-align: center;
+}
+
+/* Título */
+.login-container h1 {
+  margin-bottom: 10px;
+  color: #7a1bc4;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* Campos de entrada */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #9b4de0;
+  box-shadow: 0 0 8px rgba(155, 77, 224, 0.4);
+}
+
+/* Botão */
+button {
+  background-color: #9b4de0;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #b37cf5;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* Link para cadastro */
+.register-link {
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #9b4de0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+img {
+    width: 100px;   /* largura */
+    height: 100px;   /* altura ajusta automaticamente */
+}
