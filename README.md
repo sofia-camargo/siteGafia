@@ -1,6 +1,5 @@
 # Projeto Gafia: Uma Jornada Sustentável na Mobilidade Elétrica 🌍
- ## teste kael
- ## teste kael 2
+
 A Gafia é uma ferramenta inovadora desenvolvida por estudantes de Sistemas de Informação da Fundação Hermínio Ometto, criada para revolucionar o planejamento de viagens com carros elétricos. Nossa equipe, composta por Giovanna Jacobucci, Kaio Eduardo Bueno de Camargo, Kael Vicente Dipres, Rafael Cauã Delariva de Lima, Sofia Camargo Nunes e Virna Karina Amaral, idealizou um software que não apenas simplifica sua locomoção, mas também o conecta a um futuro mais sustentável.
 
 ---
