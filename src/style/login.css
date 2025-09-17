@@ -1,101 +1,101 @@
-/* Estilo geral */
-body {
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #9b4de0, #b37cf5); /* Roxo claro estilo Nubank */
-}
+   body {
+      font-family: Arial, sans-serif;
+      background: #010131;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .login-container img {
+      width: 70px;
+      margin-bottom: 15px;
+    }
+    .login-container h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .login-container p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: #9d4edd;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-container button:hover {
+      background: #b866ff;
+      transform: translateY(-3px);
+    }
+    .login-container a {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #7b2cbf;
+      text-decoration: none;
+    }
+    .login-container a:hover {
+      text-decoration: underline;
+    }
 
-/* Container do login */
+    /* Adicione este código ao seu arquivo login.css */
+
+/* Deixa o container principal como referência para o posicionamento do botão */
 .login-container {
-  background: #fff;
-  padding: 40px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  width: 360px;
-  text-align: center;
+  position: relative;
 }
 
-/* Título */
-.login-container h1 {
-  margin-bottom: 10px;
-  color: #7a1bc4;
+/* Estilos do botão de voltar */
+.back-button {
+  position: absolute;  /* Posicionamento absoluto em relação ao .login-container */
+  top: 20px;           /* Distância do topo */
+  left: 20px;          /* Distância da esquerda */
+  
+  /* Dimensões e aparência */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Deixa o botão redondo */
+  background-color: transparent; /* Fundo inicial transparente */
+  
+  /* Centraliza o ícone SVG dentro do botão */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Estilo do ícone */
+  color: #555; /* Cor da seta */
+  text-decoration: none; /* Remove o sublinhado do link */
+  
+  /* Animação suave para a mudança de cor */
+  transition: background-color 0.3s ease;
 }
 
-.subtitle {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 25px;
-}
-
-/* Campos de entrada */
-.input-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.input-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 6px;
-  color: #333;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-group input:focus {
-  border-color: #9b4de0;
-  box-shadow: 0 0 8px rgba(155, 77, 224, 0.4);
-}
-
-/* Botão */
-button {
-  background-color: #9b4de0;
-  color: #fff;
-  border: none;
-  padding: 14px;
-  border-radius: 30px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: #b37cf5;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
-}
-
-/* Link para cadastro */
-.register-link {
-  margin-top: 18px;
-  font-size: 14px;
-}
-
-.register-link a {
-  color: #9b4de0;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.register-link a:hover {
-  text-decoration: underline;
-}
-
-img {
-    width: 100px;   /* largura */
-    height: 100px;   /* altura ajusta automaticamente */
+/* Efeito ao passar o mouse */
+.back-button:hover {
+  background-color: #f0f0f0; /* Cor do fundo ao passar o mouse */
 }
