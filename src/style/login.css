@@ -29,13 +29,14 @@
       color: #666;
       margin-bottom: 20px;
     }
-    .login-container input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
+    .login-container input, .login-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
     }
     .login-container button {
       width: 100%;
