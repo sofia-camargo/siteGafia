@@ -1,4 +1,4 @@
-   body {
+body {
       font-family: Arial, sans-serif;
       background: #010131;
       display: flex;
@@ -73,27 +73,38 @@
 
 /* Estilos do botão de voltar */
 .back-button {
-  position: absolute;  /* Posicionamento absoluto em relação ao .login-container */
-  top: 20px;           /* Distância do topo */
-  left: 20px;          /* Distância da esquerda */
-  
-  /* Dimensões e aparência */
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* Deixa o botão redondo */
-  background-color: transparent; /* Fundo inicial transparente */
-  
-  /* Centraliza o ícone SVG dentro do botão */
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Estilo do ícone */
-  color: #555; /* Cor da seta */
-  text-decoration: none; /* Remove o sublinhado do link */
-  
-  /* Animação suave para a mudança de cor */
+
+  position: absolute;
+  top: 20px;
+  left: 20px;
+
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: transparent;
+
+  color: #555; /* cor da seta */
+  text-decoration: none;
+
   transition: background-color 0.3s ease;
+}
+
+
+
+.back-button svg {
+  width: 20px;   
+  height: 20px;
+  stroke: currentColor; 
+  display: block; 
+  margin-left: 15%;
+  margin-top: 15%;
+}
+
+.back-button:hover {
+  background-color: #f0f0f0;
 }
 
 /* Efeito ao passar o mouse */
