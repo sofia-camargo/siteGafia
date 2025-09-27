@@ -1,5 +1,4 @@
 <?php
-// api/cadastro.php
 
 require_once 'db_connection.php';
 
@@ -34,31 +33,30 @@ if (!$nome || !$sobrenome || !$cpf || !$nascimento || !$telefone || !$estado || 
     exit;
 }
 
+if (!validaCPF($cpf)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'O CPF informado é inválido.']);
+    exit;
+}
+
 try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    $emailHash = password_hash($email, PASSWORD_DEFAULT);
 
-    // CORREÇÃO 1: O nome da tabela foi corrigido para "usuarios" (plural).
-    // As colunas no INSERT agora correspondem exatamente às da sua imagem.
     $sql = "INSERT INTO usuarios (nome, sobrenome, dtnasc, cpf, email, telefone, senha, id_estado) 
             VALUES (:nome, :sobrenome, :dtnasc, :cpf, :email, :telefone, :senha, :id_estado)";
     
     $stmt = $pdo->prepare($sql);
-
-    // CORREÇÃO 2: A coluna 'id_estado' espera um número.
-    // Como o formulário envia um texto (ex: "São Paulo"), vamos converter para um número.
-    // (int)$estado irá converter o texto para o número 0 se não for numérico.
-    // Isso evita o erro de tipo de dado e permite que o cadastro seja concluído.
-    $estado_id = (int)$estado; // Solução temporária para teste
 
     $stmt->execute([
         ':nome' => $nome,
         ':sobrenome' => $sobrenome,
         ':dtnasc' => $nascimento,
         ':cpf' => $cpf,
-        ':email' => $email,
+        ':email' => $emailHash,
         ':telefone' => $telefone,
         ':senha' => $senhaHash,
-        ':id_estado' => 1 // VALOR PROVISÓRIO - Veja a explicação abaixo
+        ':id_estado' => $estado
     ]);
 
     http_response_code(201);
@@ -74,5 +72,28 @@ try {
         http_response_code(500);
         echo json_encode(['error' => 'Ocorreu um erro interno no servidor ao processar sua solicitação.']);
     }
+}
+
+function validaCPF($cpf) {
+    $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+    
+    if (strlen($cpf) != 11) {
+        return false;
+    }
+
+    if (preg_match('/(\d)\1{10}/', $cpf)) {
+        return false;
+    }
+
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
 }
 ?>
