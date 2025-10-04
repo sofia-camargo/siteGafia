@@ -1,7 +1,7 @@
 <?php
+// api/cadastro.php
 
 require_once 'db_connection.php';
-
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -33,30 +33,34 @@ if (!$nome || !$sobrenome || !$cpf || !$nascimento || !$telefone || !$estado || 
     exit;
 }
 
-if (!validaCPF($cpf)) {
+// **CORREÇÃO IMPORTANTE: Converte a data para o formato do PostgreSQL**
+$dateObject = DateTime::createFromFormat('d/m/Y', $nascimento);
+if ($dateObject) {
+    $nascimentoFormatado = $dateObject->format('Y-m-d');
+} else {
     http_response_code(400);
-    echo json_encode(['error' => 'O CPF informado é inválido.']);
+    echo json_encode(['error' => 'Formato de data de nascimento inválido. Use DD/MM/AAAA.']);
     exit;
 }
 
 try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-    $emailHash = password_hash($email, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO usuarios (nome, sobrenome, dtnasc, cpf, email, telefone, senha, id_estado) 
-            VALUES (:nome, :sobrenome, :dtnasc, :cpf, :email, :telefone, :senha, :id_estado)";
+    // Query alinhada com a sua tabela 'usuarios'
+    $sql = "INSERT INTO usuarios (nome, sobrenome, cpf, email, telefone, senha, id_estado, dt_nasc) 
+            VALUES (:nome, :sobrenome, :cpf, :email, :telefone, :senha, :id_estado, :dt_nasc)";
     
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
         ':nome' => $nome,
         ':sobrenome' => $sobrenome,
-        ':dtnasc' => $nascimento,
         ':cpf' => $cpf,
-        ':email' => $emailHash,
+        ':email' => $email,
         ':telefone' => $telefone,
         ':senha' => $senhaHash,
-        ':id_estado' => $estado
+        ':id_estado' => $estado,
+        ':dt_nasc' => $nascimentoFormatado // Usa a data formatada
     ]);
 
     http_response_code(201);
@@ -64,25 +68,12 @@ try {
 
 } catch (PDOException $e) {
     error_log("Erro de banco de dados: " . $e->getMessage());
-
-    if ($e->getCode() == 23505) {
+    if ($e->getCode() == '23505') {
         http_response_code(409);
         echo json_encode(['error' => 'Este email ou CPF já está em uso.']);
     } else {
         http_response_code(500);
-        echo json_encode(['error' => 'Ocorreu um erro interno no servidor ao processar sua solicitação.']);
-    }
-}
-
-function validaCPF($cpf) {
-    $cpf = preg_replace('/[^0-9]/is', '', $cpf);
-    
-    if (strlen($cpf) != 11) {
-        return false;
-    }
-
-    if (preg_match('/(\d)\1{10}/', $cpf)) {
-        return false;
+        echo json_encode(['error' => 'Ocorreu um erro interno no servidor.', 'details' => $e->getMessage()]);
     }
 
     for ($t = 9; $t < 11; $t++) {

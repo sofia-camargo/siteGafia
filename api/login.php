@@ -31,13 +31,16 @@ if (!$email || !$senha) {
 }
 
 try {
+    // Query está correcta e alinhada com a sua tabela 'usuarios'
     $sql = "SELECT id_usuario, nome, senha FROM usuarios WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':email' => $email]);
     
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Verifica se o utilizador existe E se a senha digitada corresponde ao hash no banco de dados
     if ($usuario && password_verify($senha, $usuario['senha'])) {
+        // Sucesso! Inicia a sessão
         $_SESSION['user_id'] = $usuario['id_usuario'];
         $_SESSION['user_name'] = $usuario['nome'];
         $_SESSION['logged_in'] = true;
@@ -45,6 +48,7 @@ try {
         http_response_code(200);
         echo json_encode(['message' => 'Login bem-sucedido!']);
     } else {
+        // Falha (utilizador não encontrado ou senha incorrecta)
         http_response_code(401);
         echo json_encode(['error' => 'Email ou senha inválidos.']);
     }
