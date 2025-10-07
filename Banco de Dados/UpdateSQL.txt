@@ -1,0 +1,27 @@
+-- UPDATE CARRO
+UPDATE carro
+SET ano_carro = :ano_carro,
+    dur_bat = :dur_bat,
+    id_marca = :id_marca,
+    id_modelo = :id_modelo
+    
+WHERE id_carro = :id_carro;
+
+-- UPDATE ESTADO
+UPDATE estados
+SET nm_estado = :nm_estado,
+    uf_estado = :uf_estado
+    
+WHERE id_estado = :id_estado;
+
+-- UPDATE MARCA
+UPDATE marca
+SET nm_marca = :nm_marca
+    
+WHERE id_marca = :id_marca;
+
+-- UPDATE MODELO
+UPDATE modelo
+SET nm_modelo = :nm_modelo
+    
+WHERE id_modelo = :id_modelo;
