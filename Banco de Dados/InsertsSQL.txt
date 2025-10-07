@@ -29,7 +29,7 @@ INSERT INTO carro (ano_carro, dur_bat, id_marca, id_modelo)
 );
 
 -- INSERT USUARIOS
-INSERT INTO usuarios (nome, sobrenome, cpf, email, senha, telefone, dtnasc, id_estado)
+INSERT INTO usuario (nome, sobrenome, cpf, email, senha, telefone, dt_nasc, id_estado)
  VALUES(
  	  :nome,
     :sobrenome,
@@ -37,7 +37,7 @@ INSERT INTO usuarios (nome, sobrenome, cpf, email, senha, telefone, dtnasc, id_e
     :email,
  	  :senha,
     :telefone,
-    :dtnasc,
+    :dt_nasc,
     :id_estado
 );
 
@@ -46,10 +46,11 @@ INSERT INTO historico_viagem (cidade_origem, cidade_destino, dt_consuta, tempo_v
  VALUES (
     :cidade_origem,
     :cidade_destino,
-    :dt_consuta,
+    :dt_consulta,
     :tempo_viagem,
     :qnt_abastecimento,
-    :km_viagem, id_estado,
+    :km_viagem,
+	:id_estado,
     :id_carro,
     :id_usuario
  )
