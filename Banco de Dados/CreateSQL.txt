@@ -64,7 +64,7 @@ CREATE TABLE historico_viagem (
     id_carro INT,
     id_usuario INT,
     
-    CONSTRAINT fk_estado FOREIGN KEY (id_estado) REFERENCES estado (id_estado),
+    CONSTRAINT fk_estado FOREIGN KEY (id_estado) REFERENCES estados (id_estado),
     CONSTRAINT fk_carro FOREIGN KEY (id_carro) REFERENCES carro (id_carro),
     CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
 );
