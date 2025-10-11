@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planejamento de Viagem Elétrica - GAFIA</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="src/style/style.css">
+    <link rel="stylesheet" href="src/style/planejamento.css">
+</head>
+<body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="index.html" aria-label="GAFIA - Início">
+          <img src="src/img/logo.png" alt="Logo GAFIA" width="54" height="54" />
+          <span>GAFIA</span>
+        </a>
+        <nav class="nav" aria-label="Principal">
+            <a href="index.html#inicio">Início</a>
+            <a href="cadastro.html">Cadastro</a>
+            <a href="login.html" class="btn btn-outline btn-login">Entrar</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="planner-container">
+        <div class="controls">
+            <h1>Planeje sua Rota Elétrica</h1>
+            <p>Insira os pontos de partida e chegada para encontrar a rota e os pontos de recarga no caminho.</p>
+            <input type="text" id="origin-input" placeholder="Digite o ponto de partida">
+            <input type="text" id="destination-input" placeholder="Digite o ponto de chegada">
+            <button id="calculate-route" class="btn btn-primary">Calcular Viagem e Pontos de Recarga</button>
+        </div>
+
+        <div id="map"></div>
+        <div id="directions-panel"></div>
+    </main>
+    
+    <footer class="site-footer">
+      <div class="container footer-grid">
+          <strong>GAFIA</strong>
+          <p class="copyright">© 2025 GAFIA — Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3Qi6LrQ-STK0QOfuH8ECzVhwcPb0FBsc&libraries=places&callback=initMap">
+    </script>
+    
+    <script src="src/js/planejamento.js"></script>
+</body>
+</html>
