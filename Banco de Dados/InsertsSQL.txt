@@ -1,0 +1,56 @@
+----- INSERTS SQL -----
+
+-- INSERT ESTADOS
+INSERT INTO estados (nm_estado, uf_estado)
+	VALUES(
+	   :nm_estado,
+    :uf_estado
+);
+
+-- INSERT MARCA
+INSERT INTO marca (nm_marca)
+	VALUES(
+	   :nm_marca
+);
+
+-- INSERT MODELO
+INSERT INTO modelo (nm_modelo)
+	VALUES(
+	   :nm_modelo
+);
+
+-- INSERT CARRO
+INSERT INTO carro (ano_carro, dur_bat, id_marca, id_modelo)
+	VALUES(
+	   :ano_carro,
+    :dur_bat,
+    :id_marca,
+    :id_modelo
+);
+
+-- INSERT USUARIOS
+INSERT INTO usuario (nome, sobrenome, cpf, email, senha, telefone, dt_nasc, id_estado)
+ VALUES(
+ 	  :nome,
+    :sobrenome,
+    :cpf,
+    :email,
+ 	  :senha,
+    :telefone,
+    :dt_nasc,
+    :id_estado
+);
+
+-- TABELA HISTORICO_VIAGEM
+INSERT INTO historico_viagem (cidade_origem, cidade_destino, dt_consuta, tempo_viagem, qnt_abastecimento, km_viagem, id_estado, id_carro, id_usuario)
+ VALUES (
+    :cidade_origem,
+    :cidade_destino,
+    :dt_consulta,
+    :tempo_viagem,
+    :qnt_abastecimento,
+    :km_viagem,
+	:id_estado,
+    :id_carro,
+    :id_usuario
+ )
