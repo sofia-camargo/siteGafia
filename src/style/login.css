@@ -1,27 +1,33 @@
-/* ======= Fundo da página ======= */
+/* ======= RESET ======= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ======= Fundo Roxo ======= */
 body {
   font-family: 'Poppins', sans-serif;
-  background: #3f0d64; /* Cor de fundo roxa */
+  background-color: #3f0d64; /* Fundo sólido roxo */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
   overflow: hidden;
 }
 
-/* ======= Container com efeito vidro ======= */
+/* ======= Painel com efeito de vidro ======= */
 .login-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.1); /* Transparência suave */
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 360px;
   padding: 2rem;
   border-radius: 20px;
-  width: 350px;
   text-align: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   color: #fff;
 }
 
@@ -31,11 +37,11 @@ body {
   margin-bottom: 15px;
 }
 
-/* ======= Títulos e textos ======= */
+/* ======= Textos ======= */
 .login-container h1 {
   font-size: 22px;
   margin-bottom: 10px;
-  color: #ffffff;
+  color: #fff;
 }
 .login-container p {
   font-size: 14px;
@@ -43,15 +49,15 @@ body {
   margin-bottom: 20px;
 }
 
-/* ======= Campos de entrada ======= */
+/* ======= Campos ======= */
 .login-container input,
 .login-container select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
   font-size: 14px;
   outline: none;
@@ -69,11 +75,11 @@ body {
 .login-container button {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #9d4edd, #b266ff);
   border: none;
-  color: #fff;
   border-radius: 10px;
   font-size: 16px;
+  background: linear-gradient(135deg, #9d4edd, #b266ff);
+  color: #fff;
   cursor: pointer;
   transition: 0.3s;
 }
