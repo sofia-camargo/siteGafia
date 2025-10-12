@@ -1,19 +1,17 @@
 // src/js/cadastro.js
 
-// Espera todo o conteúdo da página carregar antes de executar o script
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- LÓGICA PARA CARREGAR OS ESTADOS ---
     const selectEstado = document.getElementById('estado');
 
     async function carregarEstados() {
-        // Verifica se o elemento <select> realmente existe na página
         if (!selectEstado) return;
 
         try {
-            const response = await fetch('api/estados.php');
+            // O caminho do fetch foi corrigido aqui
+            const response = await fetch('./api/buscar_estados.php');
             if (!response.ok) {
-                // Se a resposta não for OK (ex: 404 ou 500), lança um erro
                 throw new Error(`Erro na rede: ${response.statusText}`);
             }
             const estados = await response.json();
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Chama a função para popular a lista de estados
     carregarEstados();
 
     // --- LÓGICA PARA ENVIAR O FORMULÁRIO DE CADASTRO ---
@@ -41,16 +38,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (formCadastro) {
         formCadastro.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Impede o recarregamento da página
+            event.preventDefault();
 
-            // Pega os dados do formulário
             const userData = {
-                // ... (resto dos campos)
+                nome: document.getElementById('nome').value,
+                sobrenome: document.getElementById('sobrenome').value,
+                nascimento: document.getElementById('nascimento').value,
+                cpf: document.getElementById('cpf').value,
+                telefone: document.getElementById('telefone').value,
                 estado: document.getElementById('estado').value,
-                // ... (etc)
+                email: document.getElementById('email').value,
+                senha: document.getElementById('senha').value
             };
-            
-            // O resto da sua lógica de submit...
+
+            try {
+                const response = await fetch('./api/cadastro.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(`Erro: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Erro de comunicação:', error);
+                alert('Ocorreu um erro de comunicação com o servidor. Tente novamente.');
+            }
         });
     }
 });

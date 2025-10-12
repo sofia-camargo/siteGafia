@@ -2,7 +2,6 @@
 // api/cadastro.php
 
 require_once 'db_connection.php';
-
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -34,31 +33,34 @@ if (!$nome || !$sobrenome || !$cpf || !$nascimento || !$telefone || !$estado || 
     exit;
 }
 
+// **CORREÇÃO IMPORTANTE: Converte a data para o formato do PostgreSQL**
+$dateObject = DateTime::createFromFormat('d/m/Y', $nascimento);
+if ($dateObject) {
+    $nascimentoFormatado = $dateObject->format('Y-m-d');
+} else {
+    http_response_code(400);
+    echo json_encode(['error' => 'Formato de data de nascimento inválido. Use DD/MM/AAAA.']);
+    exit;
+}
+
 try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    // CORREÇÃO 1: O nome da tabela foi corrigido para "usuarios" (plural).
-    // As colunas no INSERT agora correspondem exatamente às da sua imagem.
-    $sql = "INSERT INTO usuarios (nome, sobrenome, dtnasc, cpf, email, telefone, senha, id_estado) 
-            VALUES (:nome, :sobrenome, :dtnasc, :cpf, :email, :telefone, :senha, :id_estado)";
+    // Query alinhada com a sua tabela 'usuarios'
+    $sql = "INSERT INTO usuarios (nome, sobrenome, cpf, email, telefone, senha, id_estado, dt_nasc) 
+            VALUES (:nome, :sobrenome, :cpf, :email, :telefone, :senha, :id_estado, :dt_nasc)";
     
     $stmt = $pdo->prepare($sql);
-
-    // CORREÇÃO 2: A coluna 'id_estado' espera um número.
-    // Como o formulário envia um texto (ex: "São Paulo"), vamos converter para um número.
-    // (int)$estado irá converter o texto para o número 0 se não for numérico.
-    // Isso evita o erro de tipo de dado e permite que o cadastro seja concluído.
-    $estado_id = (int)$estado; // Solução temporária para teste
 
     $stmt->execute([
         ':nome' => $nome,
         ':sobrenome' => $sobrenome,
-        ':dtnasc' => $nascimento,
         ':cpf' => $cpf,
         ':email' => $email,
         ':telefone' => $telefone,
         ':senha' => $senhaHash,
-        ':id_estado' => 1 // VALOR PROVISÓRIO - Veja a explicação abaixo
+        ':id_estado' => $estado,
+        ':dt_nasc' => $nascimentoFormatado // Usa a data formatada
     ]);
 
     http_response_code(201);
@@ -66,13 +68,23 @@ try {
 
 } catch (PDOException $e) {
     error_log("Erro de banco de dados: " . $e->getMessage());
-
-    if ($e->getCode() == 23505) {
+    if ($e->getCode() == '23505') {
         http_response_code(409);
         echo json_encode(['error' => 'Este email ou CPF já está em uso.']);
     } else {
         http_response_code(500);
-        echo json_encode(['error' => 'Ocorreu um erro interno no servidor ao processar sua solicitação.']);
+        echo json_encode(['error' => 'Ocorreu um erro interno no servidor.', 'details' => $e->getMessage()]);
     }
+
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
 }
 ?>
