@@ -19,7 +19,8 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil para definir a forma */
   padding: 2rem;
   border-radius: 16px; /* Bordas mais arredondadas combinam com o efeito */
-  width: 350px;
+  width: 90%; /* Ocupa 90% da largura da tela */
+  max-width: 800px; /* Mas não passa de 800px de largura */
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
@@ -132,4 +133,16 @@ body {
   width: 24px;   
   height: 24px;
   stroke: currentColor; 
+}
+
+/* Estilo para linha do formulário com campos lado a lado */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.form-row input {
+  width: 100%;
+  margin: 0;
 }
