@@ -167,8 +167,8 @@ body{
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 28px;
-  height: 20px;
+  width: 12px;
+  height: 10px;
   cursor: pointer;
   z-index: 1001; /* Fica acima do menu */
 }
