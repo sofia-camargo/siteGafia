@@ -1,72 +1,135 @@
-/* Estilos gerais do corpo da página */
+/* Estilos gerais da página */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #3f0d64; /* Cor de fundo roxa solicitada */
-    color: white;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background: #3f0d64; /* O fundo roxo que você pediu */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  color: #fff; /* Define a cor do texto padrão como branco */
 }
 
-/* Contêiner para centralização */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+/* Container principal com o EFEITO DE VIDRO */
+.login-container {
+  position: relative; /* Necessário para o botão de voltar */
+  background: rgba(255, 255, 255, 0.1); /* Fundo branco com baixa opacidade */
+  backdrop-filter: blur(10px); /* O desfoque que cria o efeito de vidro */
+  -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil para definir a forma */
+  padding: 2rem;
+  border-radius: 16px; /* Bordas mais arredondadas combinam com o efeito */
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilização do formulário com efeito de vidro */
-.cadastro-form {
-    width: 100%;
-    max-width: 400px;
-    padding: 40px;
-    background: rgba(255, 255, 255, 0.1); /* Fundo branco com baixa opacidade */
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px); /* Para compatibilidade com navegadores Webkit */
-    border: 1px solid rgba(255, 255, 255, 0.3);
+.login-container img {
+  width: 70px;
+  margin-bottom: 15px;
 }
 
-.cadastro-form h2 {
-    text-align: center;
-    margin-bottom: 30px;
+/* Textos dentro do container */
+.login-container h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #fff; /* Cor do título alterada para branco */
 }
 
-/* Grupo de inputs e labels */
-.input-group {
-    margin-bottom: 20px;
+.login-container p {
+  font-size: 14px;
+  color: #e0e0e0; /* Cor do parágrafo alterada para um branco mais suave */
+  margin-bottom: 20px;
 }
 
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
+/* Campos de input e select */
+.login-container input, .login-container select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  background: rgba(255, 255, 255, 0.2); /* Fundo dos inputs também transparente */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  color: #fff; /* Cor do texto digitado */
 }
 
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: white;
-    font-size: 16px;
+/* Estilo para o placeholder dos inputs */
+.login-container input::placeholder {
+  color: #ddd;
 }
 
-/* Estilização do botão */
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: #3f0d64;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* Remove a aparência padrão do select e ajusta a cor da seta */
+.login-container select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+  background-size: .65em auto;
 }
 
-button:hover {
-    background-color: rgba(255, 255, 255, 1);
+.login-container option {
+    background: #3f0d64; /* Fundo roxo para as opções do select */
+}
+
+/* Botão de cadastrar */
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.9); /* Fundo branco quase opaco para destaque */
+  border: none;
+  color: #3f0d64; /* Cor do texto do botão usando o roxo do fundo */
+  font-weight: bold;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.login-container button:hover {
+  background: #fff; /* Fica totalmente branco ao passar o mouse */
+  transform: translateY(-3px);
+}
+
+/* Link "Já tem uma conta?" */
+.login-container a {
+  display: block;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #c77dff; /* Um roxo mais claro para contraste */
+  text-decoration: none;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}
+
+/* Botão de voltar */
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  color: #fff; /* Cor do ícone */
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Efeito de hover sutil */
+}
+
+.back-button svg {
+  width: 24px;   
+  height: 24px;
+  stroke: currentColor; 
 }
