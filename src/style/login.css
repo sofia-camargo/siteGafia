@@ -1,114 +1,113 @@
-/* ======= Fundo da página ======= */
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #3f0d64; /* Cor de fundo roxa */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
+      font-family: Arial, sans-serif;
+      background: #010131;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .login-container img {
+      width: 70px;
+      margin-bottom: 15px;
+    }
+    .login-container h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .login-container p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .login-container input, .login-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: #9d4edd;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .login-container button:hover {
+      background: #b866ff;
+      transform: translateY(-3px);
+    }
+    .login-container a {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #7b2cbf;
+      text-decoration: none;
+    }
+    .login-container a:hover {
+      text-decoration: underline;
+    }
 
-/* ======= Container com efeito vidro ======= */
+    /* Adicione este código ao seu arquivo login.css */
+
+/* Deixa o container principal como referência para o posicionamento do botão */
 .login-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.1); /* Transparência suave */
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 2rem;
-  border-radius: 20px;
-  width: 350px;
-  text-align: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
-  color: #fff;
 }
 
-/* ======= Logo ======= */
-.login-container img {
-  width: 70px;
-  margin-bottom: 15px;
-}
-
-/* ======= Títulos e textos ======= */
-.login-container h1 {
-  font-size: 22px;
-  margin-bottom: 10px;
-  color: #ffffff;
-}
-.login-container p {
-  font-size: 14px;
-  color: #e0e0e0;
-  margin-bottom: 20px;
-}
-
-/* ======= Campos de entrada ======= */
-.login-container input,
-.login-container select {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: 0.3s;
-}
-.login-container input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-.login-container input:focus {
-  border-color: #c77dff;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* ======= Botão ======= */
-.login-container button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #9d4edd, #b266ff);
-  border: none;
-  color: #fff;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.login-container button:hover {
-  background: linear-gradient(135deg, #b266ff, #d18aff);
-  transform: translateY(-3px);
-}
-
-/* ======= Link ======= */
-.login-container a {
-  display: block;
-  margin-top: 15px;
-  font-size: 14px;
-  color: #e3b8ff;
-  text-decoration: none;
-}
-.login-container a:hover {
-  text-decoration: underline;
-}
-
-/* ======= Botão de voltar ======= */
+/* Estilos do botão de voltar */
 .back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: 0.3s;
+  background-color: transparent;
+
+  color: #555; /* cor da seta */
+  text-decoration: none;
+
+  transition: background-color 0.3s ease;
 }
+
+
+
+.back-button svg {
+  width: 20px;   
+  height: 20px;
+  stroke: currentColor; 
+  display: block; 
+  margin-left: 15%;
+  margin-top: 15%;
+}
+
 .back-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #f0f0f0;
+}
+
+/* Efeito ao passar o mouse */
+.back-button:hover {
+  background-color: #f0f0f0; /* Cor do fundo ao passar o mouse */
 }
