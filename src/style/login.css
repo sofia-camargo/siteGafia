@@ -1,4 +1,3 @@
-/* Estilos gerais da página */
 /* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
 #page-form {
   display: flex;
@@ -6,17 +5,18 @@
   align-items: center;
   min-height: 100vh;
 }
+
 /* Container principal com o EFEITO DE VIDRO */
 .login-container {
-  position: relative; /* Necessário para o botão de voltar */
-  background: rgba(255, 255, 255, 0.1); /* Fundo branco com baixa opacidade */
-  backdrop-filter: blur(10px); /* O desfoque que cria o efeito de vidro */
-  -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil para definir a forma */
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   padding: 2rem;
-  border-radius: 16px; /* Bordas mais arredondadas combinam com o efeito */
-  width: 50%; /* Ocupa 90% da largura da tela */
-  max-width: 400px; /* Mas não passa de 800px de largura */
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
@@ -30,26 +30,26 @@
 .login-container h1 {
   font-size: 22px;
   margin-bottom: 10px;
-  color: #fff; /* Cor do título alterada para branco */
+  color: #fff;
 }
 
 .login-container p {
   font-size: 14px;
-  color: #e0e0e0; /* Cor do parágrafo alterada para um branco mais suave */
+  color: #e0e0e0;
   margin-bottom: 20px;
 }
 
-/* Campos de input e select */
+/* REGRA GERAL PARA TODOS OS INPUTS (O CAUSADOR DO PROBLEMA) */
 .login-container input, .login-container select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  background: rgba(255, 255, 255, 0.2); /* Fundo dos inputs também transparente */
+  background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
-  color: #fff; /* Cor do texto digitado */
+  color: #fff;
 }
 
 /* Estilo para o placeholder dos inputs */
@@ -69,16 +69,16 @@
 }
 
 .login-container option {
-    background: #3f0d64; /* Fundo roxo para as opções do select */
+    background: #3f0d64;
 }
 
 /* Botão de cadastrar */
 .login-container button {
   width: 100%;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.9); /* Fundo branco quase opaco para destaque */
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  color: #3f0d64; /* Cor do texto do botão usando o roxo do fundo */
+  color: #3f0d64;
   font-weight: bold;
   border-radius: 8px;
   font-size: 16px;
@@ -87,7 +87,7 @@
 }
 
 .login-container button:hover {
-  background: #fff; /* Fica totalmente branco ao passar o mouse */
+  background: #fff;
   transform: translateY(-3px);
 }
 
@@ -96,7 +96,7 @@
   display: block;
   margin-top: 15px;
   font-size: 14px;
-  color: #c77dff; /* Um roxo mais claro para contraste */
+  color: #c77dff;
   text-decoration: none;
 }
 
@@ -116,13 +116,13 @@
   height: 40px;
   border-radius: 50%;
   background-color: transparent;
-  color: #fff; /* Cor do ícone */
+  color: #fff;
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
 
 .back-button:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* Efeito de hover sutil */
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .back-button svg {
@@ -131,14 +131,19 @@
   stroke: currentColor; 
 }
 
-/* Estilo para linha do formulário com campos lado a lado */
+/* ================================================= */
+/* AQUI ESTÁ A CORREÇÃO DEFINITIVA          */
+/* ================================================= */
+
+/* Define o container dos inputs para ser flexível */
 .form-row {
   display: flex;
   gap: 20px;
-  margin-bottom: 8px;
 }
 
+/* Sobrescreve a regra geral APENAS para os inputs dentro do .form-row */
 .form-row input {
-  width: 100%;
-  margin: 0;
+  flex: 1; /* DIZ: "Ocupe uma fração igual do espaço disponível" */
+  width: auto; /* DIZ: "Ignore a regra de width: 100% que vem de cima" */
+  margin: 0;   /* DIZ: "Remova a margem vertical de 8px que vem de cima" */
 }
