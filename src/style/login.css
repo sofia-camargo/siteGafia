@@ -1,7 +1,7 @@
 /* Estilos gerais da página */
 body {
   font-family: Arial, sans-serif;
-  background: #3f0d64; /* O fundo roxo que você pediu */
+  background: #3f0d64  #1b0330; /* O fundo roxo que você pediu */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,7 +73,7 @@ body {
 }
 
 .login-container option {
-    background: #3f0d64 #1b0330; /* Fundo roxo para as opções do select */
+    background: #3f0d64; /* Fundo roxo para as opções do select */
 }
 
 /* Botão de cadastrar */
