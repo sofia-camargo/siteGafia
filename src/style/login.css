@@ -15,7 +15,7 @@
   border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil para definir a forma */
   padding: 2rem;
   border-radius: 16px; /* Bordas mais arredondadas combinam com o efeito */
-  width: 90%; /* Ocupa 90% da largura da tela */
+  width: 50%; /* Ocupa 90% da largura da tela */
   max-width: 400px; /* Mas não passa de 800px de largura */
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
