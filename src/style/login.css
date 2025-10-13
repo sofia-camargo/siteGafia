@@ -1,14 +1,5 @@
 /* Estilos gerais da página */
-body {
-  font-family: Arial, sans-serif;
-  background: #3f0d64  #1b0330; /* O fundo roxo que você pediu */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  color: #fff; /* Define a cor do texto padrão como branco */
-}
+
 
 /* Container principal com o EFEITO DE VIDRO */
 .login-container {
