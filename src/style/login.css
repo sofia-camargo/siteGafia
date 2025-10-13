@@ -73,7 +73,7 @@ body {
 }
 
 .login-container option {
-    background: #3f0d64; /* Fundo roxo para as opções do select */
+    background: #3f0d64 #1b0330; /* Fundo roxo para as opções do select */
 }
 
 /* Botão de cadastrar */
