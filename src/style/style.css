@@ -187,6 +187,9 @@ body{
 
   .hamburger{ 
     display:flex;
+  .header-inner{
+    padding: 14px 24px;
+  }  
    }
   .nav{
     position: fixed; 
