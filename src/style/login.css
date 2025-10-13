@@ -1,6 +1,11 @@
 /* Estilos gerais da página */
-
-
+/* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
+#page-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 /* Container principal com o EFEITO DE VIDRO */
 .login-container {
   position: relative; /* Necessário para o botão de voltar */
