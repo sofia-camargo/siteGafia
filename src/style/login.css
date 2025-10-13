@@ -144,20 +144,19 @@
   margin: 0;
 }
 
-/* ================================================= */
-/* AJUSTE RESPONSIVO PARA CELULARES                  */
-/* <<<<<<<<<<<< CÓDIGO NOVO ADICIONADO AQUI <<<<<<<<<<<< */
-/* ================================================= */
+
+/* AJUSTE RESPONSIVO PARA CELULARES */
+
 
 @media (max-width: 768px) {
   .form-row {
-    flex-direction: column; /* Altera a direção de horizontal para vertical */
-    gap: 0;                 /* Remove o espaço lateral entre os campos */
+    flex-direction: column; /* Coloca os campos um embaixo do outro */
+    gap: 0;                 /* Remove o espaço entre eles */
   }
 
-  /* Devolve a margem vertical para os inputs que estão no .form-row, 
-     para ficarem iguais aos outros campos no celular */
+  /* FORÇA os inputs dentro de .form-row a voltarem ao comportamento normal no celular */
   .form-row input {
-    margin: 8px 0;
+    width: 100%;    /* Faz com que ocupem a largura total, como os outros campos */
+    margin: 8px 0;  /* Devolve a margem vertical para dar espaçamento */
   }
 }
