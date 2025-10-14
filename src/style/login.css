@@ -1,8 +1,8 @@
 /* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
 #page-form {
-  display: flex;
+  /*display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;*/
   min-height: 100vh;
 }
 
@@ -159,4 +159,51 @@
     width: 100%;    /* Faz com que ocupem a largura total, como os outros campos */
     margin: 8px 0;  /* Devolve a margem vertical para dar espaçamento */
   }
+}
+
+/* ======================================================= */
+/* == CÓDIGO ADICIONADO PARA CRIAR A TELA DIVIDIDA == */
+/* ======================================================= */
+
+.split-screen-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Metade Esquerda (Formulário) */
+.form-panel {
+    flex: 1; /* Ocupa 50% do espaço */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Garante um respiro nas bordas */
+    background-color: #3f0d64; /* Cor de fundo para combinar com o seu design */
+}
+
+/* Metade Direita (Imagem) */
+.image-panel {
+    flex: 1; /* Ocupa os outros 50% */
+    background-image: url('../img/imagemcarro.png'); /* <-- TROQUE PELA SUA IMAGEM */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Ajuste para o seu container não ocupar a largura toda dentro do painel */
+.login-container {
+    width: 100%; /* Garante que ele se ajuste bem dentro do painel */
+    max-width: 500px; /* Ajustei um pouco a largura máxima */
+}
+
+
+/* AJUSTE RESPONSIVO PARA A TELA DIVIDIDA */
+@media (max-width: 900px) {
+    .split-screen-container {
+        flex-direction: column; /* Empilha os painéis em telas menores */
+    }
+
+    /* Em telas de celular, a imagem some para focar no formulário */
+    .image-panel {
+        display: none;
+    }
 }
