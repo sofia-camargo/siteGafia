@@ -16,7 +16,7 @@ body {
     
     /* --- INÍCIO DAS ALTERAÇÕES AQUI --- */
     /* Remove o gradiente anterior e adiciona a imagem de fundo */
-    background-image: url('../img/fundoGafia.png'), linear-gradient(to right top, #651e8e, #3f0d64, #1d0b30);
+    background-image: url('../img/fundo2.png'), linear-gradient(to right top, #651e8e, #3f0d64, #1d0b30);
     background-repeat: repeat; /* Faz a imagem se repetir para cobrir todo o fundo */
     background-size: auto, cover; /* 'auto' para o padrão, 'cover' para o gradiente */
     background-blend-mode: soft-light; /* Ou 'multiply', 'overlay', 'lighten' para testar como a imagem se mistura com o gradiente */
