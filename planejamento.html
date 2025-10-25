@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="src/style/style.css">
     <link rel="stylesheet" href="src/style/planejamento.css">
@@ -37,7 +38,14 @@
         </div>
 
         <div id="map"></div>
-        <div id="directions-panel"></div>
+        <div id="directions-panel">
+          <div id="output-route-summary" style="display: none;">
+            <p>Distância Estimada: <strong id="output-distancia">---</strong></p>
+            <p>Duração Estimada: <strong id="output-duracao">---</strong></p>
+          </div>
+        </div>
+        
+
     </main>
     
     <footer class="site-footer">
