@@ -57,11 +57,13 @@ function calculateAndDisplayRoute() {
         if (status == 'OK') {
             const rota = result.routes[0].legs[0];
             const distanciaTotal = rota.distance.text; 
-            const duracaoTotal = rota.duration.text;  
-
-            // 2. Exibe a distância e a duração no HTML para o usuário
+            const duracaoTotal = rota.duration.text;
+            const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
+             
+            /*Exibe a distância e a duração no HTML para o usuário*/
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
+            document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
             summaryContainer.style.display = 'block'; // Torna o contêiner visível
 
             // Esta linha agora funcionará e irá reescrever o directions-panel
