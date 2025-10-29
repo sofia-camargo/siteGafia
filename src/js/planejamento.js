@@ -63,10 +63,9 @@ function calculateAndDisplayRoute() {
             /*Exibe a distância e a duração no HTML para o usuário*/
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
-            document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
-            summaryContainer.style.display = 'block'; // Torna o contêiner visível
+            /*document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh';*/ 
+            /*summaryContainer.style.display = 'block'; */
 
-            // Esta linha agora funcionará e irá reescrever o directions-panel
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
@@ -88,7 +87,6 @@ async function findChargingStations(routeResult) {
         radius: 50000,
     };
     
-    // A nova API usa um método diferente para a busca
     const { places } = await Place.searchByText(request);
 
     if (places.length) {
@@ -110,7 +108,7 @@ async function createMarkerForPlace(place) {
 
 function clearMarkers() {
     for (let i = 0; i < markers.length; i++) {
-        markers[i].map = null; // A nova forma de remover marcadores
+        markers[i].map = null; 
     }
     markers = [];
 }
