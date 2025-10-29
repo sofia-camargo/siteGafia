@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="src/style/style.css">
     <link rel="stylesheet" href="src/style/planejamento.css">
@@ -16,7 +17,7 @@
     <header class="site-header">
       <div class="container header-inner">
         <a class="logo" href="index.html" aria-label="GAFIA - Início">
-          <img src="src/img/logo.png" alt="Logo GAFIA" width="54" height="54" />
+          <img src="src/img/Gafialogo.png" alt="Logo GAFIA" width="54" height="54" />
           <span>GAFIA</span>
         </a>
         <nav class="nav" aria-label="Principal">
@@ -37,7 +38,17 @@
         </div>
 
         <div id="map"></div>
-        <div id="directions-panel"></div>
+        <div id="directions-panel">
+          <div id="output-route-summary" style="display: none;">
+            <p>Distância Estimada: <strong id="output-distancia">---</strong></p>
+            <p>Duração Estimada: <strong id="output-duracao">---</strong></p>
+            <p>Consumo de Energia Estimado: <strong id="output-energia">---</strong></p>
+            <p>Precisará de recarga durante o trajeto? <strong id="output-recarregar">---</strong></p>
+            <p>Quantidade de Paradas para Recarga: <strong id="output-paradas">---</strong></p>
+          </div>
+        </div>
+        
+
     </main>
     
     <footer class="site-footer">

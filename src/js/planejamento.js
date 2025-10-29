@@ -5,7 +5,6 @@ let directionsService;
 let directionsRenderer;
 let markers = []; // Array para guardar os marcadores
 
-// A nova forma assíncrona de iniciar o mapa
 async function initMap() {
     // Importa as bibliotecas necessárias da API
     const { Map } = await google.maps.importLibrary("maps");
@@ -19,16 +18,14 @@ async function initMap() {
     map = new Map(document.getElementById("map"), {
         zoom: 4,
         center: { lat: -14.235, lng: -51.925 }, // Centro do Brasil
-        mapId: "GAFIA_MAP_STYLE" // Um ID para o seu estilo de mapa
+        mapId: "GAFIA_MAP_STYLE" // Um ID para o estilo de mapa
     });
 
     directionsRenderer.setMap(map);
-    directionsRenderer.setPanel(document.getElementById('directions-panel'));
-
+    // directionsRenderer.setPanel(document.getElementById('directions-panel')); - Removido temporariamente - Sua função é
+    //calcular e exibir a rota no painel, mas estamos focando na exibição no mapa.
     const originInput = document.getElementById('origin-input');
     const destinationInput = document.getElementById('destination-input');
-    
-    // O Autocomplete continua a funcionar da mesma forma
     new Autocomplete(originInput);
     new Autocomplete(destinationInput);
 
@@ -37,6 +34,19 @@ async function initMap() {
 
 function calculateAndDisplayRoute() {
     clearMarkers();
+    
+    // Referência ao novo contêiner de resumo da rota
+    const summaryContainer = document.getElementById('output-route-summary');
+
+    // 1. Oculta o painel de resumo e limpa os campos em cada nova tentativa
+    summaryContainer.style.display = 'none';
+    document.getElementById('output-distancia').innerText = '---'; 
+    document.getElementById('output-duracao').innerText = '---'; 
+    
+    // REMOVIDO: document.getElementById('directions-panel').innerHTML = ''; 
+    // Esta linha foi removida pois impedia o directionsRenderer de funcionar.
+
+
     const request = {
         origin: document.getElementById('origin-input').value,
         destination: document.getElementById('destination-input').value,
@@ -45,9 +55,23 @@ function calculateAndDisplayRoute() {
 
     directionsService.route(request, (result, status) => {
         if (status == 'OK') {
-            directionsRenderer.setDirections(result);
+            const rota = result.routes[0].legs[0];
+            const distanciaTotal = rota.distance.text; 
+            const duracaoTotal = rota.duration.text;
+            const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
+             
+            /*Exibe a distância e a duração no HTML para o usuário*/
+            document.getElementById('output-distancia').innerText = distanciaTotal; 
+            document.getElementById('output-duracao').innerText = duracaoTotal;
+            document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
+            summaryContainer.style.display = 'block'; // Torna o contêiner visível
+
+            // Esta linha agora funcionará e irá reescrever o directions-panel
+            directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
+            // Se falhar, garante que o contêiner permaneça oculto
+            summaryContainer.style.display = 'none'; 
             alert('Não foi possível calcular a rota. Erro: ' + status);
         }
     });
