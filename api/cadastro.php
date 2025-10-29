@@ -4,7 +4,7 @@
 require_once 'db_connection.php';
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { // Verifica se o método é diferente de POST
     http_response_code(405);
     echo json_encode(['error' => 'Método não permitido']);
     exit;
