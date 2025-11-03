@@ -20,20 +20,20 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 
 $nome = $data['nome'] ?? null;
 $sobrenome = $data['sobrenome'] ?? null;
-$cpf = $data['cpf'] ?? null;
-$nascimento = $data['nascimento'] ?? null;
-$telefone = $data['telefone'] ?? null;
-$estado = $data['estado'] ?? null;
+//$cpf = $data['cpf'] ?? null;
+//$nascimento = $data['nascimento'] ?? null;
+//$telefone = $data['telefone'] ?? null;
+//$estado = $data['estado'] ?? null;
 $email = $data['email'] ?? null;
 $senha = $data['senha'] ?? null;
 
-if (!$nome || !$sobrenome || !$cpf || !$nascimento || !$telefone || !$estado || !$email || !$senha) {
+if (!$nome || !$sobrenome || !$email || !$senha) {
     http_response_code(400);
     echo json_encode(['error' => 'Todos os campos são obrigatórios.']);
     exit;
 }
 
-// **CORREÇÃO IMPORTANTE: Converte a data para o formato do PostgreSQL**
+/*
 $dateObject = DateTime::createFromFormat('d/m/Y', $nascimento);
 if ($dateObject) {
     $nascimentoFormatado = $dateObject->format('Y-m-d');
@@ -41,13 +41,13 @@ if ($dateObject) {
     http_response_code(400);
     echo json_encode(['error' => 'Formato de data de nascimento inválido. Use DD/MM/AAAA.']);
     exit;
-}
+}*/
 
 try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
     // Query alinhada com a sua tabela 'usuarios'
-    $sql = "INSERT INTO usuarios (nome, sobrenome, cpf, email, telefone, senha, id_estado, dt_nasc) 
+    $sql = "INSERT INTO usuarios (nome, sobrenome, telefone, senha, id_estado, dt_nasc) 
             VALUES (:nome, :sobrenome, :cpf, :email, :telefone, :senha, :id_estado, :dt_nasc)";
     
     $stmt = $pdo->prepare($sql);
@@ -55,12 +55,12 @@ try {
     $stmt->execute([
         ':nome' => $nome,
         ':sobrenome' => $sobrenome,
-        ':cpf' => $cpf,
+        //':cpf' => $cpf, VARIÁVEL CPF DESATIVADA
         ':email' => $email,
-        ':telefone' => $telefone,
+        //':telefone' => $telefone, VARIÁVEL TELEFONE DESATIVADA
         ':senha' => $senhaHash,
-        ':id_estado' => $estado,
-        ':dt_nasc' => $nascimentoFormatado // Usa a data formatada
+        //':id_estado' => $estado, VARIÁVEL ESTADO DESATIVADA
+        //':dt_nasc' => $nascimentoFormatado // VARIÁVEL DATA DE NASCIMENTO DESATIVADA
     ]);
 
     http_response_code(201);
@@ -70,13 +70,13 @@ try {
     error_log("Erro de banco de dados: " . $e->getMessage());
     if ($e->getCode() == '23505') {
         http_response_code(409);
-        echo json_encode(['error' => 'Este email ou CPF já está em uso.']);
+        echo json_encode(['error' => 'Este email já está em uso.']);
     } else {
         http_response_code(500);
         echo json_encode(['error' => 'Ocorreu um erro interno no servidor.', 'details' => $e->getMessage()]);
     }
 
-    for ($t = 9; $t < 11; $t++) {
+    /*for ($t = 9; $t < 11; $t++) {    Validação de CPF desativada em razão da simplificação do cadastro
         for ($d = 0, $c = 0; $c < $t; $c++) {
             $d += $cpf[$c] * (($t + 1) - $c);
         }
@@ -84,7 +84,7 @@ try {
         if ($cpf[$c] != $d) {
             return false;
         }
-    }
+    }*/
     return true;
 }
 ?>

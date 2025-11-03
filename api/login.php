@@ -31,7 +31,6 @@ if (!$email || !$senha) {
 }
 
 try {
-    // Query está correcta e alinhada com a sua tabela 'usuarios'
     $sql = "SELECT id_usuario, nome, senha FROM usuarios WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':email' => $email]);
