@@ -22,8 +22,7 @@ async function initMap() {
     });
 
     directionsRenderer.setMap(map);
-    // directionsRenderer.setPanel(document.getElementById('directions-panel')); - Removido temporariamente - Sua função é
-    //calcular e exibir a rota no painel, mas estamos focando na exibição no mapa.
+    
     const originInput = document.getElementById('origin-input');
     const destinationInput = document.getElementById('destination-input');
     new Autocomplete(originInput);
@@ -32,19 +31,29 @@ async function initMap() {
     document.getElementById('calculate-route').addEventListener('click', calculateAndDisplayRoute);
 }
 
+function calcularConsumoEnergia(distanciaEmMetros) {
+    
+    const taxaConsumoKwhPorKm = 0.2;  // TAXA DE CONSUMO ESTIMADA -  Conectar com o banco
+    
+    // Converte a distância de metros para quilômetros
+    const distanciaEmKm = distanciaEmMetros / 1000;
+    
+    // Calcula o consumo total
+    const consumoTotal = distanciaEmKm * taxaConsumoKwhPorKm;
+    
+    return consumoTotal;
+}
+
+
 function calculateAndDisplayRoute() {
     clearMarkers();
     
-    // Referência ao novo contêiner de resumo da rota
     const summaryContainer = document.getElementById('output-route-summary');
 
-    // 1. Oculta o painel de resumo e limpa os campos em cada nova tentativa
     summaryContainer.style.display = 'none';
     document.getElementById('output-distancia').innerText = '---'; 
     document.getElementById('output-duracao').innerText = '---'; 
-    
-    // REMOVIDO: document.getElementById('directions-panel').innerHTML = ''; 
-    // Esta linha foi removida pois impedia o directionsRenderer de funcionar.
+    document.getElementById('output-energia').innerText = '---'; // Limpa o campo de energia
 
 
     const request = {
@@ -58,13 +67,19 @@ function calculateAndDisplayRoute() {
             const rota = result.routes[0].legs[0];
             const distanciaTotal = rota.distance.text; 
             const duracaoTotal = rota.duration.text;
+            
+            // 💡 CORREÇÃO 1: Descomentando o cálculo da energia
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
-             
+              
             /*Exibe a distância e a duração no HTML para o usuário*/
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
-            /*document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh';*/ 
-            /*summaryContainer.style.display = 'block'; */
+            
+            // 💡 CORREÇÃO 2: Exibindo a energia
+            document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
+            
+            // 💡 CORREÇÃO 3 (PRINCIPAL): Descomentando a exibição do contêiner de resumo
+            summaryContainer.style.display = 'block'; 
 
             directionsRenderer.setDirections(result); 
             findChargingStations(result);

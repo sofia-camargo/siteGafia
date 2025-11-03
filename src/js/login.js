@@ -27,10 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`Erro: ${data.error}`);
                 }
 
-            } catch (error) {
+            } catch (error) { // Tratamento de erros de rede
                 console.error('Erro de comunicação:', error);
                 alert('Ocorreu um erro de comunicação com o servidor.');
             }
         });
     }
+    
 });
