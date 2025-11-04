@@ -29,6 +29,8 @@ async function initMap() {
     new Autocomplete(destinationInput);
 
     document.getElementById('calculate-route').addEventListener('click', calculateAndDisplayRoute);
+
+    document.getElementById('output-route-summary').style.display = 'none';
 }
 
 function calcularConsumoEnergia(distanciaEmMetros) {
@@ -68,23 +70,18 @@ function calculateAndDisplayRoute() {
             const distanciaTotal = rota.distance.text; 
             const duracaoTotal = rota.duration.text;
             
-            // 💡 CORREÇÃO 1: Descomentando o cálculo da energia
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
               
-            /*Exibe a distância e a duração no HTML para o usuário*/
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
             
-            // 💡 CORREÇÃO 2: Exibindo a energia
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
-            
-            // 💡 CORREÇÃO 3 (PRINCIPAL): Descomentando a exibição do contêiner de resumo
+    
             summaryContainer.style.display = 'block'; 
 
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
-            // Se falhar, garante que o contêiner permaneça oculto
             summaryContainer.style.display = 'none'; 
             alert('Não foi possível calcular a rota. Erro: ' + status);
         }
