@@ -46,10 +46,43 @@ function calcularConsumoEnergia(distanciaEmMetros) {
     return consumoTotal;
 }
 
+function checkUserLoggedIn() {
+    // -----------------------------------------------------------
+    // ******* ESSA É A PARTE CRÍTICA E DEPENDE DO SEU BACKEND *******
+    // -----------------------------------------------------------
+    
+    // 1. VERIFICAÇÃO COM TOKEN/COOKIE:
+    //  O método mais seguro é verificar se existe um Token JWT ou um Cookie de Sessão válido.
+    
+    const authToken = localStorage.getItem('authToken'); // Exemplo: verifica token no LocalStorage
+    
+    if (authToken) {
+        // Para uma verificação robusta, você faria um FETCH para o servidor
+        // para validar se este token ainda é válido antes de retornar true.
+        return true; 
+    }
+    
+    return true; // Retorne true se o usuário estiver logado
+    
+    return false; // Retorne false se o usuário NÃO estiver logado
+}
 
 function calculateAndDisplayRoute() {
-    clearMarkers();
+
+    if (!checkUserLoggedIn()) {
+        
+        alert('Você precisa estar logado para calcular e salvar a sua rota. Por favor, faça o login.');
+        
+        // Armazena a URL atual para que o login.html saiba para onde retornar
+        localStorage.setItem('redirect_url', window.location.href); 
+        
+        // Redireciona para a página de login
+        window.location.href = 'login.html'; 
+        
+        return; 
+    }
     
+    clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
 
     summaryContainer.style.display = 'none';
