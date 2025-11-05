@@ -22,9 +22,9 @@ html, body {
 body{
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  background: radial-gradient(1200px 700px at 80% -10%, #5f1aa3 0%, transparent 60%),
+  background: radial-gradient(100% 70% at 80% -10%, #5f1aa3 0%, transparent 60%),
               linear-gradient(135deg, var(--bg-1), var(--bg-2));
-  line-height: 1.6;
+  
 }
 
 /* ===== UTILS ===== */
@@ -68,7 +68,7 @@ body{
   color: var(--brand); 
   border-color: var(--brand); 
   background: #00000020;
-   backdrop-filter: blur(4px); 
+  backdrop-filter: blur(4px); 
 }
 .btn-secondary:hover{ 
   background: var(--brand); 
@@ -84,8 +84,8 @@ body{
   color:#fff; 
 }
 .btn-lg{
-   padding: 14px 28px; 
-   border-radius: 14px; 
+  padding: 14px 28px; 
+  border-radius: 14px; 
 }
 
 /* ===== HEADER ===== */
@@ -103,13 +103,13 @@ body{
 }
 
 .logo{ 
-   display:flex; 
-   align-items:center;
-   gap:10px; 
-   font-weight:700; 
-   font-size:1.35rem; 
-   color:#fff; 
-   text-decoration:none;
+  display:flex; 
+  align-items:center;
+  gap:10px; 
+  font-weight:700; 
+  font-size:1.35rem; 
+  color:#fff; 
+  text-decoration:none;
 }
 .logo img{ 
   width:54px; 
@@ -153,7 +153,7 @@ body{
 /* botão Entrar com padding correto dentro do nav */
 .nav .btn{ 
   padding: 10px 16px;
-   border-radius: 12px;
+  border-radius: 12px;
 }
 .btn-login{ 
   margin-left: 8px; 
@@ -220,7 +220,7 @@ body{
 /* ===== HERO ===== */
 .hero{
   position: relative;
-  padding: 72px 0 32px;
+  padding: 0px 2% 3%
 }
 .hero-grid{
   display:grid; 
@@ -259,7 +259,7 @@ body{
   min-height: 360px;
 }
 .hero-img .carro{
-  width: min(100%, 560px);
+  width: min(150%, 210%);
   height: auto;
   filter: drop-shadow(0 12px 30px rgba(0,0,0,.45));
   animation: float 6s ease-in-out infinite;
@@ -277,9 +277,10 @@ body{
 
 /* ===== SECTION GENERIC ===== */
 .section{ 
-  padding: 56px 0; 
+  padding: 0px 0; 
 }
 .section h2{
+  /*margin-top: -7%;*/
   font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
   margin-bottom: 8px;
 }
@@ -377,3 +378,6 @@ a:focus-visible{
   outline-offset: 2px; 
   border-radius: 8px; 
 }
+/* ===== BARRAS LATERAIS (decorativas) ===== */
+/* aparecem nos “vazios” à esquerda e direita, sem afetar o layout */
+ 
