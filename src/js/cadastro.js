@@ -3,7 +3,7 @@
 // CORREÇÃO: Unificando tudo em um único listener 'DOMContentLoaded'
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- LÓGICA PARA CARREGAR OS ESTADOS ---
+   /* // --- LÓGICA PARA CARREGAR OS ESTADOS ---
     const selectEstado = document.getElementById('estado');
 
     async function carregarEstados() {
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    */
 
     // --- LÓGICA DO POP-OVER DE SENHA (USANDO HTML EXISTENTE) ---
     // CORREÇÃO: Este bloco foi reescrito para usar os IDs do seu HTML, 
