@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll; /* Força a barra de rolagem a estar sempre presente */
+}
+
 /* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
 #page-form {
   /*display: flex;
@@ -164,9 +168,12 @@
 /* ======================================================= */
 
 .split-screen-container {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
+  display: flex;
+  width: 100%;
+  /* MUDE ISTO: */
+  min-height: 100vh;
+  /* PARA ISTO: */
+  height: 100vh; 
 }
 
 /* Metade Esquerda (Formulário) */
@@ -177,6 +184,7 @@
     align-items: center;
     padding: 20px; /* Garante um respiro nas bordas */
     background-color: #3f0d64; /* Cor de fundo para combinar com o seu design */
+    overflow-y: auto;
 }
 
 /* Metade Direita (Imagem) */
