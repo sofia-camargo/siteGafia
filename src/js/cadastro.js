@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Regras de validação (para calcular a pontuação)
     const validations = [
-        { test: pass => pass.length >= 12 }, // 1. Comprimento
+        { test: pass => pass.length >= 8 }, // 1. Comprimento
         { test: pass => /\d/.test(pass) },      // 2. Número
         { test: pass => /[a-z]/.test(pass) },   // 3. Minúscula
         { test: pass => /[A-Z]/.test(pass) },   // 4. Maiúscula
