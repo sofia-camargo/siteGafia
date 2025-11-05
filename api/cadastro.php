@@ -84,7 +84,8 @@ try {
         if ($cpf[$c] != $d) {
             return false;
         }
-    }*/
+    }
     return true;
+    */
 }
 ?>

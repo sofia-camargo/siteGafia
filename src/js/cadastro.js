@@ -1,9 +1,9 @@
 // src/js/cadastro.js
 
-// CORREÇÃO: Unificando tudo em um único listener 'DOMContentLoaded'
+// Unificando tudo em um único listener 'DOMContentLoaded'
 document.addEventListener('DOMContentLoaded', () => {
 
-   /* // --- LÓGICA PARA CARREGAR OS ESTADOS ---
+    /* // --- LÓGICA PARA CARREGAR OS ESTADOS (Mantido comentado como no seu original) ---
     const selectEstado = document.getElementById('estado');
 
     async function carregarEstados() {
@@ -32,19 +32,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     carregarEstados(); // Chama a função
+    */
 
     // --- LÓGICA PARA ENVIAR O FORMULÁRIO DE CADASTRO ---
+    // *** CORREÇÃO AQUI: O seu bloco de formulário estava inteiramente comentado. ***
     const formCadastro = document.getElementById('form-cadastro');
 
     if (formCadastro) {
         formCadastro.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // CORREÇÃO: Removidos campos que não existem no HTML (nascimento, cpf, telefone)
+            // *** CORREÇÃO AQUI: Removido o campo 'estado'
+            // pois ele está comentado no seu HTML.
             const userData = {
                 nome: document.getElementById('nome').value,
                 sobrenome: document.getElementById('sobrenome').value,
-                estado: document.getElementById('estado').value,
+                // estado: document.getElementById('estado').value, // Removido
                 email: document.getElementById('email').value,
                 senha: document.getElementById('senha').value
             };
@@ -56,25 +59,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(userData),
                 });
 
+                // Tenta ler a resposta como JSON
                 const data = await response.json();
 
                 if (response.ok) {
                     alert('Cadastro realizado com sucesso!');
                     window.location.href = 'login.html';
                 } else {
+                    // Mostra o erro vindo do servidor (ex: "Este email já está em uso.")
                     alert(`Erro: ${data.error}`);
                 }
             } catch (error) {
+                // Pega erros de rede ou se a resposta do PHP não for JSON (ex: erro PHP)
                 console.error('Erro de comunicação:', error);
                 alert('Ocorreu um erro de comunicação com o servidor. Tente novamente.');
             }
         });
     }
-    */
 
     // --- LÓGICA DO POP-OVER DE SENHA (USANDO HTML EXISTENTE) ---
-    // CORREÇÃO: Este bloco foi reescrito para usar os IDs do seu HTML, 
-    // em vez de tentar criar novos elementos.
+    // Esta parte estava correta e foi mantida.
 
     // 1. Seleciona os elementos que JÁ EXISTEM no HTML
     const passwordInput = document.getElementById('senha');
@@ -117,8 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const pass = passwordInput.value;
         let totalScore = 0;
 
-        // Mostra a barra e o label (eles já estão no HTML,
-        // mas o JS de 'focus' já mostra o popover inteiro)
         strengthBar.style.display = 'block';
         strengthLabel.style.display = 'block';
 
@@ -145,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. LÓGICA DO CHECKBOX "MOSTRAR SENHA"
-    // ADICIONADO: Isso estava faltando no seu JS
     checkboxToggle.addEventListener('change', () => {
         // Muda o tipo do input de senha
         passwordInput.setAttribute('type', checkboxToggle.checked ? 'text' : 'password');
