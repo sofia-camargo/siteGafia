@@ -47,8 +47,8 @@ try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
     // Query alinhada com a sua tabela 'usuarios'
-    $sql = "INSERT INTO usuarios (nome, sobrenome, telefone, senha, id_estado, dt_nasc) 
-            VALUES (:nome, :sobrenome, :cpf, :email, :telefone, :senha, :id_estado, :dt_nasc)";
+    $sql = "INSERT INTO usuarios (nome, sobrenome, senha) 
+            VALUES (:nome, :sobrenome, :email, :senha)";
     
     $stmt = $pdo->prepare($sql);
 
