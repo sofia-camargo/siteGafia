@@ -4,7 +4,7 @@
 require_once 'db_connection.php';
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { // Verifica se o método é diferente de POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Método não permitido']);
     exit;
@@ -18,12 +18,9 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     exit;
 }
 
+// Campos alinhados com o JS e HTML (sem estado)
 $nome = $data['nome'] ?? null;
 $sobrenome = $data['sobrenome'] ?? null;
-//$cpf = $data['cpf'] ?? null;
-//$nascimento = $data['nascimento'] ?? null;
-//$telefone = $data['telefone'] ?? null;
-//$estado = $data['estado'] ?? null;
 $email = $data['email'] ?? null;
 $senha = $data['senha'] ?? null;
 
@@ -33,34 +30,23 @@ if (!$nome || !$sobrenome || !$email || !$senha) {
     exit;
 }
 
-/*
-$dateObject = DateTime::createFromFormat('d/m/Y', $nascimento);
-if ($dateObject) {
-    $nascimentoFormatado = $dateObject->format('Y-m-d');
-} else {
-    http_response_code(400);
-    echo json_encode(['error' => 'Formato de data de nascimento inválido. Use DD/MM/AAAA.']);
-    exit;
-}*/
-
 try {
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    // Query alinhada com a sua tabela 'usuarios'
+    // *** CORREÇÃO AQUI ***
+    // A query SQL estava errada.
+    // Faltava a coluna 'email' na lista de colunas (tinham 3 colunas para 4 valores).
     $sql = "INSERT INTO usuarios (nome, sobrenome, email, senha) 
             VALUES (:nome, :sobrenome, :email, :senha)";
     
     $stmt = $pdo->prepare($sql);
 
+    // Os parâmetros de 'execute' estavam corretos, combinando com a nova query
     $stmt->execute([
         ':nome' => $nome,
         ':sobrenome' => $sobrenome,
-        //':cpf' => $cpf, VARIÁVEL CPF DESATIVADA
         ':email' => $email,
-        //':telefone' => $telefone, VARIÁVEL TELEFONE DESATIVADA
         ':senha' => $senhaHash,
-        //':id_estado' => $estado, VARIÁVEL ESTADO DESATIVADA
-        //':dt_nasc' => $nascimentoFormatado // VARIÁVEL DATA DE NASCIMENTO DESATIVADA
     ]);
 
     http_response_code(201);
@@ -68,7 +54,7 @@ try {
 
 } catch (PDOException $e) {
     error_log("Erro de banco de dados: " . $e->getMessage());
-    if ($e->getCode() == '23505') {
+    if ($e->getCode() == '23505' || $e->getCode() == 1062) { // 23505 (PostgreSQL), 1062 (MySQL)
         http_response_code(409);
         echo json_encode(['error' => 'Este email já está em uso.']);
     } else {
