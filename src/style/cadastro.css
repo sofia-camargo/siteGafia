@@ -23,6 +23,7 @@ html {
   max-width: 600px;
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+
 }
 
 .login-container img {
@@ -57,10 +58,6 @@ html {
 }
 
 /* Estilo para o placeholder dos inputs */
-.login-container input::placeholder {
-  color: #ddd;
-}
-
 /* Remove a aparência padrão do select e ajusta a cor da seta */
 .login-container select {
   -webkit-appearance: none;
@@ -88,6 +85,7 @@ html {
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 10px  ;
 }
 
 .login-container button:hover {
@@ -114,7 +112,7 @@ html {
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 20px;
+  top: 10px;
   left: 20px;
   width: 40px;
   height: 40px;
@@ -130,6 +128,7 @@ html {
 }
 
 .back-button svg {
+  margin-top: 18%;
   width: 24px;   
   height: 24px;
   stroke: currentColor; 
@@ -137,6 +136,7 @@ html {
 
 /* Estilo para linha do formulário com campos lado a lado (Desktop) */
 .form-row {
+  margin-bottom: 10px;
   display: flex;
   gap: 20px;
 }
