@@ -16,16 +16,35 @@
   --container: 1200px;
 }
 
-html, body { 
+/*html, body { 
   height: 100%; scroll-behavior: smooth; 
 }
 body{
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
-  background: radial-gradient(100% 70% at 80% -10%, #5f1aa3 0%, transparent 60%),
+  background: radial-gradient(100% 40% at 80% -10%, #5f1aa3 0%, transparent 60%),
               linear-gradient(135deg, var(--bg-1), var(--bg-2));
   
+} */
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+
+  background:
+   /* radial-gradient(80% 45% at 80% -20%, #5f1aa3 0 45%, var(--bg-2) 46%) no-repeat,
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));*/
+
+
+    radial-gradient(100% 40% at 80% -10%, #5f1aa3 0%, transparent 60%),
+    linear-gradient(135deg, var(--bg-1), var(--bg-2));
+  background-repeat: no-repeat;
+  
+  background-position: top center, center;
 }
+
+
+
 
 /* ===== UTILS ===== */
 .container{ 
@@ -187,10 +206,11 @@ body{
 
   .hamburger{ 
     display:flex;
+  }
   .header-inner{
     padding: 14px 24px;
   }  
-   }
+  
   .nav{
     position: fixed; 
     inset: 64px 16px auto 16px;
@@ -378,6 +398,14 @@ a:focus-visible{
   outline-offset: 2px; 
   border-radius: 8px; 
 }
-/* ===== BARRAS LATERAIS (decorativas) ===== */
-/* aparecem nos “vazios” à esquerda e direita, sem afetar o layout */
+
+
+
  
+.hero {
+  position: relative; /* garante que o pseudo-elemento se posicione dentro do herói */
+  overflow: visible;
+}
+ 
+
+
