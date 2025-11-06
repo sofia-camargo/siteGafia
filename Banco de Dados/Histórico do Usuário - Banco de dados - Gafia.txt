@@ -1,0 +1,81 @@
+-- RESUMO DE VIAGENS
+
+CREATE OR REPLACE VIEW vw_resumo_usuario AS
+SELECT 
+    u.id_usuario,
+    CONCAT(u.nome, ' ', u.sobrenome) AS nome_completo,
+    COUNT(h.id_historico) AS total_viagens,
+    SUM(h.km_viagem) AS total_km,
+    SUM(h.qnt_abastecimento) AS total_abastecimentos,
+    ROUND(AVG(h.km_viagem), 2) AS media_km_por_viagem,
+    ROUND(AVG(EXTRACT(EPOCH FROM h.tempo_viagem)) / 3600, 2) AS media_tempo_viagem_horas
+FROM usuario u
+JOIN historico_viagem h ON u.id_usuario = h.id_usuario
+GROUP BY u.id_usuario, nome_completo;
+
+
+
+-- CARROS UTILIZADOS PELO USUÁRIO
+
+CREATE OR REPLACE VIEW vw_carros_usuario AS
+SELECT 
+    u.id_usuario,
+    CONCAT(u.nome, ' ', u.sobrenome) AS nome_completo,
+    c.id_carro,
+    m.nm_marca,
+    mo.nm_modelo,
+    c.ano_carro,
+    c.dur_bat,
+    COUNT(h.id_historico) AS viagens_com_carro,
+    SUM(h.km_viagem) AS km_total_com_carro
+FROM usuario u
+JOIN historico_viagem h ON u.id_usuario = h.id_usuario
+JOIN carro c ON h.id_carro = c.id_carro
+JOIN marca m ON c.id_marca = m.id_marca
+JOIN modelo mo ON c.id_modelo = mo.id_modelo
+GROUP BY u.id_usuario, nome_completo, c.id_carro, m.nm_marca, mo.nm_modelo, c.ano_carro, c.dur_bat;
+
+
+-- VIAGENS DOS ÚLTIMOS 30 DIAS DO USUÁRIO
+
+CREATE OR REPLACE VIEW vw_viagens_recentes_usuario AS
+SELECT 
+    u.id_usuario,
+    CONCAT(u.nome, ' ', u.sobrenome) AS nome_completo,
+    h.dt_consulta,
+    h.cidade_origem,
+    h.cidade_destino,
+    h.km_viagem,
+    h.tempo_viagem
+FROM usuario u
+JOIN historico_viagem h ON u.id_usuario = h.id_usuario
+WHERE h.dt_consulta >= CURRENT_DATE - INTERVAL '30 days'
+ORDER BY h.dt_consulta DESC;
+
+
+-- HISTÓRICO COMPLETO DO USUÁRIO
+
+CREATE OR REPLACE VIEW vw_historico_usuario AS
+SELECT 
+    u.id_usuario,
+    CONCAT(u.nome, ' ', u.sobrenome) AS nome_completo,
+    h.id_historico,
+    h.dt_consulta,
+    h.cidade_origem,
+    h.cidade_destino,
+    h.km_viagem,
+    h.tempo_viagem,
+    h.qnt_abastecimento,
+    e.uf_estado,
+    m.nm_marca,
+    mo.nm_modelo,
+    c.ano_carro
+FROM historico_viagem h
+JOIN usuario u ON h.id_usuario = u.id_usuario
+JOIN estados e ON h.id_estado = e.id_estado
+JOIN carro c ON h.id_carro = c.id_carro
+JOIN marca m ON c.id_marca = m.id_marca
+JOIN modelo mo ON c.id_modelo = mo.id_modelo;
+
+
+
