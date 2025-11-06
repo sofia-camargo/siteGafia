@@ -37,13 +37,30 @@
 
                     <select id="estado" required>
                         <option value="">Selecione seu estado...</option>
-                    </select>
+                        </select>
+                    
                     <input type="email" id="email" placeholder="Digite seu e-mail" required>
-                    <input type="password" id="senha" placeholder="Crie uma senha" required>
+
+                    <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+                    
+                    <div class="show-password-container">
+                        <input type="checkbox" id="toggleSenha">
+                        <label for="toggleSenha">Mostrar senha</label>
+                    </div>
+
+                    <div id="password-popover" class="hidden">
+                        
+                        <label for="password-strength" class="password-strength-label">Força da senha:</label>
+                        <progress id="password-strength" value="0" max="100"></progress>
+                        
+                        <p class="password-hint-text">
+                            Use 8+ caracteres com maiúsculas, minúsculas, números e símbolos.
+                        </p>
+                    </div>
                     
                     <button type="submit">Cadastrar</button>
                 </form>
-                
+
                 <a href="login.html">Já tem uma conta? Entre</a>
             </div>
             </div>

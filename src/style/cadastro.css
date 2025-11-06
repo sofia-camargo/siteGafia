@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll; /* Força a barra de rolagem a estar sempre presente */
+}
+
 /* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
 #page-form {
   /*display: flex;
@@ -146,8 +150,6 @@
 
 
 /* AJUSTE RESPONSIVO PARA CELULARES */
-
-
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column; /* Coloca os campos um embaixo do outro */
@@ -166,9 +168,12 @@
 /* ======================================================= */
 
 .split-screen-container {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
+  display: flex;
+  width: 100%;
+  /* MUDE ISTO: */
+  min-height: 100vh;
+  /* PARA ISTO: */
+  height: 100vh; 
 }
 
 /* Metade Esquerda (Formulário) */
@@ -179,6 +184,7 @@
     align-items: center;
     padding: 20px; /* Garante um respiro nas bordas */
     background-color: #3f0d64; /* Cor de fundo para combinar com o seu design */
+    overflow-y: auto;
 }
 
 /* Metade Direita (Imagem) */
@@ -206,4 +212,117 @@
     .image-panel {
         display: none;
     }
+}
+
+/* ======================================================= */
+/* === ESTILOS PARA SENHA FORTE (VERSÃO MINIMALISTA) === */
+/* CORRIGIDO: Este bloco estava dentro do @media (900px) */
+/* ======================================================= */
+
+/* 1. O Pop-over (a caixa escondida) */
+#password-popover {
+    width: 100%;
+    box-sizing: border-box;
+    
+    /* Adaptado para o seu tema "glass" */
+    background: rgba(0, 0, 0, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-top: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* 2. Classe .hidden para esconder o pop-over */
+#password-popover.hidden {
+    display: none;
+}
+
+/* 3. O rótulo da barra de progresso (texto branco) */
+.password-strength-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff; /* Corrigido */
+    margin-bottom: 8px;
+    text-align: left; /* Alinha o texto "Força da senha" */
+}
+
+/* 4. A barra de progresso */
+progress#password-strength {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    border-radius: 5px;
+    overflow: hidden;
+}
+/* Fundo da barra (track) - agora mais escuro */
+progress#password-strength::-webkit-progress-bar {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Cores da barra (Vermelho/Laranja/Verde) - Mantidas */
+progress#password-strength::-webkit-progress-value {
+    background-color: #d9534f; 
+    transition: background-color 0.3s ease;
+}
+progress#password-strength.medium::-webkit-progress-value {
+    background-color: #f0ad4e;
+}
+progress#password-strength.strong::-webkit-progress-value {
+    background-color: #4CAF50;
+}
+/* (Versões -moz- para Firefox) */
+progress#password-strength::-moz-progress-bar {
+    background-color: #d9534f;
+    transition: background-color 0.3s ease;
+}
+progress#password-strength.medium::-moz-progress-bar {
+    background-color: #f0ad4e;
+}
+progress#password-strength.strong::-moz-progress-bar {
+    background-color: #4CAF50;
+}
+
+
+/* 5. A linha de texto de ajuda (texto claro) */
+.password-hint-text {
+    font-size: 0.85rem;
+    color: #ddd; /* Corrigido */
+    margin: 10px 0 0 0; 
+    line-height: 1.4;
+    text-align: center; 
+}
+
+
+/* 6. O container do checkbox "Mostrar Senha" (O FIX PRINCIPAL) */
+.show-password-container {
+    display: flex; /* <-- Alinha lado a lado */
+    align-items: center; /* <-- Alinha verticalmente */
+    
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+/* Garante que o checkbox não ocupe 100% da largura */
+.show-password-container input[type="checkbox"] {
+    width: auto; /* <-- Impede que ele quebre a linha */
+    margin-right: 8px; /* Espaço entre o check e o texto */
+    margin-top: 0; /* Reseta margens */
+    margin-bottom: 0;
+}
+
+/* Estilo do texto "Mostrar senha" (texto claro) */
+.show-password-container label {
+    cursor: pointer;
+    color: #e0e0e0; /* Corrigido */
+    user-select: none;
+    
+    /* Garante que o clique no texto também marque o checkbox */
+    width: 100%;
 }
