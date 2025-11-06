@@ -29,6 +29,8 @@ async function initMap() {
     new Autocomplete(destinationInput);
 
     document.getElementById('calculate-route').addEventListener('click', calculateAndDisplayRoute);
+
+    document.getElementById('output-route-summary').style.display = 'none';
 }
 
 function calcularConsumoEnergia(distanciaEmMetros) {
@@ -44,10 +46,43 @@ function calcularConsumoEnergia(distanciaEmMetros) {
     return consumoTotal;
 }
 
+function checkUserLoggedIn() {
+    // -----------------------------------------------------------
+    // ******* ESSA É A PARTE CRÍTICA E DEPENDE DO SEU BACKEND *******
+    // -----------------------------------------------------------
+    
+    // 1. VERIFICAÇÃO COM TOKEN/COOKIE:
+    //  O método mais seguro é verificar se existe um Token JWT ou um Cookie de Sessão válido.
+    
+    const authToken = localStorage.getItem('authToken'); // Exemplo: verifica token no LocalStorage
+    
+    if (authToken) {
+        // Para uma verificação robusta, você faria um FETCH para o servidor
+        // para validar se este token ainda é válido antes de retornar true.
+        return true; 
+    }
+    
+    return true; // Retorne true se o usuário estiver logado
+    
+    return false; // Retorne false se o usuário NÃO estiver logado
+}
 
 function calculateAndDisplayRoute() {
-    clearMarkers();
+
+    if (!checkUserLoggedIn()) {
+        
+        alert('Você precisa estar logado para calcular e salvar a sua rota. Por favor, faça o login.');
+        
+        // Armazena a URL atual para que o login.html saiba para onde retornar
+        localStorage.setItem('redirect_url', window.location.href); 
+        
+        // Redireciona para a página de login
+        window.location.href = 'login.html'; 
+        
+        return; 
+    }
     
+    clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
 
     summaryContainer.style.display = 'none';
@@ -68,23 +103,18 @@ function calculateAndDisplayRoute() {
             const distanciaTotal = rota.distance.text; 
             const duracaoTotal = rota.duration.text;
             
-            // 💡 CORREÇÃO 1: Descomentando o cálculo da energia
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
               
-            /*Exibe a distância e a duração no HTML para o usuário*/
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
             
-            // 💡 CORREÇÃO 2: Exibindo a energia
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
-            
-            // 💡 CORREÇÃO 3 (PRINCIPAL): Descomentando a exibição do contêiner de resumo
+    
             summaryContainer.style.display = 'block'; 
 
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
-            // Se falhar, garante que o contêiner permaneça oculto
             summaryContainer.style.display = 'none'; 
             alert('Não foi possível calcular a rota. Erro: ' + status);
         }
