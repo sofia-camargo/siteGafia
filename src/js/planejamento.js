@@ -46,40 +46,48 @@ function calcularConsumoEnergia(distanciaEmMetros) {
     return consumoTotal;
 }
 
-function checkUserLoggedIn() {
-    // -----------------------------------------------------------
-    // ******* ESSA É A PARTE CRÍTICA E DEPENDE DO SEU BACKEND *******
-    // -----------------------------------------------------------
+async function checkUserLoggedIn() { 
     
-    // 1. VERIFICAÇÃO COM TOKEN/COOKIE:
-    //  O método mais seguro é verificar se existe um Token JWT ou um Cookie de Sessão válido.
+    const authToken = localStorage.getItem('authToken');
     
-    const authToken = localStorage.getItem('authToken'); // Exemplo: verifica token no LocalStorage
-    
-    if (authToken) {
-        // Para uma verificação robusta, você faria um FETCH para o servidor
-        // para validar se este token ainda é válido antes de retornar true.
-        return true; 
+    if (!authToken) {
+        return false;
     }
-    
-    return true; // Retorne true se o usuário estiver logado
-    
-    return false; // Retorne false se o usuário NÃO estiver logado
+
+    try {
+        const response = await fetch('/api/validate_token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}` // Padrão de segurança - envia o token no cabeçalho
+            }
+        });
+
+        if (response.ok) {
+            return true;
+        } else if (response.status === 401 || response.status === 403) {
+            // 401 Unauthorized / 403 Forbidden: Token expirado ou inválido
+            console.warn("Token JWT inválido ou expirado.");
+            return false;
+        } else {
+            // Outros erros de servidor (500)
+            console.error(`Erro inesperado do servidor: ${response.status}`);
+            return false; 
+        }
+
+    } catch (error) {
+        console.error('Falha na comunicação com o servidor de autenticação:', error); //erro de rede
+        return false;
+    }
 }
 
-function calculateAndDisplayRoute() {
+async function calculateAndDisplayRoute() {
 
-    if (!checkUserLoggedIn()) {
-        
-        alert('Você precisa estar logado para calcular e salvar a sua rota. Por favor, faça o login.');
-        
-        // Armazena a URL atual para que o login.html saiba para onde retornar
-        localStorage.setItem('redirect_url', window.location.href); 
-        
-        // Redireciona para a página de login
-        window.location.href = 'login.html'; 
-        
-        return; 
+    if (!await checkUserLoggedIn()) {
+        alert('Você precisa estar logado para obter mais informações. Por favor, faça o login.');
+        localStorage.setItem('redirect_url', window.location.href); // Armazena a URL atual para que o login.html saiba para onde retornar
+        window.location.href = 'login.html'; // Redireciona para a página de login
+        return; // Interrompe a execução da rota se o usuário não estiver logado
     }
     
     clearMarkers();
@@ -102,15 +110,19 @@ function calculateAndDisplayRoute() {
             const rota = result.routes[0].legs[0];
             const distanciaTotal = rota.distance.text; 
             const duracaoTotal = rota.duration.text;
+            const recarga = 
             
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
               
             document.getElementById('output-distancia').innerText = distanciaTotal; 
             document.getElementById('output-duracao').innerText = duracaoTotal;
-            
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
-    
             summaryContainer.style.display = 'block'; 
+           
+            if (!await checkUserLoggedIn() == true) {
+                document.getElementById('output-recarregar"').innerText = '---';
+            }
+           
 
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
@@ -120,7 +132,6 @@ function calculateAndDisplayRoute() {
         }
     });
 }
-
 async function findChargingStations(routeResult) {
     const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary("places");
     const centerOfRoute = routeResult.routes[0].bounds.getCenter();
