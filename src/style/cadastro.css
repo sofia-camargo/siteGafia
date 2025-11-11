@@ -68,7 +68,10 @@ html {
   background-position: right 10px top 50%;
   background-size: .65em auto;
 }
-
+::placeholder {
+  color: #ffffff77; /* coloque a cor que quiser */
+  opacity: 1; /* garante que a cor apareça forte */
+}
 .login-container option {
     background: #3f0d64;
 }
@@ -139,6 +142,7 @@ html {
   margin-bottom: 10px;
   display: flex;
   gap: 20px;
+  
 }
 
 /* Sobrescreve a regra geral APENAS para os inputs dentro do .form-row */
@@ -235,10 +239,58 @@ html {
     transition: all 0.3s ease;
 }
 
-/* 2. Classe .hidden para esconder o pop-over */
+/* 2. Classe .hidden para esconder o pop-over 
 #password-popover.hidden {
     display: none;
+}*/
+
+
+
+/* ====== POPOVER ANIMÁVEL ====== */
+#password-popover {
+  width: 100%;
+  box-sizing: border-box;
+
+  /* visual que você já usa */
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-top: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+  /* estado base (recolhido) */
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+
+  transition:
+    max-height 280ms ease,
+    opacity 200ms ease,
+    transform 280ms ease;
+  will-change: max-height, opacity, transform;
 }
+
+/* quando aberto */
+#password-popover.is-open {
+  /* max-height será setado via JS = scrollHeight */
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #password-popover { transition: none; }
+}
+
+
+
+
+
+
+
 
 /* 3. O rótulo da barra de progresso (texto branco) */
 .password-strength-label {
