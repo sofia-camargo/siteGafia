@@ -83,12 +83,12 @@ async function checkUserLoggedIn() {
 
 async function calculateAndDisplayRoute() {
 
-    if (!await checkUserLoggedIn()) {
+    /*if (!await checkUserLoggedIn()) { -- **Verifica se o usuário está logado antes de calcular a rota**
         alert('Você precisa estar logado para obter mais informações. Por favor, faça o login.');
         localStorage.setItem('redirect_url', window.location.href); // Armazena a URL atual para que o login.html saiba para onde retornar
         window.location.href = 'login.html'; // Redireciona para a página de login
         return; // Interrompe a execução da rota se o usuário não estiver logado
-    }
+    }*/ 
     
     clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
@@ -110,7 +110,7 @@ async function calculateAndDisplayRoute() {
             const rota = result.routes[0].legs[0];
             const distanciaTotal = rota.distance.text; 
             const duracaoTotal = rota.duration.text;
-            const recarga = 
+            //const recarga = 
             
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value); // Em metros
               
@@ -119,11 +119,6 @@ async function calculateAndDisplayRoute() {
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
             summaryContainer.style.display = 'block'; 
            
-            if (!await checkUserLoggedIn() == true) {
-                document.getElementById('output-recarregar"').innerText = '---';
-            }
-           
-
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
@@ -135,20 +130,23 @@ async function calculateAndDisplayRoute() {
 async function findChargingStations(routeResult) {
     const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary("places");
     const centerOfRoute = routeResult.routes[0].bounds.getCenter();
-
+    
     const request = {
-        // A nova API usa uma sintaxe um pouco diferente
         textQuery: 'estação de recarga para veículos elétricos',
         location: centerOfRoute,
         radius: 50000,
     };
     
-    const { places } = await Place.searchByText(request);
+    const {places} = await Place.searchByText(request);
+    
+    console.log("Locais de carregamento encontrados:", places); 
 
     if (places.length) {
         places.forEach(place => {
             createMarkerForPlace(place);
         });
+    } else {
+        console.log('Nenhuma estação de recarga encontrada ao longo da rota.');
     }
 }
 
@@ -164,7 +162,7 @@ async function createMarkerForPlace(place) {
 
 function clearMarkers() {
     for (let i = 0; i < markers.length; i++) {
-        markers[i].map = null; 
+        markers[i].map = null;
     }
     markers = [];
 }
