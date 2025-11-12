@@ -157,10 +157,6 @@ function calcularDadosAvancados(distanciaKm) {
     const tempoRecargaPorParadaMin = 40; // 40 minutos
     document.getElementById('output-tempo-recarrega').innerText = (paradas * tempoRecargaPorParadaMin) + " minutos";
 }
-
-
-// --- FUNÇÃO PRINCIPAL MODIFICADA ---
-async function calculateAndDisplayRoute() {
     clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
     const advancedDetails = document.getElementById('advanced-route-details'); // Novo ID
@@ -186,7 +182,6 @@ async function calculateAndDisplayRoute() {
     directionsService.route(request, (result, status) => {
         if (status == 'OK') {
             const rota = result.routes[0].legs[0];
-            const distanciaKm = rota.distance.value / 1000; 
             
             const energiaEstimado = calcularConsumoEnergia(rota.distance.value);
               
@@ -195,28 +190,6 @@ async function calculateAndDisplayRoute() {
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
             summaryContainer.style.display = 'block'; 
            
-            if (usuarioEstaLogado) {
-                // Tenta pegar o carro selecionado
-                const selectCarro = document.getElementById('select-meu-carro');
-                if (selectCarro.value) {
-                    // Puxa os dados do carro que salvamos no JSON do <option>
-                    const carroInfo = JSON.parse(selectCarro.value);
-                    
-                    // Mostra o grupo de detalhes avançados
-                    advancedDetails.style.display = 'block';
-                    
-                    // Chama a função de cálculo avançado com os dados do carro
-                    calcularDadosAvancados(distanciaKm, carroInfo.autonomia, carroInfo.eficiencia);
-                } else {
-                    // Logado, mas não selecionou carro ou não tem carro
-                    loginPrompt.innerText = "Selecione um veículo da sua garagem para ver mais detalhes.";
-                    loginPrompt.style.display = 'block';
-                }
-            } else {
-                // Não logado: garante que o prompt de login esteja visível
-                loginPrompt.style.display = 'block';
-            }
-
             directionsRenderer.setDirections(result); 
             findChargingStations(result);
         } else {
@@ -230,19 +203,23 @@ async function calculateAndDisplayRoute() {
 async function findChargingStations(routeResult) {
     const { Place } = await google.maps.importLibrary("places");
     const centerOfRoute = routeResult.routes[0].bounds.getCenter();
-
+    
     const request = {
         textQuery: 'estação de recarga para veículos elétricos',
         location: centerOfRoute,
         radius: 50000,
     };
     
-    const { places } = await Place.searchByText(request);
+    const {places} = await Place.searchByText(request);
+    
+    console.log("Locais de carregamento encontrados:", places); 
 
     if (places.length) {
         places.forEach(place => {
             createMarkerForPlace(place);
         });
+    } else {
+        console.log('Nenhuma estação de recarga encontrada ao longo da rota.');
     }
 }
 
@@ -258,7 +235,7 @@ async function createMarkerForPlace(place) {
 
 function clearMarkers() {
     for (let i = 0; i < markers.length; i++) {
-        markers[i].map = null; 
+        markers[i].map = null;
     }
     markers = [];
 }

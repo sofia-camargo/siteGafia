@@ -1,5 +1,4 @@
-// Código que conecta com o banco as marcas dos carros para seleção do usuário na página "Meu Perfil"
-// Ou seja, quando o usuário for adicionar um veículo à sua garagem, ele poderá escolher a marca do carro a partir dos dados fornecidos por esta API.
+
 <?php
 // api/get_marcas.php
 require_once 'db_connection.php';
