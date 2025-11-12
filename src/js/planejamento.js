@@ -37,7 +37,6 @@ async function initMap() {
     document.getElementById('output-route-summary').style.display = 'none';
 }
 
-// --- NOVA FUNÇÃO ---
 // Verifica a sessão PHP (substitui a versão com token)
 async function checkSession() { 
     const loginPrompt = document.getElementById('login-prompt'); // Novo ID
