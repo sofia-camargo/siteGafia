@@ -1,6 +1,8 @@
+// src/js/main.js
+
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // Seletores para os menus da index.html
+    // Seletores para os menus 
     const navGuest = document.getElementById('nav-guest');
     const navUser = document.getElementById('nav-user');
     const userGreeting = document.getElementById('user-greeting');
@@ -30,4 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (navGuest) navGuest.style.display = 'flex';
         if (navUser) navUser.style.display = 'none';
     }
+
+    // A lógica de carrossel JS foi removida
+    // pois sua index.html usa um carrossel 100% CSS
+    // com a classe '.infinite-carousel'.
 });
