@@ -64,6 +64,7 @@ async function checkSession() {
                             id: carro.id_carro,
                             autonomia: carro.dur_bat || 300, // IMPORTANTE: dur_bat precisa estar no DB
                             eficiencia: carro.eficiencia_wh_km || 200 // IMPORTANTE: adicione esta coluna
+                      
                         });
                         option.textContent = `${carro.nm_marca} ${carro.nm_modelo} (${carro.ano_carro})`;
                         selectCarro.appendChild(option);
@@ -80,7 +81,7 @@ async function checkSession() {
             usuarioEstaLogado = false;
             if (loginPrompt) loginPrompt.style.display = 'block'; // Mostra link de login
             if (selectCarro) selectCarro.style.display = 'none'; // Esconde seletor de carro
-        }
+    _   }
     } catch (error) {
         console.error('Falha na comunicação com o servidor de autenticação:', error);
         usuarioEstaLogado = false;
@@ -259,5 +260,4 @@ function clearMarkers() {
     markers = [];
 }
 
-// *** CORREÇÃO 2: A chamada 'initMap()' duplicada foi REMOVIDA daqui ***
-// Não chame initMap() aqui. Deixe o 'callback=initMap' no seu HTML fazer isso.
+// *** CORREÇÃO 2: A chamada 'initMap()' duplicada e o '}' extra foram REMOVIDOS daqui ***
