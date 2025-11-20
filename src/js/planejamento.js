@@ -44,7 +44,8 @@ async function initMap() {
     // Verifica a sessão do usuário assim que a página carrega
     await checkSession(); 
 
-    document.getElementById('output-route-summary').style.display = 'none';
+    const outputSummary = document.getElementById('output-route-summary');
+    if (outputSummary) outputSummary.style.display = 'none';
 }
 
 // Atualiza o objeto veiculoSelecionado quando o usuário muda a seleção
@@ -59,10 +60,10 @@ function updateSelectedVehicle(event) {
     }
 }
 
-// Verifica a sessão PHP (substitui a versão com token)
+// Verifica a sessão PHP
 async function checkSession() { 
-    const loginPrompt = document.getElementById('login-prompt'); // Novo ID
-    const selectCarro = document.getElementById('select-meu-carro'); // Novo ID
+    const loginPrompt = document.getElementById('login-prompt'); 
+    const selectCarro = document.getElementById('select-meu-carro'); 
     
     try {
         const response = await fetch('api/verificar_sessao.php'); 
@@ -121,7 +122,6 @@ async function checkSession() {
 
 // Calcula a penalidade de consumo baseada no peso (passageiros)
 function getPenalidadePorPeso() {
-    // Certifique-se de adicionar <input type="number" id="passageiros"> ao seu HTML
     const inputPassageiros = document.getElementById('passageiros');
     const passageiros = inputPassageiros ? parseInt(inputPassageiros.value) || 1 : 1;
     
@@ -136,9 +136,8 @@ function getPenalidadePorPeso() {
     return 1 + penalidadePercentual; 
 }
 
-// calcula o consumo base (kWh) aplicando a penalidade de peso
+// Calcula o consumo base (kWh) aplicando a penalidade de peso
 function calcularConsumoEnergia(distanciaEmMetros) {
-    
     // Puxa a eficiência do veículo selecionado (Wh/km)
     const eficienciaCarroWhPorKm = veiculoSelecionado.eficiencia; 
     const taxaConsumoKwhPorKm = eficienciaCarroWhPorKm / 1000;
@@ -217,14 +216,13 @@ function formatTime(totalSeconds) {
     return output.join(' e ');
 }
 
-
 function calculateAndDisplayRoute() {
     clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
     const advancedDetails = document.getElementById('advanced-route-details'); 
 
     // Limpa e esconde os campos
-    summaryContainer.style.display = 'none';
+    if (summaryContainer) summaryContainer.style.display = 'none';
     if (advancedDetails) advancedDetails.style.display = 'none';
     
     document.getElementById('output-distancia').innerText = '---'; 
@@ -233,7 +231,7 @@ function calculateAndDisplayRoute() {
     document.getElementById('output-recarregar').innerText = '---';
     document.getElementById('output-paradas').innerText = '---';
     document.getElementById('output-tempo-recarrega').innerText = '---';
-    document.getElementById('output-tempo-total').innerText = '---'; // Limpa o novo campo
+    document.getElementById('output-tempo-total').innerText = '---'; 
 
     const request = {
         origin: document.getElementById('origin-input').value,
@@ -253,7 +251,7 @@ function calculateAndDisplayRoute() {
             document.getElementById('output-distancia').innerText = rota.distance.text; 
             document.getElementById('output-duracao').innerText = rota.duration.text;
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
-            summaryContainer.style.display = 'block'; 
+            if (summaryContainer) summaryContainer.style.display = 'block'; 
             
             const { paradas: paradasNecessarias, tempoRecargaTotalMin } = calcularDadosAvancados(distanciaEmKm); 
     
@@ -265,19 +263,18 @@ function calculateAndDisplayRoute() {
             
             directionsRenderer.setDirections(result); 
             
-            // Se houver paradas necessárias, busca estações
-            if (paradasNecessarias > 0) {
-                findChargingStations(result);
-            }
+            // Se houver paradas necessárias, busca estações usando Open Charge Map
+            // (ou busca mesmo sem paradas para informar ao usuário, conforme sua preferência)
+            findChargingStations(result);
             
         } else {
-            summaryContainer.style.display = 'none'; 
+            if (summaryContainer) summaryContainer.style.display = 'none'; 
             alert('Não foi possível calcular a rota. Erro: ' + status);
         }
     });
 }
 
-// --- FUNÇÃO PARA BUSCAR PONTOS DE CARREGAMENTO DO CARRO ---
+// --- FUNÇÃO PARA BUSCAR PONTOS DE CARREGAMENTO (OPEN CHARGE MAP) ---
 async function findChargingStations(routeResult) {
     // *** Sua chave de API do Open Charge Map ***
     const OCM_API_KEY = "c1b598ab-8144-43d6-9c74-e191d034ab21"; 
@@ -293,6 +290,7 @@ async function findChargingStations(routeResult) {
     const routePath = routeResult.routes[0].overview_path; 
     const fetchPromises = [];
 
+    // Cria requisições assíncronas ao longo do trajeto
     for (let i = 0; i < routePath.length; i += SAMPLE_STEP) {
         const point = routePath[i];
         const latitude = point.lat();
@@ -312,6 +310,7 @@ async function findChargingStations(routeResult) {
                 const stations = await response.json();
                 
                 stations.forEach(station => {
+                    // Evita duplicatas usando o ID único da estação
                     if (!processedOcmIds.has(station.ID)) {
                         processedOcmIds.add(station.ID);
                         allStations.push(station);
