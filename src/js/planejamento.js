@@ -5,6 +5,10 @@ let directionsService;
 let directionsRenderer;
 let markers = []; // Array para guardar os marcadores
 let usuarioEstaLogado = false; // Variável global para sabermos o status
+let veiculoSelecionado = {
+    autonomia: 300, // km (Default)
+    eficiencia: 200 // Wh/km (Default)
+}; // Objeto para armazenar os dados do carro selecionado
 
 async function initMap() {
     // Importa as bibliotecas necessárias da API
@@ -30,11 +34,29 @@ async function initMap() {
     new Autocomplete(destinationInput);
 
     document.getElementById('calculate-route').addEventListener('click', calculateAndDisplayRoute);
+    
+    // Adiciona listener para carregar dados do carro quando o dropdown mudar
+    const selectCarro = document.getElementById('select-meu-carro');
+    if (selectCarro) {
+        selectCarro.addEventListener('change', updateSelectedVehicle);
+    }
 
     // Verifica a sessão do usuário assim que a página carrega
     await checkSession(); 
 
     document.getElementById('output-route-summary').style.display = 'none';
+}
+
+// Atualiza o objeto veiculoSelecionado quando o usuário muda a seleção
+function updateSelectedVehicle(event) {
+    const selectedValue = event.target.value;
+    if (selectedValue) {
+        veiculoSelecionado = JSON.parse(selectedValue);
+        console.log("Veículo selecionado:", veiculoSelecionado);
+    } else {
+        // Volta para os valores default se nada for selecionado
+        veiculoSelecionado = { autonomia: 300, eficiencia: 200 }; 
+    }
 }
 
 // Verifica a sessão PHP (substitui a versão com token)
@@ -55,8 +77,12 @@ async function checkSession() {
             try {
                 const resCarros = await fetch('api/meus_veiculos.php'); // API da garagem
                 const meusCarros = await resCarros.json();
+                
+                // Limpa opções antigas e adiciona a primeira opção
+                selectCarro.innerHTML = '<option value="">Selecione seu Carro</option>';
+                
                 if (meusCarros && meusCarros.length > 0) {
-                    meusCarros.forEach(carro => {
+                    meusCarros.forEach((carro, index) => {
                         const option = document.createElement('option');
                         // Salvamos os dados do carro no 'value' como JSON
                         option.value = JSON.stringify({
@@ -65,6 +91,13 @@ async function checkSession() {
                             eficiencia: carro.eficiencia_wh_km || 200 // IMPORTANTE: adicione esta coluna
                         });
                         option.textContent = `${carro.nm_marca} ${carro.nm_modelo} (${carro.ano_carro})`;
+                        
+                        // Seleciona o primeiro carro por padrão e atualiza a variável global
+                        if (index === 0) {
+                             option.selected = true;
+                             veiculoSelecionado = JSON.parse(option.value);
+                        }
+                        
                         selectCarro.appendChild(option);
                     });
                 } else {
@@ -86,7 +119,6 @@ async function checkSession() {
     }
 }
 
-// --- NOVA FUNÇÃO ---
 // Calcula a penalidade de consumo baseada no peso (passageiros)
 function getPenalidadePorPeso() {
     // Certifique-se de adicionar <input type="number" id="passageiros"> ao seu HTML
@@ -104,13 +136,11 @@ function getPenalidadePorPeso() {
     return 1 + penalidadePercentual; 
 }
 
-// --- FUNÇÃO MODIFICADA ---
-// Agora calcula o consumo base (kWh) aplicando a penalidade de peso
+// calcula o consumo base (kWh) aplicando a penalidade de peso
 function calcularConsumoEnergia(distanciaEmMetros) {
     
-    // **** DADO DO BANCO (PUXAR DO CARRO SELECIONADO) ****
-    // Substituir pela eficiência (Wh/km) do carro selecionado pelo usuário
-    const eficienciaCarroWhPorKm = 200; // Ex: 0.2 kWh/km = 200 Wh/km
+    // Puxa a eficiência do veículo selecionado (Wh/km)
+    const eficienciaCarroWhPorKm = veiculoSelecionado.eficiencia; 
     const taxaConsumoKwhPorKm = eficienciaCarroWhPorKm / 1000;
     
     // Pega o multiplicador de peso
@@ -124,46 +154,78 @@ function calcularConsumoEnergia(distanciaEmMetros) {
     return consumoTotal; // Retorna o total de kWh
 }
 
-// --- NOVA FUNÇÃO ---
-// Calcula paradas necessárias
+// Calcula paradas necessárias e o tempo de recarga total
 function calcularDadosAvancados(distanciaKm) {
-    // **** DADO DO BANCO (PUXAR DO CARRO SELECIONADO) ****
-    // Substituir pela autonomia (dur_bat) do carro selecionado
-    const autonomiaTotalCarroKm = 300; // Ex: 300 km
+    // Puxa a autonomia total do veículo selecionado (km)
+    const autonomiaTotalCarroKm = veiculoSelecionado.autonomia; 
     
-    // Certifique-se de adicionar <input type="number" id="bateria-atual"> ao seu HTML
     const inputBateria = document.getElementById('bateria-atual');
     const bateriaAtual = inputBateria ? parseInt(inputBateria.value) || 100 : 100;
 
     // Calcula a autonomia real com base na bateria e peso
-    const autonomiaRealKm = (autonomiaTotalCarroKm * (bateriaAtual / 100)) / getPenalidadePorPeso();
+    const autonomiaInicialKm = (autonomiaTotalCarroKm * (bateriaAtual / 100)) / getPenalidadePorPeso();
 
     let paradas = 0;
     let recargaNecessaria = "Não";
+    let tempoRecargaTotalMin = 0; // Inicializa em 0
 
-    if (distanciaKm > autonomiaRealKm) {
+    if (distanciaKm > autonomiaInicialKm) {
         recargaNecessaria = "Sim";
-        // Cálculo simples: (distância restante) / (autonomia total)
-        const distanciaRestante = distanciaKm - autonomiaRealKm;
-        paradas = Math.ceil(distanciaRestante / autonomiaTotalCarroKm);
+        
+        // Distância restante após usar a bateria inicial
+        let distanciaParaCobrir = distanciaKm - autonomiaInicialKm; 
+        
+        // O veículo fará recargas completas (usando a autonomia total do carro)
+        paradas = Math.ceil(distanciaParaCobrir / autonomiaTotalCarroKm); 
     }
 
-    // Atualiza a interface
+    const tempoRecargaPorParadaMin = 40; // 40 minutos (estimativa)
+    tempoRecargaTotalMin = paradas * tempoRecargaPorParadaMin;
+    
     document.getElementById('output-recarregar').innerText = recargaNecessaria;
     document.getElementById('output-paradas').innerText = paradas;
+    document.getElementById('output-tempo-recarrega').innerText = tempoRecargaTotalMin + " minutos";
+
+    // Mostra o bloco de detalhes avançados se o usuário estiver logado
+    const advancedDetails = document.getElementById('advanced-route-details');
+    if (usuarioEstaLogado && advancedDetails) {
+        advancedDetails.style.display = 'block';
+    }
     
-    // Simples estimativa de tempo
-    const tempoRecargaPorParadaMin = 40; // 40 minutos
-    document.getElementById('output-tempo-recarrega').innerText = (paradas * tempoRecargaPorParadaMin) + " minutos";
+    // Retorna as paradas e o tempo de recarga para o cálculo do tempo total
+    return { paradas: paradas, tempoRecargaTotalMin: tempoRecargaTotalMin }; 
 }
+
+// Função auxiliar para formatar segundos em um formato legível (Ex: 1 hora e 30 minutos)
+function formatTime(totalSeconds) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    let output = [];
+    if (hours > 0) {
+        output.push(`${hours} hora${hours > 1 ? 's' : ''}`);
+    }
+    if (minutes > 0) {
+        output.push(`${minutes} minuto${minutes > 1 ? 's' : ''}`);
+    }
+    
+    // Retorna a saída, ou um valor padrão se for muito curto
+    if (output.length === 0) {
+        return "< 1 minuto";
+    }
+
+    return output.join(' e ');
+}
+
+
+function calculateAndDisplayRoute() {
     clearMarkers();
     const summaryContainer = document.getElementById('output-route-summary');
-    const advancedDetails = document.getElementById('advanced-route-details'); // Novo ID
-    const loginPrompt = document.getElementById('login-prompt'); // Novo ID
+    const advancedDetails = document.getElementById('advanced-route-details'); 
 
-    // Limpa os campos
+    // Limpa e esconde os campos
     summaryContainer.style.display = 'none';
-    advancedDetails.style.display = 'none'; // Esconde o grupo avançado
+    if (advancedDetails) advancedDetails.style.display = 'none';
     
     document.getElementById('output-distancia').innerText = '---'; 
     document.getElementById('output-duracao').innerText = '---'; 
@@ -171,6 +233,7 @@ function calcularDadosAvancados(distanciaKm) {
     document.getElementById('output-recarregar').innerText = '---';
     document.getElementById('output-paradas').innerText = '---';
     document.getElementById('output-tempo-recarrega').innerText = '---';
+    document.getElementById('output-tempo-total').innerText = '---'; // Limpa o novo campo
 
     const request = {
         origin: document.getElementById('origin-input').value,
@@ -181,16 +244,32 @@ function calcularDadosAvancados(distanciaKm) {
     directionsService.route(request, (result, status) => {
         if (status == 'OK') {
             const rota = result.routes[0].legs[0];
+            const distanciaEmMetros = rota.distance.value;
+            const distanciaEmKm = distanciaEmMetros / 1000;
+            const tempoConducaoSegundos = rota.duration.value; // Duração da condução (em segundos)
             
-            const energiaEstimado = calcularConsumoEnergia(rota.distance.value);
-              
+            const energiaEstimado = calcularConsumoEnergia(distanciaEmMetros);
+                
             document.getElementById('output-distancia').innerText = rota.distance.text; 
             document.getElementById('output-duracao').innerText = rota.duration.text;
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
             summaryContainer.style.display = 'block'; 
-           
+            
+            const { paradas: paradasNecessarias, tempoRecargaTotalMin } = calcularDadosAvancados(distanciaEmKm); 
+    
+            const tempoRecargaSegundos = tempoRecargaTotalMin * 60;
+            const tempoTotalViagemSegundos = tempoConducaoSegundos + tempoRecargaSegundos;
+            
+            // Exibe o tempo total formatado
+            document.getElementById('output-tempo-total').innerText = formatTime(tempoTotalViagemSegundos);
+            
             directionsRenderer.setDirections(result); 
-            findChargingStations(result);
+            
+            // Se houver paradas necessárias, busca estações
+            if (paradasNecessarias > 0) {
+                findChargingStations(result);
+            }
+            
         } else {
             summaryContainer.style.display = 'none'; 
             alert('Não foi possível calcular a rota. Erro: ' + status);
@@ -198,27 +277,67 @@ function calcularDadosAvancados(distanciaKm) {
     });
 }
 
-// --- Funções do Google Maps (sem alteração) ---
+// --- FUNÇÃO PARA BUSCAR PONTOS DE CARREGAMENTO DO CARRO ---
 async function findChargingStations(routeResult) {
-    const { Place } = await google.maps.importLibrary("places");
-    const centerOfRoute = routeResult.routes[0].bounds.getCenter();
+    // *** Sua chave de API do Open Charge Map ***
+    const OCM_API_KEY = "c1b598ab-8144-43d6-9c74-e191d034ab21"; 
     
-    const request = {
-        textQuery: 'estação de recarga para veículos elétricos',
-        location: centerOfRoute,
-        radius: 50000,
-    };
-    
-    const {places} = await Place.searchByText(request);
-    
-    console.log("Locais de carregamento encontrados:", places); 
+    // Configurações de busca
+    const DISTANCE_KM = 5;       // Raio de busca em torno do ponto
+    const MAX_RESULTS = 5;       // Máximo de resultados por ponto amostrado
+    const SAMPLE_STEP = 50;      // Amostrar 1 ponto a cada 50 pontos da rota
 
-    if (places.length) {
-        places.forEach(place => {
-            createMarkerForPlace(place);
-        });
-    } else {
-        console.log('Nenhuma estação de recarga encontrada ao longo da rota.');
+    clearMarkers(); 
+    
+    const processedOcmIds = new Set();
+    const routePath = routeResult.routes[0].overview_path; 
+    const fetchPromises = [];
+
+    for (let i = 0; i < routePath.length; i += SAMPLE_STEP) {
+        const point = routePath[i];
+        const latitude = point.lat();
+        const longitude = point.lng();
+
+        const OCM_URL = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${latitude}&longitude=${point.lng()}&distance=${DISTANCE_KM}&maxresults=${MAX_RESULTS}&key=${OCM_API_KEY}`;
+        
+        fetchPromises.push(fetch(OCM_URL));
+    }
+    
+    try {
+        const responses = await Promise.all(fetchPromises);
+        let allStations = [];
+
+        for (const response of responses) {
+            if (response.ok) {
+                const stations = await response.json();
+                
+                stations.forEach(station => {
+                    if (!processedOcmIds.has(station.ID)) {
+                        processedOcmIds.add(station.ID);
+                        allStations.push(station);
+                    }
+                });
+            } else {
+                console.error(`Falha em uma requisição OCM: ${response.status}`);
+            }
+        }
+        
+        console.log(`Total de ${allStations.length} estações únicas encontradas ao longo do trajeto.`);
+        
+        if (allStations.length > 0) {
+            allStations.forEach(station => {
+                const placeData = {
+                    location: { 
+                        lat: station.AddressInfo.Latitude, 
+                        lng: station.AddressInfo.Longitude 
+                    },
+                    displayName: station.AddressInfo.Title 
+                };
+                createMarkerForPlace(placeData);
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao processar as buscas de estações:', error);
     }
 }
 
