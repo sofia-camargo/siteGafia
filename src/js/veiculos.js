@@ -1,176 +1,178 @@
-// Substitua o conteúdo de src/js/veiculos.js por isto:
+// src/js/veiculos.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Seletores dos dropdowns
+    // Referências aos elementos do DOM
+    const listaVeiculosDiv = document.getElementById('lista-veiculos');
     const selectMarca = document.getElementById('select-marca');
     const selectModelo = document.getElementById('select-modelo');
     const selectAno = document.getElementById('select-ano');
-    const form = document.getElementById('form-add-veiculo');
+    const formAddVeiculo = document.getElementById('form-add-veiculo');
 
-    // Proteção de página
-    fetch('api/verificar_sessao.php')
-        .then(res => res.json())
-        .then(session => {
-            if (!session.loggedIn) {
-                window.location.href = 'login.html';
-            } else {
-                carregarMeusVeiculos(); // Carrega a garagem do usuário
-                carregarMarcas(); // Inicia o processo dos dropdowns
+    // --- FUNÇÕES GERAIS DE BUSCA E GESTÃO ---
+
+    // 1. Função Genérica para fazer requisições FETCH
+    const fetchData = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                // Lança um erro se o status HTTP não for 2xx
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            return response.json();
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            return { error: 'Falha ao buscar dados.' };
+        }
+    };
+
+    // 2. Carregar todos os veículos do usuário (Lista Inicial)
+    const carregarVeiculos = async () => {
+        const veiculos = await fetchData('api/meus_veiculos.php');
+        listaVeiculosDiv.innerHTML = ''; // Limpa o conteúdo anterior
+
+        if (veiculos.error) {
+            listaVeiculosDiv.innerHTML = `<p class="error-msg">Erro: ${veiculos.error}</p>`;
+            return;
+        }
+
+        if (veiculos.length === 0) {
+            listaVeiculosDiv.innerHTML = '<p>Você ainda não tem veículos na sua garagem.</p>';
+            return;
+        }
+
+        // Renderiza cada veículo como um "card"
+        veiculos.forEach(veiculo => {
+            const card = document.createElement('div');
+            card.className = 'card veiculo-card';
+            card.innerHTML = `
+                <h3>${veiculo.nm_marca} ${veiculo.nm_modelo}</h3>
+                <p>Ano: ${veiculo.ano_carro}</p>
+                <p>Bateria: ${veiculo.dur_bat} kWh</p>
+                <button class="btn btn-danger btn-sm" data-carro-id="${veiculo.id_carro}">Remover</button>
+            `;
+            listaVeiculosDiv.appendChild(card);
         });
 
-    // 1. Carregar Marcas
-    async function carregarMarcas() {
-        try {
-            const res = await fetch('api/get_marcas.php');
-            const marcas = await res.json();
-            
-            selectMarca.innerHTML = '<option value="">Selecione a Marca</option>';
-            marcas.forEach(marca => {
-                selectMarca.innerHTML += `<option value="${marca.id_marca}">${marca.nm_marca}</option>`;
-            });
-        } catch (e) {
-            console.error('Erro ao carregar marcas', e);
-        }
-    }
+        // Adiciona listeners para os botões de remover
+        document.querySelectorAll('.btn-danger').forEach(button => {
+            button.addEventListener('click', removerVeiculo);
+        });
+    };
 
-    // 2. Evento: Ao mudar a Marca, carregar Modelos
-    selectMarca.addEventListener('change', async () => {
-        const marcaId = selectMarca.value;
+    // 3. Remover um veículo (DELETE request)
+    const removerVeiculo = async (event) => {
+        const carroId = event.target.dataset.carroId;
+        if (!confirm(`Tem certeza que deseja remover o veículo ID ${carroId} da sua garagem?`)) {
+            return;
+        }
+
+        const response = await fetch('api/meus_veiculos.php', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ carro_id: carroId })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+            carregarVeiculos(); // Recarrega a lista
+        } else {
+            alert(`Erro ao remover: ${result.error}`);
+        }
+    };
+
+
+    // --- LÓGICA DE PREENCHIMENTO EM CASCATA ---
+
+    // 4. Preenche o Select de Marcas
+    const preencherMarcas = async () => {
+        const marcas = await fetchData('api/marcas.php');
+        if (marcas.error) return;
+
+        marcas.forEach(marca => {
+            const option = new Option(marca.nm_marca, marca.id_marca);
+            selectMarca.add(option);
+        });
+        selectMarca.disabled = false;
+    };
+
+    // 5. Preenche o Select de Modelos
+    const preencherModelos = async (marcaId) => {
+        // Limpa e desativa os selects dependentes
+        selectModelo.innerHTML = '<option value="">Selecione o Modelo</option>';
+        selectAno.innerHTML = '<option value="">Selecione o Ano</option>';
         selectModelo.disabled = true;
         selectAno.disabled = true;
-        selectModelo.innerHTML = '<option value="">Carregando...</option>';
-        
+
         if (!marcaId) return;
 
-        try {
-            const res = await fetch(`api/get_modelos.php?id_marca=${marcaId}`);
-            const modelos = await res.json();
-            
-            selectModelo.innerHTML = '<option value="">Selecione o Modelo</option>';
-            modelos.forEach(modelo => {
-                selectModelo.innerHTML += `<option value="${modelo.id_modelo}">${modelo.nm_modelo}</option>`;
-            });
-            selectModelo.disabled = false;
-        } catch (e) {
-            console.error('Erro ao carregar modelos', e);
-        }
-    });
+        const modelos = await fetchData(`api/modelos.php?marca_id=${marcaId}`);
+        if (modelos.error) return;
 
-    // 3. Evento: Ao mudar o Modelo, carregar Anos (e o id_carro)
-    selectModelo.addEventListener('change', async () => {
-        const modeloId = selectModelo.value;
+        modelos.forEach(modelo => {
+            const option = new Option(modelo.nm_modelo, modelo.id_modelo);
+            selectModelo.add(option);
+        });
+        selectModelo.disabled = false;
+    };
+
+    // 6. Preenche o Select de Anos (Carros)
+    const preencherAnos = async (modeloId) => {
+        selectAno.innerHTML = '<option value="">Selecione o Ano</option>';
         selectAno.disabled = true;
-        selectAno.innerHTML = '<option value="">Carregando...</option>';
 
         if (!modeloId) return;
 
-        try {
-            // Cuidado: o nome do seu arquivo pode estar 'get_ano_idCarrp.php'
-            const res = await fetch(`api/get_ano_idCarrp.php?id_modelo=${modeloId}`);
-            const anos = await res.json();
-            
-            selectAno.innerHTML = '<option value="">Selecione o Ano</option>';
-            anos.forEach(carro => {
-                // O valor da opção é o id_carro, o texto é o ano
-                selectAno.innerHTML += `<option value="${carro.id_carro}">${carro.ano_carro}</option>`;
-            });
-            selectAno.disabled = false;
-        } catch (e) {
-            console.error('Erro ao carregar anos', e);
-        }
+        const carros = await fetchData(`api/carros.php?modelo_id=${modeloId}`);
+        if (carros.error) return;
+
+        carros.forEach(carro => {
+            // O valor do option é o ID do carro (id_carro), que será enviado ao PHP
+            const option = new Option(`${carro.ano_carro} (${carro.dur_bat} kWh)`, carro.id_carro);
+            selectAno.add(option);
+        });
+        selectAno.disabled = false;
+    };
+
+
+    // --- EVENT LISTENERS ---
+
+    selectMarca.addEventListener('change', (e) => {
+        preencherModelos(e.target.value);
     });
 
-    // 4. Evento: Submissão do Formulário
-    form.addEventListener('submit', async (e) => {
+    selectModelo.addEventListener('change', (e) => {
+        preencherAnos(e.target.value);
+    });
+
+    // 7. Evento de submissão do formulário (POST request para adicionar)
+    formAddVeiculo.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // O ID do carro vem do dropdown de ano/id
-        const carroId = selectAno.value; 
-
+        const carroId = selectAno.value;
         if (!carroId) {
-            alert('Por favor, selecione marca, modelo e ano do veículo.');
+            alert('Por favor, selecione a marca, modelo e ano do veículo.');
             return;
         }
 
-        try {
-            const response = await fetch('api/meus_veiculos.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ carro_id: carroId })
-            });
-            const result = await response.json();
-            alert(result.message || result.error);
-            
-            if (response.ok) {
-                carregarMeusVeiculos(); // Recarrega a lista da garagem
-                // Limpa os selects
-                form.reset();
-                selectModelo.disabled = true;
-                selectAno.disabled = true;
-            }
-        } catch (error) {
-            alert('Erro de comunicação ao adicionar veículo.');
+        const response = await fetch('api/meus_veiculos.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ carro_id: carroId })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message);
+            formAddVeiculo.reset();
+            preencherModelos(null); // Reseta os selects
+            carregarVeiculos(); // Recarrega a lista
+        } else {
+            alert(`Erro ao adicionar: ${result.error}`);
         }
     });
+
+    // --- INICIALIZAÇÃO ---
+    preencherMarcas();
+    carregarVeiculos();
 });
-
-// Função para carregar a garagem (você já tinha, só copiei aqui)
-async function carregarMeusVeiculos() {
-    const lista = document.getElementById('lista-veiculos');
-    lista.innerHTML = '<p class="muted">A carregar sua garagem...</p>';
-
-    try {
-        const response = await fetch('api/meus_veiculos.php'); // Método GET (padrão)
-        const veiculos = await response.json();
-        
-        lista.innerHTML = ''; 
-        if (veiculos.length === 0) {
-            lista.innerHTML = '<p class="muted">Você ainda não tem veículos na sua garagem.</p>';
-            return;
-        }
-
-        veiculos.forEach(v => {
-            const card = document.createElement('article');
-            card.className = 'card';
-            // Adicionamos o 'data-id' para o botão de excluir (veja item 6)
-            card.innerHTML = `
-                <h3>${v.nm_marca} ${v.nm_modelo}</h3>
-                <p>Ano: ${v.ano_carro}</p>
-                <button class="btn-excluir" data-id="${v.id_carro}" style="color: red; background: none; border: none; cursor: pointer; font-size: 0.9rem; padding: 5px;">Excluir</button>
-            `;
-            lista.appendChild(card);
-        });
-        
-        // Adiciona os eventos de clique aos novos botões de excluir (veja item 6)
-        adicionarEventosExcluir();
-
-    } catch (error) {
-        lista.innerHTML = '<p class="muted">Ocorreu um erro ao carregar seus veículos.</p>';
-    }
-}
-
-// (Funções do Item 6: Excluir Veículo)
-function adicionarEventosExcluir() {
-    document.querySelectorAll('.btn-excluir').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const carroId = e.target.dataset.id;
-            if (confirm('Tem certeza que deseja remover este veículo da sua garagem?')) {
-                try {
-                    const res = await fetch('api/meus_veiculos.php', {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ carro_id: carroId })
-                    });
-                    const result = await res.json();
-                    alert(result.message || result.error);
-                    if (res.ok) {
-                        carregarMeusVeiculos(); // Recarrega a lista
-                    }
-                } catch (err) {
-                    alert('Erro ao comunicar com o servidor.');
-                }
-            }
-        });
-    });
-}
