@@ -41,7 +41,5 @@ async function carregarPerfil() {
     // Preenche o formulário com os dados do utilizador
     document.getElementById('nome').value = data.nome;
     document.getElementById('sobrenome').value = data.sobrenome;
-    document.getElementById('telefone').value = data.telefone;
     document.getElementById('email').value = data.email;
-    document.getElementById('cpf').value = data.cpf;
 }
