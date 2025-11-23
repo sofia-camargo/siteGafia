@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="src/style/style.css" />
 </head>
 <body>
+  <div class="layout">
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="/" aria-label="GAFIA - Início">
@@ -27,7 +28,7 @@
       <nav id="nav-guest" class="nav" aria-label="Principal">
         <a href="#inicio">Início</a>
         <a href="#sobre">Sobre</a>
-        <a href="planejamento.html">Planejador de Viagem</a>
+        <a href="planejamento.html">Planejar Viagem</a>
         <a href="cadastro.html">Cadastro</a>
         <a href="#contato">Contato</a>
         <a href="login.html" class="btn btn-outline btn-login">Entrar</a>
@@ -79,6 +80,24 @@
         <p>Interface moderna, responsiva e pensada para uso em viagens.</p>
       </article>
     </div>
+
+    <!-- ===== CARROSSEL DE DESTAQUES ===== -->
+<!-- ===== CARROSSEL INFINITO ===== -->
+<div class="infinite-carousel">
+  <div class="infinite-track">
+    <div class="card"><h3>Recargas Rápidas</h3><p>Estações de carregamento rápido ao longo da rota.</p></div>
+    <div class="card"><h3>Autonomia Estendida</h3><p>O GAFIA calcula rotas para máxima eficiência.</p></div>
+    <div class="card"><h3>Clima e Relevo</h3><p>Analisa temperatura e altitude para ajustar consumo.</p></div>
+    <div class="card"><h3>Histórico de Rotas</h3><p>Revise viagens e aprenda com seus trajetos.</p></div>
+    <!-- DUPLICADOS pra dar o looping contínuo -->
+    <div class="card"><h3>Recargas Rápidas</h3><p>Estações de carregamento rápido ao longo da rota.</p></div>
+    <div class="card"><h3>Autonomia Estendida</h3><p>O GAFIA calcula rotas para máxima eficiência.</p></div>
+    <div class="card"><h3>Clima e Relevo</h3><p>Analisa temperatura e altitude para ajustar consumo.</p></div>
+    <div class="card"><h3>Histórico de Rotas</h3><p>Revise viagens e aprenda com seus trajetos.</p></div>
+  </div>
+</div>
+</div>
+
   </section>
 
   <section id="cadastro" class="cta">
@@ -106,7 +125,7 @@
   </footer>
 
   <script src="src/js/main.js"></script>
-
+</div>
 </body>
 
 </html>

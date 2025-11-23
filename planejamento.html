@@ -14,41 +14,73 @@
     <link rel="stylesheet" href="src/style/planejamento.css">
 </head>
 <body>
+    
     <header class="site-header">
       <div class="container header-inner">
         <a class="logo" href="index.html" aria-label="GAFIA - Início">
           <img src="src/img/Gafialogo.png" alt="Logo GAFIA" width="54" height="54" />
           <span>GAFIA</span>
         </a>
-        <nav class="nav" aria-label="Principal">
-            <a href="index.html#inicio">Início</a>
-            <a href="cadastro.html">Cadastro</a>
-            <a href="login.html" class="btn btn-outline btn-login">Entrar</a>
+
+        <nav id="nav-guest" class="nav" aria-label="Principal">
+          <a href="index.html#inicio">Início</a>
+          <a href="index.html#sobre">Sobre</a>
+          <a href="planejamento.html">Planejar Viagem</a>
+          <a href="cadastro.html">Cadastro</a>
+          <a href="index.html#contato">Contato</a>
+          <a href="login.html" class="btn btn-outline btn-login">Entrar</a>
         </nav>
+
+        <nav id="nav-user" class="nav" aria-label="Principal do Utilizador" style="display: none;">
+          <a href="planejamento.html">Planejar Viagem</a>
+          <a href="veiculos.html">Meus Veículos</a>
+          <a href="perfil.html">Meu Perfil</a>
+          <span id="user-greeting" style="color: var(--muted); align-self: center;"></span>
+          <a href="api/logout.php" class="btn btn-outline btn-login">Sair</a>
+        </nav>
+        
       </div>
     </header>
 
     <main class="planner-container">
         <div class="controls">
             <h1>Planeje sua Rota Elétrica</h1>
-            <p>Insira os pontos de partida e chegada para encontrar a rota e os pontos de recarga no caminho.</p>
+            <p>Insira os dados da sua viagem para encontrar a rota e os pontos de recarga.</p>
+            
             <input type="text" id="origin-input" placeholder="Digite o ponto de partida">
             <input type="text" id="destination-input" placeholder="Digite o ponto de chegada">
+
+            <div style="display: flex; gap: 1rem; margin-bottom: 12px;">
+                <input type="number" id="bateria-atual" placeholder="% de Bateria Atual" min="0" max="100" style="width: 100%;">
+                <input type="number" id="passageiros" placeholder="Nº de Passageiros" min="1" max="5" style="width: 100%;">
+            </div>
+
+            <select id="select-meu-carro" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--stroke); background-color: #ffffff1a; color: var(--text); font-family: 'Poppins', sans-serif; font-size: 1rem;">
+                <option value="">Selecione seu veículo...</option>
+                </select>
+            
             <button id="calculate-route" class="btn btn-primary">Calcular Viagem e Pontos de Recarga</button>
         </div>
 
         <div id="map"></div>
+        
         <div id="directions-panel">
           <div id="output-route-summary">
             <p>Distância Estimada: <strong id="output-distancia">---</strong></p>
             <p>Duração Estimada: <strong id="output-duracao">---</strong></p>
             <p>Consumo de Energia Estimado: <strong id="output-energia">---</strong></p>
-            <p>Precisará de recarga durante o trajeto? <strong id="output-recarregar">---</strong></p>
-            <p>Quantidade de Paradas para Recarga: <strong id="output-paradas">---</strong></p>
+
+            <div id="advanced-route-details" style="display: none;"> 
+                <p>Precisará de recarga? <strong id="output-recarregar">---</strong></p>
+                <p>Paradas para Recarga: <strong id="output-paradas">---</strong></p>
+                <p>Tempo Total de Recarga: <strong id="output-tempo-recarrega">---</strong></p>
+                <p>Tempo Total de Viagem: <strong id="output-tempo-total">---</strong></p>
+            </div>
+
+            <p id="login-prompt">Para mais informações, faça o <a target="_self" href="login.html"> login.</a></p>
           </div>
         </div>
         
-
     </main>
     
     <footer class="site-footer">
@@ -58,10 +90,11 @@
       </div>
     </footer>
 
-    <script async
+    <script src="src/js/main.js"></script>
+    <script src="src/js/planejamento.js"></script>
+
+    <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3Qi6LrQ-STK0QOfuH8ECzVhwcPb0FBsc&libraries=places&callback=initMap">
     </script>
-    
-    <script src="src/js/planejamento.js"></script>
-</body>
+    </body>
 </html>

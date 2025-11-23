@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll; /* Força a barra de rolagem a estar sempre presente */
+}
+
 /* ===== ESTILO PARA CENTRALIZAR PÁGINAS DE FORMULÁRIO ===== */
 #page-form {
   /*display: flex;
@@ -19,6 +23,7 @@
   max-width: 600px;
   text-align: center;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+
 }
 
 .login-container img {
@@ -53,10 +58,6 @@
 }
 
 /* Estilo para o placeholder dos inputs */
-.login-container input::placeholder {
-  color: #ddd;
-}
-
 /* Remove a aparência padrão do select e ajusta a cor da seta */
 .login-container select {
   -webkit-appearance: none;
@@ -67,7 +68,10 @@
   background-position: right 10px top 50%;
   background-size: .65em auto;
 }
-
+::placeholder {
+  color: #ffffff77; /* coloque a cor que quiser */
+  opacity: 1; /* garante que a cor apareça forte */
+}
 .login-container option {
     background: #3f0d64;
 }
@@ -84,6 +88,7 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 10px  ;
 }
 
 .login-container button:hover {
@@ -110,7 +115,7 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 20px;
+  top: 10px;
   left: 20px;
   width: 40px;
   height: 40px;
@@ -126,6 +131,7 @@
 }
 
 .back-button svg {
+  margin-top: 18%;
   width: 24px;   
   height: 24px;
   stroke: currentColor; 
@@ -133,8 +139,10 @@
 
 /* Estilo para linha do formulário com campos lado a lado (Desktop) */
 .form-row {
+  margin-bottom: 10px;
   display: flex;
   gap: 20px;
+  
 }
 
 /* Sobrescreve a regra geral APENAS para os inputs dentro do .form-row */
@@ -164,9 +172,12 @@
 /* ======================================================= */
 
 .split-screen-container {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
+  display: flex;
+  width: 100%;
+  /* MUDE ISTO: */
+  min-height: 100vh;
+  /* PARA ISTO: */
+  height: 100vh; 
 }
 
 /* Metade Esquerda (Formulário) */
@@ -177,6 +188,7 @@
     align-items: center;
     padding: 20px; /* Garante um respiro nas bordas */
     background-color: #3f0d64; /* Cor de fundo para combinar com o seu design */
+    overflow-y: auto;
 }
 
 /* Metade Direita (Imagem) */
@@ -227,10 +239,58 @@
     transition: all 0.3s ease;
 }
 
-/* 2. Classe .hidden para esconder o pop-over */
+/* 2. Classe .hidden para esconder o pop-over 
 #password-popover.hidden {
     display: none;
+}*/
+
+
+
+/* ====== POPOVER ANIMÁVEL ====== */
+#password-popover {
+  width: 100%;
+  box-sizing: border-box;
+
+  /* visual que você já usa */
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-top: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+  /* estado base (recolhido) */
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+
+  transition:
+    max-height 280ms ease,
+    opacity 200ms ease,
+    transform 280ms ease;
+  will-change: max-height, opacity, transform;
 }
+
+/* quando aberto */
+#password-popover.is-open {
+  /* max-height será setado via JS = scrollHeight */
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #password-popover { transition: none; }
+}
+
+
+
+
+
+
+
 
 /* 3. O rótulo da barra de progresso (texto branco) */
 .password-strength-label {

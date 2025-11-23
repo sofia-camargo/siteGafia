@@ -10,8 +10,8 @@
 <body id="page-form">
 
     <div class="split-screen-container">
-      
-      <div class="image-panel">
+    
+    <div class="image-panel">
             </div>
 
         <div class="form-panel">
@@ -35,9 +35,9 @@
                         <input type="text" id="sobrenome" placeholder="Digite seu sobrenome" required>
                     </div>
 
-                    <select id="estado" required>
+                    <!--<select id="estado" required>
                         <option value="">Selecione seu estado...</option>
-                        </select>
+                        </select> -->
                     
                     <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
@@ -48,7 +48,10 @@
                         <label for="toggleSenha">Mostrar senha</label>
                     </div>
 
-                    <div id="password-popover" class="hidden">
+                    <!--<div id="password-popover" class="hidden">-->
+                        <div id="password-popover" aria-hidden="true">
+
+                        
                         
                         <label for="password-strength" class="password-strength-label">Força da senha:</label>
                         <progress id="password-strength" value="0" max="100"></progress>

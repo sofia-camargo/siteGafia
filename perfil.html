@@ -9,74 +9,28 @@
   <link rel="stylesheet" href="perfil.css">
 </head>
 <body>
+    <header class="site-header"></header>
 
-<aside class="menu-lateral">
-  <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
-  <nav>
-    <ul>
-      <li><a href="perfil.html" class="active">Minha conta</a></li>
-      <li><a href="senha.html">Alterar senha</a></li>
-      <li><a href="historico.html">Históricos</a></li>
-      <li><a href="garagem.html">Garagem</a></li>
-    </ul>
-  </nav>
-</aside>
-
-<div class="main-wrap">
-    <section class="vidro">
-      <h1>Editar informações</h1>
-
-      <div class="profile-grid">
-        <div class="section-title">Informações pessoais</div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-user"></i>
-          <input type="text" value="Virna Amaral">
-        </div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-envelope"></i>
-          <input type="email" value="virna.amaral.pereira@gmail.com">
-        </div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-calendar-days"></i>
-          <input type="date" value="1997-05-08">
-        </div>
-
-        <div class="section-title full">Endereço</div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-globe"></i>
-          <select>
-            <option>Brasil</option>
-            <option>Portugal</option>
-            <option>EUA</option>
-          </select>
-        </div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-map-pin"></i>
-          <input type="text" value="13606-030">
-        </div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-city"></i>
-          <input type="text" value="São Paulo">
-        </div>
-
-        <div class="input-group">
-          <i class="fa-solid fa-location-dot"></i>
-          <input type="text" value="Araras">
-        </div>
-
-        <div class="actions full">
-          <button class="save-btn">Salvar</button>
-          <button class="delete-btn">Excluir conta</button>
+    <main class="section container">
+        <div class="login-container" style="background: var(--card); margin: 0 auto; color: var(--text);">
+            <h2 style="color: var(--text);">Meu Perfil</h2>
+            <p style="color: var(--muted);">Atualize suas informações pessoais.</p>
+            
+            <form id="form-perfil">
+                <input type="text" id="nome" placeholder="Nome" required>
+                <input type="text" id="sobrenome" placeholder="Sobrenome" required>
+                
+                <input type="email" id="email" placeholder="Email (não pode ser alterado)" readonly disabled>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Alterações</button>
+            </form>
+            <div id="perfil-mensagem" style="margin-top: 1rem;"></div>
         </div>
       </div>
     </section>
 </div>
 
+    <footer class="site-footer"></footer>
+    <script src="src/js/perfil.js"></script>
 </body>
 </html>
