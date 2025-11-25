@@ -50,36 +50,28 @@
 
         <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
 
-        <!-- ADICIONAR NOVO VEÍCULO -->
-        <h2 class="section-title">Adicionar Veículo</h2>
+                <!-- ADICIONAR NOVO VEÍCULO -->
+                <h2 class="section-title">Adicionar Veículo</h2>
 
-        <form id="form-add-veiculo" class="profile-grid full">
+        <form id="form-add-veiculo" class="profile-grid full" style="position: relative;">
+            
+            <input type="hidden" id="selected-carro-id" name="carro_id">
 
-            <!-- MARCA -->
-            <div class="input-group full">
-                <i class="fa-solid fa-flag-checkered"></i>
-                <select id="select-marca">
-                    <option value="">Selecione a Marca</option>
-                </select>
-            </div>
+            <div class="input-group full" style="position: relative;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input 
+                    type="text" 
+                    id="input-pesquisa-carro" 
+                    placeholder="Digite o nome do carro (ex: BYD Seal, Volvo...)" 
+                    autocomplete="off"
+                >
+                
+                </div>
 
-            <!-- MODELO -->
-            <div class="input-group full">
-                <i class="fa-solid fa-car"></i>
-                <select id="select-modelo" disabled>
-                    <option value="">Selecione o Modelo</option>
-                </select>
-            </div>
+            <div id="sugestoes-veiculos" class="suggestions-dropdown">
+                </div>
 
-            <!-- ANO -->
-            <div class="input-group full">
-                <i class="fa-solid fa-calendar"></i>
-                <select id="select-ano" disabled>
-                    <option value="">Selecione o Ano</option>
-                </select>
-            </div>
-
-            <button type="submit" class="save-btn full" style="margin-top:10px;">
+            <button type="submit" id="btn-adicionar" class="save-btn full" style="margin-top:10px;" disabled>
                 Adicionar à Garagem
             </button>
 
