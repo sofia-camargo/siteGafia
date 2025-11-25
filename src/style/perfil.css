@@ -1,0 +1,278 @@
+/* ===== RESET ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ===== FUNDO GERAL ===== */
+html, body { height: 100%; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top left, #3f0d64, #1b0330 80%);
+  color: #fff;
+  display: flex;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+/* ===== MENU LATERAL ===== */
+.menu-lateral {
+  width: 240px;
+  min-width: 200px;
+  background: rgba(63,13,100,0.18);
+  backdrop-filter: blur(12px);
+  padding: 28px 18px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.menu-lateral .brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+  font-size:1.05rem;
+}
+.menu-lateral .brand i { color: #e0b3ff; }
+
+.menu-lateral nav ul { list-style:none; margin-top:6px; }
+.menu-lateral nav a{
+  display:block;
+  color: #ffffffcc;
+  text-decoration:none;
+  padding:10px 12px;
+  border-radius:10px;
+  transition: all .25s ease;
+  font-weight:500;
+}
+.menu-lateral nav a:hover{
+  transform: translateX(6px);
+  background: linear-gradient(90deg, #ff00cc22, #7b2cbf22);
+  color: #fff;
+}
+/* ===== MENU SELECIONADO ===== */
+.menu-lateral nav a.active {
+  background: linear-gradient(90deg, #ff00cc55, #7b2cbf55);
+  border-left: 4px solid #ff00cc;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(255, 0, 204, 0.2);
+  transform: translateX(4px);
+}
+
+.menu-lateral nav a.active:hover {
+  transform: translateX(6px);
+  filter: brightness(1.1);
+}
+
+/* ===== AREA PRINCIPAL ===== */
+.main-wrap {
+  flex:1;
+  padding: 36px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+/* ===== PAINEL VIDRO ===== */
+.vidro {
+  width: 760px;
+  max-width: calc(100% - 80px);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(18px);
+  border-radius: 18px;
+  padding: 30px 30px;
+  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+}
+
+.vidro h1 {
+  font-size: 1.6rem;
+  margin-bottom: 14px;
+  color: #fff;
+  border-bottom: 2px solid rgba(199,125,255,0.12);
+  padding-bottom: 12px;
+}
+
+.tabs {
+  display:flex;
+  gap:10px;
+  margin: 14px 0 22px;
+  flex-wrap:wrap;
+}
+.tabs button{
+  background: transparent;
+  border: 1px solid rgba(199,125,255,0.35);
+  color: #e8d6ff;
+  padding:8px 14px;
+  border-radius: 24px;
+  cursor:pointer;
+}
+.tabs button.active {
+  background: linear-gradient(90deg,#ff00cc,#7b2cbf);
+  color:#fff;
+  border: none;
+  box-shadow: 0 6px 18px rgba(123,44,191,0.18);
+  transform: translateY(-2px);
+}
+
+/* ===== FORM LAYOUT ===== */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 30px;
+  align-items: start;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  color: #e6d6ff;
+  margin-bottom: 8px;
+  grid-column: 1 / -1;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background: rgba(255,255,255,0.04);
+  padding:10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all .22s ease;
+}
+.input-group i {
+  color: #c77dff;
+  min-width:18px;
+  text-align:center;
+  font-size:1.05rem;
+}
+.input-group input,
+.input-group select {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  width:100%;
+  font-size: .95rem;
+}
+.input-group:focus-within {
+  box-shadow: 0 6px 18px rgba(127,63,191,0.12);
+  border-color: rgba(199,125,255,0.5);
+  transform: translateY(-2px);
+}
+
+/* ===== BOTÕES ===== */
+.actions {
+  display:flex;
+  gap:14px;
+  margin-top: 8px;
+  grid-column: 1 / -1;
+  align-items:center;
+}
+
+.save-btn {
+  flex:1;
+  background: linear-gradient(90deg,#ff00cc,#7b2cbf);
+  color: #fff;
+  border:none;
+  padding:12px 18px;
+  border-radius: 40px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 10px 30px rgba(255,0,204,0.18);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.save-btn:hover{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(255,0,204,0.28);
+  filter: brightness(1.06);
+}
+
+.delete-btn {
+  background: linear-gradient(90deg,#ff6b6b,#9f4bbf);
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius: 40px;
+  font-weight:600;
+  cursor:pointer;
+  width:180px;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 960px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .menu-lateral { display:none; }
+  .main-wrap { padding: 20px; }
+  .vidro { width:100%; padding: 22px; }
+}
+.donut-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.donut-card {
+    text-align: center;
+    color: #fff;
+}
+
+.donut {
+    --progress: 0deg;
+
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+
+    background: conic-gradient(
+        #c000ff var(--progress),
+        #512b52 0deg
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    transition: 0.4s ease;
+
+    box-shadow: 0 0 25px rgba(170, 0, 255, 0.6),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Furo no meio */
+.donut .center {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #16021f;
+    position: absolute;
+    z-index: 1;
+    box-shadow: inset 0 0 12px rgba(138, 0, 255, 0.5);
+}
+
+.donut span {
+    position: absolute;
+    z-index: 2;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.donut:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 35px rgba(190, 0, 255, 0.7);
+}
+
+.donut-card p {
+    margin-top: 10px;
+    font-size: 1rem;
+    opacity: 0.9;
+}
