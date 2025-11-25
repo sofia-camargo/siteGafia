@@ -126,9 +126,9 @@ if ($action === 'search_veiculos' && $method === 'GET') {
                 FROM carro c
                 JOIN marca m ON c.id_marca = m.id_marca
                 JOIN modelo mo ON c.id_modelo = mo.id_modelo
-                WHERE m.nm_marca LIKE :term 
-                   OR mo.nm_modelo LIKE :term 
-                   OR c.ano_carro LIKE :term 
+                WHERE m.nm_marca ILIKE :term 
+                OR mo.nm_modelo ILIKE :term 
+                OR CAST(c.ano_carro AS TEXT) ILIKE :term 
                 ORDER BY m.nm_marca, mo.nm_modelo, c.ano_carro DESC
                 LIMIT 10"; 
         
