@@ -2,46 +2,95 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <title>Meus Veículos - GAFIA</title>
-    <link rel="stylesheet" href="src/style/style.css" />
-    </head>
+    <title>Minha Garagem</title>
+
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Seu CSS principal (o grande roxo) -->
+    <link rel="stylesheet" href="src/style/perfil.css">
+</head>
+
 <body>
-    <header class="site-header"></header>
 
-    <main class="section container">
-        <h2>Minha Garagem</h2>
-        <p class="section-lead">Aqui estão os veículos elétricos associados à sua conta.</p>
-        
-        <div id="lista-veiculos" class="cards">
-            </div>
+<!-- ===== MENU LATERAL ===== -->
+<aside class="menu-lateral">
+    <div class="brand">
+        <i class="fa-solid fa-car-battery"></i> Minha Garagem
+    </div>
 
-        <hr style="margin: 40px 0; border-color: var(--stroke);">
+    <nav>
+        <ul>
+            <li><a href="perfil.html">Minha Conta</a></li>
+            <li><a href="senha.html">Alterar Senha</a></li>
+            <li><a href="historico.html">Históricos</a></li>
+            <li><a href="garagem.html" class="active">Garagem</a></li>
+        </ul>
+    </nav>
+</aside>
 
-        <section id="adicionar-veiculo">
-            <h2>Adicionar Novo Veículo à Garagem</h2>
-            <p class="section-lead">Selecione um veículo da nossa lista para adicionar à sua garagem.</p>
-            <form id="form-add-veiculo" class="cta-inner" style="background: var(--card); border-radius: var(--radius-lg); padding: 2rem;">
+<!-- ===== CONTEÚDO PRINCIPAL ===== -->
+<div class="main-wrap">
+    <section class="vidro">
+
+        <h1>Minha Garagem</h1>
+
+        <div class="profile-grid full">
+            <p style="color:#e6d6ff; font-size:1rem;">
+                Aqui estão os veículos elétricos associados à sua conta.
+            </p>
+        </div>
+
+        <!-- LISTA DE VEÍCULOS -->
+        <h2 class="section-title">Meus Veículos</h2>
+
+        <div id="lista-veiculos" class="profile-grid full" style="gap:20px;">
+            <!-- Veículos serão carregados aqui -->
+        </div>
+
+        <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
+
+        <!-- ADICIONAR NOVO VEÍCULO -->
+        <h2 class="section-title">Adicionar Veículo</h2>
+
+        <form id="form-add-veiculo" class="profile-grid full">
+
+            <!-- MARCA -->
+            <div class="input-group full">
+                <i class="fa-solid fa-flag-checkered"></i>
                 <select id="select-marca">
                     <option value="">Selecione a Marca</option>
                 </select>
+            </div>
 
+            <!-- MODELO -->
+            <div class="input-group full">
+                <i class="fa-solid fa-car"></i>
                 <select id="select-modelo" disabled>
                     <option value="">Selecione o Modelo</option>
                 </select>
+            </div>
 
-                 <select id="select-ano" disabled>
+            <!-- ANO -->
+            <div class="input-group full">
+                <i class="fa-solid fa-calendar"></i>
+                <select id="select-ano" disabled>
                     <option value="">Selecione o Ano</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-lg">Adicionar à Minha Garagem</button>
-            </form>
-        </section>
+            </div>
 
-    </main>
+            <button type="submit" class="save-btn full" style="margin-top:10px;">
+                Adicionar à Garagem
+            </button>
 
-    <footer class="site-footer"></footer>
-    
-    <script src="src/js/main.js"></script> 
-    
-    <script src="src/js/veiculos.js"></script>
+        </form>
+
+    </section>
+</div>
+
+<!-- SCRIPTS -->
+<script src="src/js/main.js"></script>
+<script src="src/js/veiculos.js"></script>
+
 </body>
 </html>
