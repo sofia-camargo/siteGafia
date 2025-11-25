@@ -24,17 +24,20 @@ $method = $_SERVER['REQUEST_METHOD'];
 // LISTAR VEÍCULOS NA GARAGEM (GET: ?action=list_garage)
 if ($action === 'list_garage' && $method === 'GET') {
     try {
-        $sql = "SELECT c.id_carro, c.ano_carro, c.dur_bat, c.eficiencia_wh_km, m.nm_marca, mo.nm_modelo
+        // REMOVIDO: c.eficiencia_wh_km
+        $sql = "SELECT c.id_carro, c.ano_carro, c.dur_bat, m.nm_marca, mo.nm_modelo
                 FROM carro c
                 JOIN garagem g ON c.id_carro = g.id_carro
                 JOIN marca m ON c.id_marca = m.id_marca
                 JOIN modelo mo ON c.id_modelo = mo.id_modelo
                 WHERE g.id_usuario = :user_id";
+        
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':user_id' => $userId]);
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Garante que a eficiência está presente (valor padrão se não estiver no DB)
+        // O código abaixo (que já existe no seu arquivo) vai garantir 
+        // que o campo eficiencia exista no JSON final, mesmo sem vir do banco.
         foreach ($veiculos as &$veiculo) {
             if (!isset($veiculo['eficiencia_wh_km'])) {
                 $veiculo['eficiencia_wh_km'] = 200; 
