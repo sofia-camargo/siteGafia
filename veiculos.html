@@ -21,12 +21,21 @@
             <h2>Adicionar Novo Veículo à Garagem</h2>
             <p class="section-lead">Selecione um veículo da nossa lista para adicionar à sua garagem.</p>
             <form id="form-add-veiculo" class="cta-inner" style="background: var(--card); border-radius: var(--radius-lg); padding: 2rem;">
-                <select id="select-carro" style="width: 100%; padding: 12px; font-size: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                    <option value="">A carregar lista de veículos...</option>
+                <select id="select-marca">
+                    <option value="">Selecione a Marca</option>
+                </select>
+
+                <select id="select-modelo" disabled>
+                    <option value="">Selecione o Modelo</option>
+                </select>
+
+                 <select id="select-ano" disabled>
+                    <option value="">Selecione o Ano</option>
                 </select>
                 <button type="submit" class="btn btn-primary btn-lg">Adicionar à Minha Garagem</button>
             </form>
         </section>
+
     </main>
 
     <footer class="site-footer"></footer>
