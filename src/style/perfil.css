@@ -211,6 +211,8 @@ body {
   .main-wrap { padding: 20px; }
   .vidro { width:100%; padding: 22px; }
 }
+
+/* ===== DONUT CHART ===== */
 .donut-container {
     display: flex;
     flex-wrap: wrap;
@@ -276,8 +278,8 @@ body {
     font-size: 1rem;
     opacity: 0.9;
 }
-/* Adicione no arquivo: src/style/perfil.css */
 
+/* ===== BOTÃO VOLTAR (MENU LATERAL) ===== */
 .btn-voltar {
     /* Remove a margem superior/esquerda excessiva pois o menu já tem padding */
     margin-bottom: 20px; 
@@ -303,4 +305,61 @@ body {
 .btn-voltar:hover {
     background: rgba(255, 255, 255, 0.35);
     transform: translateX(2px); /* Efeito visual de movimento */
+}
+
+
+/* ===== BUSCA ESTILO GOOGLE (AUTOCOMPLETE) ===== */
+
+/* Container da lista de sugestões */
+.suggestions-dropdown {
+    position: absolute;
+    top: 60px; /* Ajuste conforme a altura do seu input */
+    left: 0;
+    width: 100%;
+    background: rgba(45, 13, 70, 0.95); /* Fundo roxo escuro quase opaco */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 12px 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Escondido por padrão */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Item individual da lista */
+.sugestao-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sugestao-item:last-child {
+    border-bottom: none;
+}
+
+.sugestao-item:hover {
+    background: rgba(255, 0, 204, 0.2); /* Cor de destaque ao passar o mouse */
+}
+
+.sugestao-item strong {
+    color: #e6d6ff;
+    font-weight: 600;
+}
+
+/* Scrollbar personalizada para a lista */
+.suggestions-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+.suggestions-dropdown::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+.suggestions-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
 }
