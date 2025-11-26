@@ -1,68 +1,52 @@
-// src/js/perfil.js
-
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Verifica a sessão e carrega o perfil se estiver logado
+    // 1. Verifica se está logado antes de carregar
     fetch('api/verificar_sessao.php')
         .then(res => res.json())
         .then(session => {
             if (!session.loggedIn) {
-                // Se não estiver logado, manda para o login
                 window.location.href = 'login.html'; 
             } else {
-                // Se estiver logado, carrega os dados nos inputs
-                carregarPerfil();
+                carregarPerfil(); // Carrega os dados se estiver logado
             }
-        })
-        .catch(err => console.error("Erro ao verificar sessão:", err));
+        });
 
-    // Lógica de salvar (Update) continua aqui...
+    // 2. Configura o botão de salvar
     const formPerfil = document.getElementById('form-perfil');
     if (formPerfil) {
-        formPerfil.addEventListener('submit', atualizarPerfil);
+        formPerfil.addEventListener('submit', salvarPerfil);
     }
 });
 
-// Função para buscar dados e preencher o formulário
 async function carregarPerfil() {
     try {
         const response = await fetch('api/buscar_perfil.php');
         const data = await response.json();
         
         if (data.error) {
-            console.error("Erro da API:", data.error);
+            console.error(data.error);
             return;
         }
 
-        // PREENCHIMENTO DOS CAMPOS
-        // O ID do elemento HTML deve bater com o ID usado no getElementById
-        setVal('nome', data.nome);
-        setVal('sobrenome', data.sobrenome);
-        setVal('email', data.email);
-        setVal('telefone', data.telefone);
-        setVal('dt_nasc', data.dt_nasc);
+        // Preenche os campos do HTML com os dados do banco
+        if (data.nome) document.getElementById('nome').value = data.nome;
+        if (data.sobrenome) document.getElementById('sobrenome').value = data.sobrenome;
+        if (data.email) document.getElementById('email').value = data.email;
+        if (data.telefone) document.getElementById('telefone').value = data.telefone;
+        if (data.dt_nasc) document.getElementById('dt_nasc').value = data.dt_nasc;
 
-        // Nota: Seu banco de dados atual (CreateSQL.txt) não tem colunas para
-        // CEP, Cidade ou País na tabela de usuários, apenas 'id_estado'.
-        // Por isso, não estamos preenchendo esses campos visuais ainda.
+        // OBS: Os campos de endereço (CEP, Cidade) ficarão vazios 
+        // porque eles não existem no seu banco de dados atual.
 
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
     }
 }
 
-// Função auxiliar para evitar erros se o campo não existir no HTML
-function setVal(id, valor) {
-    const el = document.getElementById(id);
-    if (el) {
-        el.value = valor || ''; // Se o valor for null, deixa vazio
-    }
-}
-
-// Função para salvar as alterações (Update)
-async function atualizarPerfil(e) {
+async function salvarPerfil(e) {
     e.preventDefault();
     
-    const dadosAtualizados = {
+    // Pega os dados atuais dos campos
+    const dados = {
         nome: document.getElementById('nome').value,
         sobrenome: document.getElementById('sobrenome').value,
         email: document.getElementById('email').value,
@@ -70,32 +54,27 @@ async function atualizarPerfil(e) {
         dt_nasc: document.getElementById('dt_nasc').value
     };
 
-    const mensagemEl = document.getElementById('perfil-mensagem');
-    if(mensagemEl) {
-        mensagemEl.textContent = "Salvando...";
-        mensagemEl.style.color = "#ccc";
-    }
+    const msgDiv = document.getElementById('perfil-mensagem');
+    msgDiv.textContent = "Salvando...";
 
     try {
         const response = await fetch('api/atualizar_perfil.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosAtualizados)
+            body: JSON.stringify(dados)
         });
         
         const result = await response.json();
         
-        if(mensagemEl) {
-            if (response.ok) {
-                mensagemEl.textContent = result.message;
-                mensagemEl.style.color = "#4CAF50"; // Verde
-            } else {
-                mensagemEl.textContent = result.error || "Erro ao salvar.";
-                mensagemEl.style.color = "#ff6b6b"; // Vermelho
-            }
+        if (response.ok) {
+            msgDiv.textContent = "Dados atualizados com sucesso!";
+            msgDiv.style.color = "lightgreen";
+        } else {
+            msgDiv.textContent = result.error || "Erro ao atualizar.";
+            msgDiv.style.color = "salmon";
         }
     } catch (error) {
-        console.error("Erro na requisição:", error);
-        if(mensagemEl) mensagemEl.textContent = "Erro de conexão.";
+        console.error(error);
+        msgDiv.textContent = "Erro de conexão.";
     }
 }
