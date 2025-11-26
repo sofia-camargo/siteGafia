@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Protege a página e carrega os dados
+    // 1. Protege a página e carrega os dados
     fetch('api/verificar_sessao.php')
         .then(res => res.json())
         .then(session => {
@@ -10,38 +10,74 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    // Evento de submissão do formulário
-    document.getElementById('form-perfil').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const dadosAtualizados = {
-            nome: document.getElementById('nome').value,
-            sobrenome: document.getElementById('sobrenome').value,
-            telefone: document.getElementById('telefone').value,
-        };
+    // 2. Evento de submissão do formulário
+    const formPerfil = document.getElementById('form-perfil');
+    if (formPerfil) {
+        formPerfil.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Coleta os dados de TODOS os campos (incluindo email e data de nascimento)
+            const dadosAtualizados = {
+                nome: document.getElementById('nome').value,
+                sobrenome: document.getElementById('sobrenome').value,
+                email: document.getElementById('email').value,      // Adicionado
+                telefone: document.getElementById('telefone').value,
+                dt_nasc: document.getElementById('dt_nasc').value   // Adicionado
+            };
 
-        const response = await fetch('api/atualizar_perfil.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosAtualizados)
+            const mensagemEl = document.getElementById('perfil-mensagem');
+            mensagemEl.textContent = "Salvando...";
+            mensagemEl.style.color = "#ccc";
+
+            try {
+                const response = await fetch('api/atualizar_perfil.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    mensagemEl.textContent = result.message;
+                    mensagemEl.style.color = "#4CAF50"; // Verde (Sucesso)
+                } else {
+                    mensagemEl.textContent = result.error || "Erro ao salvar.";
+                    mensagemEl.style.color = "#ff6b6b"; // Vermelho (Erro)
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                mensagemEl.textContent = "Erro de conexão com o servidor.";
+                mensagemEl.style.color = "#ff6b6b";
+            }
         });
-        const result = await response.json();
-        const mensagemEl = document.getElementById('perfil-mensagem');
-        mensagemEl.textContent = result.message || result.error;
-    });
+    }
 });
 
 async function carregarPerfil() {
-    const response = await fetch('api/buscar_perfil.php');
-    const data = await response.json();
-    if(data.error) {
-        alert(data.error);
-        return;
-    }
+    try {
+        const response = await fetch('api/buscar_perfil.php');
+        const data = await response.json();
+        
+        if(data.error) {
+            console.error(data.error);
+            return;
+        }
 
-    // Preenche o formulário com os dados do utilizador
-    document.getElementById('nome').value = data.nome;
-    document.getElementById('sobrenome').value = data.sobrenome;
-    document.getElementById('telefone').value = data.telefone;
-    document.getElementById('email').value = data.email;
-    document.getElementById('cpf').value = data.cpf;
+        // Preenche o formulário com os dados do utilizador
+        // Usamos verificações (if) para evitar erros caso algum campo não exista no HTML
+        if(document.getElementById('nome')) document.getElementById('nome').value = data.nome || '';
+        if(document.getElementById('sobrenome')) document.getElementById('sobrenome').value = data.sobrenome || '';
+        if(document.getElementById('email')) document.getElementById('email').value = data.email || '';
+        if(document.getElementById('telefone')) document.getElementById('telefone').value = data.telefone || '';
+        
+        // Preenche a data de nascimento
+        if(document.getElementById('dt_nasc')) document.getElementById('dt_nasc').value = data.dt_nasc || '';
+
+        // Nota: Removi o CPF daqui pois retiramos ele do HTML para edição, 
+        // já que geralmente não se permite alterar CPF após cadastro.
+
+    } catch (error) {
+        console.error("Erro ao carregar perfil:", error);
+    }
 }

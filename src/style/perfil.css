@@ -276,3 +276,31 @@ body {
     font-size: 1rem;
     opacity: 0.9;
 }
+/* Adicione no arquivo: src/style/perfil.css */
+
+.btn-voltar {
+    /* Remove a margem superior/esquerda excessiva pois o menu já tem padding */
+    margin-bottom: 20px; 
+    width: 100%; /* Opcional: faz o botão ocupar a largura do menu */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre o ícone e o texto */
+    
+    padding: 10px 18px;
+    font-size: 16px;
+    font-weight: 500;
+
+    background: rgba(255, 255, 255, 0.20);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil para destacar */
+    border-radius: 12px;
+    color: #fff;
+
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-voltar:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateX(2px); /* Efeito visual de movimento */
+}
