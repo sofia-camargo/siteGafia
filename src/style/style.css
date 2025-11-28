@@ -461,3 +461,118 @@ a:focus-visible{
   .infinite-track { animation-duration: 45s; }
 }
 
+/* ===== SEÇÃO DE CONTATO / EQUIPE ===== */
+
+/* Estiliza o container principal para centralizar */
+#contato {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+#contato h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+/* Container que organiza os cards em grade (Grid) */
+/* ===== SEÇÃO EQUIPE (FLEXBOX PARA CENTRALIZAR) ===== */
+
+.team-grid {
+    display: flex;             /* Mudamos de Grid para Flex */
+    flex-wrap: wrap;           /* Permite quebrar linha */
+    justify-content: center;   /* O SEGREDO: Centraliza tudo horizontalmente */
+    gap: 20px;
+    margin-top: 40px;
+    max-width: 1200px;         /* Limite de largura geral para não ficar muito espalhado */
+    margin-left: auto;         /* Centraliza o container na tela */
+    margin-right: auto;
+}
+
+.dev-card {
+    /* Controle de tamanho dos cards */
+    flex: 1 1 280px;          /* Cresce (1), Encolhe (1), Base (280px) */
+    max-width: 340px;         /* Impede que o card fique gigante em telas largas */
+    
+    /* Estilo "Vidro" igual ao anterior */
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* O resto continua igual... */
+.dev-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ... (Mantenha os estilos de .dev-info, .dev-email, .dev-social que passei antes) */
+
+/* Nome do desenvolvedor */
+.dev-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+/* Cargo (Desenvolvedor) */
+.dev-role {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Email */
+.dev-email {
+    font-size: 0.85rem;
+    color: var(--brand); /* Cor roxa do seu tema */
+    text-decoration: none;
+    margin-bottom: 15px;
+    display: block;
+    word-break: break-all; /* Evita que email grande quebre o layout */
+}
+
+.dev-email:hover {
+    text-decoration: underline;
+}
+
+/* Área dos ícones (GitHub/LinkedIn) */
+.dev-social {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: auto; /* Empurra os ícones para o final do card */
+}
+
+.dev-social a {
+    color: #fff;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.dev-social a:hover {
+    background: var(--brand); /* Fundo roxo ao passar o mouse */
+    transform: scale(1.1);
+}
+
+
+

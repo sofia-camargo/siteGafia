@@ -76,7 +76,7 @@ async function checkSession() {
 
             // Carrega os veículos do usuário no dropdown
             try {
-                const resCarros = await fetch('api/meus_veiculos.php'); // API da garagem
+                const resCarros = await fetch('api/meus_veiculos.php?action=list_garage');
                 const meusCarros = await resCarros.json();
                 
                 // Limpa opções antigas e adiciona a primeira opção
