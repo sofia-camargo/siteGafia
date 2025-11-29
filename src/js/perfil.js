@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Protege a página e carrega os dados
+    // 1. Verifica sessão
     fetch('api/verificar_sessao.php')
         .then(res => res.json())
         .then(session => {
             if (!session.loggedIn) {
-                window.location.href = 'login.html'; // Redireciona se não houver sessão
+                window.location.href = 'login.html';
             } else {
                 carregarPerfil();
-                // Chama a função de resumo após verificar a sessão
+                // Chama a função de resumo após verificar a sessão (Nova funcionalidade)
                 carregarResumoUsuario(); 
             }
-        });
+        })
+        .catch(err => console.error("Erro sessão:", err));
 
-    // 2. Evento de submissão do formulário
+    // 2. Configura o formulário para salvar
     const formPerfil = document.getElementById('form-perfil');
     if (formPerfil) {
         formPerfil.addEventListener('submit', async (e) => {
@@ -62,8 +63,8 @@ async function carregarPerfil() {
         const response = await fetch('api/buscar_perfil.php');
         const data = await response.json();
         
-        if(data.error) {
-            console.error(data.error);
+        if (data.error) {
+            console.error("Erro API:", data.error);
             return;
         }
 
