@@ -33,6 +33,7 @@ O objetivo da disciplina é desenvolver um CRUD com o tema do Objetivo de Desenv
 * PostgreSQL
 ### APIs e Integrações de Terceiros
 * Open Charge
+* Maps JavaScript API
 
 ## Funcionalidades
 * Login e cadastro do usuário;

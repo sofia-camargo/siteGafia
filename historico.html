@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Histórico</title>
+  <title>Histórico de Viagens</title>
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="src/style/perfil.css">
+  <link rel="stylesheet" href="src/style/perfil.css"> 
+  <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
 </head>
 <body>
 
@@ -31,125 +32,100 @@
 
     <div class="profile-grid full">
       <p style="color:#e6d6ff; font-size:1rem;">
-        • Total de rotas percorridas: 10 <br>
-        • Recargas feitas: 15<br>
-        • Km rodados: 150 <br> 
-        • Tempo Total: 5h 35m<br>
+        • Total de rotas percorridas: <strong id="total-viagens">...</strong> <br>
+        • Total de abastecimentos: <strong id="total-abastecimentos">...</strong><br>
+        • Total de Km rodados: <strong id="total-km">...</strong> <br> 
+        • Média KM por Viagem: <strong id="media-km">...</strong> km <br>
+        • Tempo Médio por Viagem: <strong id="media-tempo">...</strong> 
       </p>
     </div>
+
+    <div class="donut-container">
+        <div class="donut-card">
+            <div class="donut" id="donut-viagens" data-progress="0">
+                <div class="center"></div>
+                <span>0%</span>
+            </div>
+            <p>Viagens</p>
+        </div>
+
+        <div class="donut-card">
+            <div class="donut" id="donut-recargas" data-progress="0">
+                <div class="center"></div>
+                <span>0%</span>
+            </div>
+            <p>Recargas</p>
+        </div>
+
+        <div class="donut-card">
+            <div class="donut" id="donut-km" data-progress="0">
+                <div class="center"></div>
+                <span>0%</span>
+            </div>
+            <p>Km Rodados</p>
+        </div>
+
+        <div class="donut-card">
+            <div class="donut" id="donut-tempo" data-progress="0">
+                <div class="center"></div>
+                <span>0%</span>
+            </div>
+            <p>Média de Tempo</p>
+        </div>
+    </div>
+    
+    <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
+
+    <h2 class="section-title full" style="margin-top: 20px;">Detalhes de Todas as Viagens</h2>
+    
+    <div id="historico-loading" class="full" style="text-align: center; color: #ddd; padding: 10px;">
+        Carregando histórico...
+    </div>
+
+    <div class="table-responsive">
+        <table id="tabela-historico" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Origem/Destino</th>
+                    <th>Veículo</th>
+                    <th>KM</th>
+                    <th>Tempo</th>
+                    <th>Recargas</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+    
+    <style>
+        /* Estilos básicos para a tabela, complementando perfil.css */
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+        #tabela-historico th, #tabela-historico td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+        #tabela-historico th {
+            background-color: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+        }
+        #tabela-historico tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+    </style>
 
   </section>
 </div>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico</title>
-
-    <link rel="stylesheet" href="historico.css">
-</head>
-<body>
-
-<div class="donut-container">
-
-    <div class="donut-card">
-    <div class="donut" id="donut-viagens" data-progress="60">
-        <div class="center"></div>
-        <span>60%</span>
-    </div>
-    <p>Viagens</p>
-</div>
-
-<div class="donut-card">
-    <div class="donut" id="donut-recargas" data-progress="40">
-        <div class="center"></div>
-        <span>40%</span>
-    </div>
-    <p>Recargas</p>
-</div>
-
-<div class="donut-card">
-    <div class="donut" id="donut-km" data-progress="80">
-        <div class="center"></div>
-        <span>80%</span>
-    </div>
-    <p>Km Rodados</p>
-</div>
-
-<div class="donut-card">
-    <div class="donut" id="donut-tempo" data-progress="100">
-        <div class="center"></div>
-        <span>100%</span>
-    </div>
-    <p>Tempo Total</p>
-</div>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    // IDs dos donuts no HTML
-    const donuts = {
-        viagens: "donut-viagens",
-        recargas: "donut-recargas",
-        km: "donut-km",
-        tempo: "donut-tempo"
-    };
-
-    // Limites para cálculo de porcentagem
-    const limites = {
-        viagens: 50,
-        recargas: 20,
-        km: 500,
-        tempo: 600  // tempo em minutos (10h = 600m)
-    };
-
-    function atualizarDonut(id, porcentagem) {
-        const donut = document.getElementById(id);
-        if (!donut) return;
-
-        donut.querySelector("span").textContent = porcentagem + "%";
-        donut.style.setProperty("--progress", (porcentagem * 3.6) + "deg");
-    }
-
-    function calcularPorcentagem(valor, limite) {
-        return Math.min(Math.round((valor / limite) * 100), 100);
-    }
-
-    // ----------- PEGAR VALORES DO PARÁGRAFO -----------
-    function atualizarAPartirDoHistorico() {
-        const p = document.querySelector(".profile-grid.full p");
-        if (!p) return;
-
-        const texto = p.innerText;
-
-        // Leitura direta das linhas FIXAS
-        const viagens = Number(texto.match(/rotas percorridas:\s*(\d+)/i)?.[1] || 0);
-        const recargas = Number(texto.match(/recargas feitas:\s*(\d+)/i)?.[1] || 0);
-        const km = Number(texto.match(/km rodados:\s*(\d+)/i)?.[1] || 0);
-
-        // tempo no formato "XXh XXm"
-        let tempoTotal = 0;
-        const tempoMatch = texto.match(/tempo total:\s*(\d+)h\s*(\d+)m/i);
-        if (tempoMatch) {
-            const horas = Number(tempoMatch[1]);
-            const minutos = Number(tempoMatch[2]);
-            tempoTotal = horas * 60 + minutos;
-        }
-
-        // Calcula porcentagens
-        atualizarDonut(donuts.viagens, calcularPorcentagem(viagens, limites.viagens));
-        atualizarDonut(donuts.recargas, calcularPorcentagem(recargas, limites.recargas));
-        atualizarDonut(donuts.km, calcularPorcentagem(km, limites.km));
-        atualizarDonut(donuts.tempo, calcularPorcentagem(tempoTotal, limites.tempo));
-    }
-
-    atualizarAPartirDoHistorico();
-});
-</script>
+<script src="src/js/main.js"></script>
+<script src="src/js/historico.js"></script>
 
 </body>
 </html>
-
-
-
