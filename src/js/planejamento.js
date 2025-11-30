@@ -6,9 +6,10 @@ let directionsRenderer;
 let markers = []; // Array para guardar os marcadores
 let usuarioEstaLogado = false; // Variável global para sabermos o status
 let veiculoSelecionado = {
+    id: null, // ID adicionado para o banco de dados
     autonomia: 300, // km (Default)
     eficiencia: 200 // Wh/km (Default)
-}; // Objeto para armazenar os dados do carro selecionado
+}; 
 
 async function initMap() {
     // Importa as bibliotecas necessárias da API
@@ -30,8 +31,14 @@ async function initMap() {
     
     const originInput = document.getElementById('origin-input');
     const destinationInput = document.getElementById('destination-input');
-    new Autocomplete(originInput);
-    new Autocomplete(destinationInput);
+    
+    // Configura o Autocomplete (opcional: restringir ao Brasil)
+    const options = {
+        componentRestrictions: { country: "br" },
+        fields: ["address_components", "geometry", "icon", "name"],
+    };
+    new Autocomplete(originInput, options);
+    new Autocomplete(destinationInput, options);
 
     document.getElementById('calculate-route').addEventListener('click', calculateAndDisplayRoute);
     
@@ -56,7 +63,7 @@ function updateSelectedVehicle(event) {
         console.log("Veículo selecionado:", veiculoSelecionado);
     } else {
         // Volta para os valores default se nada for selecionado
-        veiculoSelecionado = { autonomia: 300, eficiencia: 200 }; 
+        veiculoSelecionado = { id: null, autonomia: 300, eficiencia: 200 }; 
     }
 }
 
@@ -87,9 +94,9 @@ async function checkSession() {
                         const option = document.createElement('option');
                         // Salvamos os dados do carro no 'value' como JSON
                         option.value = JSON.stringify({
-                            id: carro.id_carro,
-                            autonomia: carro.dur_bat || 300, // IMPORTANTE: dur_bat precisa estar no DB
-                            eficiencia: carro.eficiencia_wh_km || 200 // IMPORTANTE: adicione esta coluna
+                            id: carro.id_carro, // IMPORTANTE: ID necessário para salvar no histórico
+                            autonomia: carro.dur_bat || 300, 
+                            eficiencia: carro.eficiencia_wh_km || 200 
                         });
                         option.textContent = `${carro.nm_marca} ${carro.nm_modelo} (${carro.ano_carro})`;
                         
@@ -208,7 +215,6 @@ function formatTime(totalSeconds) {
         output.push(`${minutes} minuto${minutes > 1 ? 's' : ''}`);
     }
     
-    // Retorna a saída, ou um valor padrão se for muito curto
     if (output.length === 0) {
         return "< 1 minuto";
     }
@@ -221,7 +227,7 @@ function calculateAndDisplayRoute() {
     const summaryContainer = document.getElementById('output-route-summary');
     const advancedDetails = document.getElementById('advanced-route-details'); 
 
-    // Limpa e esconde os campos
+    // Limpa e esconde os campos visualmente antes do cálculo
     if (summaryContainer) summaryContainer.style.display = 'none';
     if (advancedDetails) advancedDetails.style.display = 'none';
     
@@ -253,6 +259,7 @@ function calculateAndDisplayRoute() {
             document.getElementById('output-energia').innerText = energiaEstimado.toFixed(2) + ' kWh'; 
             if (summaryContainer) summaryContainer.style.display = 'block'; 
             
+            // Cálculos avançados (paradas, tempo de recarga)
             const { paradas: paradasNecessarias, tempoRecargaTotalMin } = calcularDadosAvancados(distanciaEmKm); 
     
             const tempoRecargaSegundos = tempoRecargaTotalMin * 60;
@@ -263,8 +270,22 @@ function calculateAndDisplayRoute() {
             
             directionsRenderer.setDirections(result); 
             
-            // Se houver paradas necessárias, busca estações usando Open Charge Map
-            // (ou busca mesmo sem paradas para informar ao usuário, conforme sua preferência)
+            // --- CÓDIGO NOVO: SALVAR NO HISTÓRICO ---
+            // Se o usuário está logado e tem um carro selecionado (com ID), salva no banco.
+            if (usuarioEstaLogado && veiculoSelecionado && veiculoSelecionado.id) {
+                const dadosParaSalvar = {
+                    id_carro: veiculoSelecionado.id,
+                    origem: document.getElementById('origin-input').value,
+                    destino: document.getElementById('destination-input').value,
+                    distancia_km: distanciaEmKm,
+                    tempo_viagem_segundos: tempoTotalViagemSegundos,
+                    paradas: paradasNecessarias
+                };
+                salvarViagemNoHistorico(dadosParaSalvar);
+            }
+            // ----------------------------------------
+
+            // Se houver necessidade, busca estações
             findChargingStations(result);
             
         } else {
@@ -272,6 +293,29 @@ function calculateAndDisplayRoute() {
             alert('Não foi possível calcular a rota. Erro: ' + status);
         }
     });
+}
+
+// --- FUNÇÃO PARA SALVAR NO BANCO (AJAX/FETCH) ---
+async function salvarViagemNoHistorico(dados) {
+    try {
+        const response = await fetch('api/salvar_viagem.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+
+        const resultado = await response.json();
+        
+        if (resultado.success) {
+            console.log("Histórico atualizado: Viagem salva com sucesso.");
+        } else {
+            console.warn("Aviso ao salvar histórico:", resultado.message);
+        }
+    } catch (error) {
+        console.error("Erro de conexão ao tentar salvar histórico:", error);
+    }
 }
 
 // --- FUNÇÃO PARA BUSCAR PONTOS DE CARREGAMENTO (OPEN CHARGE MAP) ---
