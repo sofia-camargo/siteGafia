@@ -1,0 +1,21 @@
+-- View de histórico detalhado
+
+CREATE OR REPLACE VIEW vw_historico_usuario AS
+SELECT 
+    h.id_historico,
+    h.id_usuario,
+    h.dt_consulta,
+    h.cidade_origem,
+    h.cidade_destino,
+    h.km_viagem,
+    h.tempo_viagem,
+    h.qnt_abastecimento,
+    -- Trazendo dados legíveis do Carro ao invés de só IDs
+    m.nm_marca,
+    mo.nm_modelo,
+    c.ano_carro
+FROM historico_viagem h
+JOIN carro c ON h.id_carro = c.id_carro
+LEFT JOIN marca m ON c.id_marca = m.id_marca
+LEFT JOIN modelo mo ON c.id_modelo = mo.id_modelo
+ORDER BY h.dt_consulta DESC;

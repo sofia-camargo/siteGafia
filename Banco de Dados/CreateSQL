@@ -1,12 +1,3 @@
-
--- TABELA ESTADOS
-CREATE TABLE estados(
-
-	id_estado SERIAL PRIMARY KEY,
-    nm_estado VARCHAR(50) NOT NULL,
-    uf_estado CHAR(2) NOT NULL UNIQUE -- O UNIQUE evita que gere duplicidade nas UF
-);
-
 -- TABELA MARCA
 CREATE TABLE marca(
 

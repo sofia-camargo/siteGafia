@@ -1,0 +1,28 @@
+CREATE OR REPLACE VIEW vw_desempenho_carros AS
+SELECT 
+    u.id_usuario,
+    c.id_carro,
+    
+    CONCAT(m.nm_marca, ' ', mo.nm_modelo) AS nome_veiculo,
+    c.ano_carro,
+    
+    -- Métricas de Quantidade
+    COUNT(h.id_historico) AS total_viagens,
+    COALESCE(SUM(h.km_viagem), 0) AS km_total_rodado,
+    
+    COALESCE(ROUND(
+        CAST(SUM(h.km_viagem) AS NUMERIC) / 
+        NULLIF(SUM(EXTRACT(EPOCH FROM h.tempo_viagem)) / 3600, 0), 
+    1), 0) AS velocidade_media_geral,
+
+    CASE 
+        WHEN SUM(h.qnt_abastecimento) = 0 THEN COALESCE(SUM(h.km_viagem), 0)
+        ELSE ROUND(CAST(SUM(h.km_viagem) AS NUMERIC) / SUM(h.qnt_abastecimento), 1)
+    END AS km_por_paragem_recarga
+
+FROM usuario u
+JOIN carro c ON u.id_usuario = c.id_usuario
+JOIN marca m ON c.id_marca = m.id_marca
+JOIN modelo mo ON c.id_modelo = mo.id_modelo
+LEFT JOIN historico_viagem h ON c.id_carro = h.id_carro
+GROUP BY u.id_usuario, c.id_carro, m.nm_marca, mo.nm_modelo, c.ano_carro;
