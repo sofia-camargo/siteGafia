@@ -1,62 +1,47 @@
 <?php
+// api/perfil.php
 session_start();
-if (!isset($_SESSION['id_usuario'])) {
-    // Redireciona se não estiver logado
-    header("Location: ../login.html"); 
-    exit;
-}
+// Ajuste o caminho do login conforme sua estrutura de pastas
+if (!isset($_SESSION['id_usuario'])) { header("Location: ../login.html"); exit; }
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil Gafia</title>
+    <title>Meu Histórico</title>
     <style>
-        /* Estilos escuros baseados na sua imagem */
         body { background-color: #1e0b36; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; }
-        
-        /* Layout dos Donuts */
-        .stats-grid { display: flex; justify-content: space-around; margin: 40px 0; flex-wrap: wrap; gap: 20px;}
+        .stats-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin: 40px 0; }
+        .text-stats { background: #2a1b4e; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         .donut-container { text-align: center; }
-        
-        /* CSS do Donut Chart */
         .donut {
             width: 100px; height: 100px; border-radius: 50%;
             background: conic-gradient(#a020f0 var(--progress, 0deg), #333 0deg);
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 10px; position: relative;
         }
-        .donut::before {
-            content: ""; position: absolute; width: 80px; height: 80px;
-            background-color: #1e0b36; border-radius: 50%;
-        }
-        .donut span { position: relative; font-weight: bold; font-size: 1.2em; }
-
-        /* Lista de texto à esquerda */
-        .text-stats { background: #2a1b4e; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .text-stats p { margin: 10px 0; font-size: 1.1em; }
+        .donut::before { content: ""; position: absolute; width: 80px; height: 80px; background-color: #1e0b36; border-radius: 50%; }
+        .donut span { position: relative; font-weight: bold; }
         
-        /* Tabela */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2a1b4e; border-radius: 8px; overflow: hidden; }
-        th { background-color: #3b2c63; text-align: left; padding: 15px; }
-        td { padding: 15px; border-bottom: 1px solid #444; }
-        .btn-voltar { display: inline-block; margin-bottom: 20px; color: #ccc; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; background: #2a1b4e; border-radius: 8px; margin-top: 20px; }
+        th, td { padding: 15px; border-bottom: 1px solid #444; text-align: left; }
+        th { background: #3b2c63; }
+        .btn { display: inline-block; padding: 10px 20px; background: #a020f0; color: white; text-decoration: none; border-radius: 5px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="../index.html" class="btn-voltar">← Voltar para o Mapa</a>
-    <h1>Histórico de Atividades</h1>
+    <a href="../index.html" class="btn">Voltar ao Mapa</a>
+    <h1>Histórico de Viagens</h1>
 
     <div class="text-stats">
-        <p>• Total de rotas percorridas: <strong id="total-viagens">0</strong></p>
-        <p>• Total de abastecimentos: <strong id="total-abastecimentos">0</strong></p>
-        <p>• Total de Km rodados: <strong id="total-km">0</strong> km</p>
-        <p>• Média KM por Viagem: <strong id="media-km">0.00</strong> km</p>
-        <p>• Tempo Médio por Viagem: <strong id="media-tempo">0h 0m</strong></p>
+        <p>Total de Viagens: <strong id="total-viagens">0</strong></p>
+        <p>Total de KM: <strong id="total-km">0</strong> km</p>
+        <p>Total Recargas: <strong id="total-abastecimentos">0</strong></p>
+        <p>Média KM/Viagem: <strong id="media-km">0</strong> km</p>
     </div>
 
     <div class="stats-grid">
@@ -65,101 +50,94 @@ if (!isset($_SESSION['id_usuario'])) {
             <p>Viagens</p>
         </div>
         <div class="donut-container">
-            <div class="donut" id="donut-recargas" style="--progress: 0deg;"><span>0%</span></div>
-            <p>Recargas</p>
-        </div>
-        <div class="donut-container">
             <div class="donut" id="donut-km" style="--progress: 0deg;"><span>0%</span></div>
-            <p>Km Rodados</p>
-        </div>
-        <div class="donut-container">
-            <div class="donut" id="donut-tempo" style="--progress: 0deg;"><span>0%</span></div>
-            <p>Tempo Médio</p>
+            <p>Distância</p>
         </div>
     </div>
 
-    <h3>Detalhes de Todas as Viagens</h3>
     <table>
         <thead>
             <tr>
                 <th>Data</th>
-                <th>Origem/Destino</th>
-                <th>Veículo</th>
-                <th>KM</th>
+                <th>Carro</th>
+                <th>Trajeto</th>
+                <th>Distância</th>
                 <th>Tempo</th>
                 <th>Recargas</th>
             </tr>
         </thead>
         <tbody id="tabela-historico">
-            </tbody>
+            <tr><td colspan="6">Carregando...</td></tr>
+        </tbody>
     </table>
 </div>
 
 <script>
-    // Sobrescreve as funções de fetch para garantir o caminho correto
-    // já que estamos dentro da pasta "api"
-    
-    async function carregarResumoUsuario() {
-        // Removemos o "api/" do fetch porque já estamos na pasta api
-        try {
-            const response = await fetch('resumo_usuario.php'); 
-            const data = await response.json();
-            
-            if (data.error) { console.error(data.error); return; }
+    document.addEventListener('DOMContentLoaded', () => {
+        carregarResumo();
+        carregarHistorico();
+    });
 
-            // Atualiza texto
-            document.getElementById('total-viagens').innerText = data.total_viagens || 0;
-            document.getElementById('total-abastecimentos').innerText = data.total_abastecimentos || 0;
-            document.getElementById('total-km').innerText = parseFloat(data.total_km).toFixed(0);
-            document.getElementById('media-km').innerText = parseFloat(data.media_km_por_viagem).toFixed(2);
+    async function carregarResumo() {
+        try {
+            const res = await fetch('resumo_usuario.php');
+            const data = await res.json();
             
-            // Atualiza Donuts (Lógica simplificada para visualização imediata)
-            atualizarDonut('donut-viagens', Math.min(data.total_viagens * 2, 100)); // Exemplo visual
-            atualizarDonut('donut-km', Math.min(data.total_km / 10, 100));
-        } catch (e) { console.error("Erro resumo:", e); }
+            if(!data.error) {
+                document.getElementById('total-viagens').innerText = data.total_viagens;
+                document.getElementById('total-km').innerText = parseFloat(data.total_km).toFixed(0);
+                document.getElementById('total-abastecimentos').innerText = data.total_abastecimentos;
+                document.getElementById('media-km').innerText = parseFloat(data.media_km_por_viagem).toFixed(1);
+                
+                // Exemplo visual simples para os donuts
+                atualizarDonut('donut-viagens', Math.min(data.total_viagens * 5, 100));
+                atualizarDonut('donut-km', Math.min(data.total_km / 10, 100));
+            }
+        } catch(e) { console.error(e); }
     }
 
     async function carregarHistorico() {
         const tbody = document.getElementById('tabela-historico');
         try {
-            const response = await fetch('historico_completo.php');
-            const dados = await response.json();
+            const res = await fetch('historico_completo.php');
+            const lista = await res.json();
             
             tbody.innerHTML = '';
-            if (!dados || dados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Nenhum histórico encontrado.</td></tr>';
+            if(!lista || lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">Nenhum registro encontrado.</td></tr>';
                 return;
             }
-            
-            dados.forEach(via => {
+
+            lista.forEach(item => {
                 const tr = document.createElement('tr');
+                // Formatação do tempo (Interval Postgres)
+                let tempoStr = item.tempo_viagem;
+                if(typeof item.tempo_viagem === 'object' && item.tempo_viagem !== null) {
+                    tempoStr = `${item.tempo_viagem.hours || 0}h ${item.tempo_viagem.minutes || 0}m`;
+                }
+
                 tr.innerHTML = `
-                    <td>${new Date(via.dt_consulta).toLocaleDateString('pt-BR')}</td>
-                    <td>${via.cidade_origem} <br>⬇<br> ${via.cidade_destino}</td>
-                    <td>${via.nm_marca} ${via.nm_modelo}</td>
-                    <td>${parseFloat(via.km_viagem).toFixed(1)} km</td>
-                    <td>${via.tempo_viagem}</td>
-                    <td>${via.qnt_abastecimento}</td>
+                    <td>${new Date(item.dt_consulta).toLocaleDateString('pt-BR')}</td>
+                    <td>${item.nm_marca} ${item.nm_modelo}</td>
+                    <td>${item.cidade_origem} <br>⬇<br> ${item.cidade_destino}</td>
+                    <td>${parseFloat(item.km_viagem).toFixed(1)} km</td>
+                    <td>${tempoStr}</td>
+                    <td>${item.qnt_abastecimento}</td>
                 `;
                 tbody.appendChild(tr);
             });
-        } catch (e) { console.error("Erro historico:", e); }
-    }
-
-    function atualizarDonut(id, percent) {
-        const el = document.getElementById(id);
-        if(el) {
-            el.style.setProperty('--progress', (percent * 3.6) + 'deg');
-            el.querySelector('span').innerText = Math.round(percent) + '%';
+        } catch(e) { 
+            tbody.innerHTML = '<tr><td colspan="6">Erro ao carregar.</td></tr>';
         }
     }
 
-    // Inicia ao carregar
-    document.addEventListener('DOMContentLoaded', () => {
-        carregarResumoUsuario();
-        carregarHistorico();
-    });
+    function atualizarDonut(id, val) {
+        const el = document.getElementById(id);
+        if(el) {
+            el.style.setProperty('--progress', (val * 3.6) + 'deg');
+            el.querySelector('span').innerText = Math.round(val) + '%';
+        }
+    }
 </script>
-
 </body>
 </html>
