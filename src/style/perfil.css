@@ -502,3 +502,48 @@ body {
         font-size: 1.8rem;
     }
 }
+
+/* =======================================================
+   CORREÇÃO DE RESPONSIVIDADE DO FORMULÁRIO
+   Cole isso no final do seu arquivo CSS
+   ======================================================= */
+
+/* 1. Garante que o padding não aumente a largura total */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* 2. Ajusta o contêiner do formulário (a caixa roxa) */
+.vidro {
+    /* Remove largura fixa se houver e deixa fluido */
+    width: 100%; 
+    max-width: 500px; /* Define um limite máximo para não ficar gigante no PC */
+    margin: 0 auto; /* Centraliza */
+    /* Garante que o conteúdo interno não vaze */
+    overflow: hidden; 
+}
+
+/* 3. Ajusta os campos de entrada e selects */
+.input-group input,
+.input-group select {
+    /* Força os campos a ocuparem 100% da largura do pai */
+    width: 100%; 
+    /* Garante que não passem da largura máxima do contêiner */
+    max-width: 100%;
+}
+
+/* 4. Ajusta os botões no final para ficarem um embaixo do outro no celular */
+@media (max-width: 600px) {
+    .actions {
+        flex-direction: column; /* Muda de lado-a-lado para pilha vertical */
+        gap: 15px; /* Espaço entre os botões */
+    }
+
+    .save-btn,
+    .delete-btn {
+        width: 100%; /* Faz os botões ocuparem a largura total */
+        /* Remove margens laterais que possam estar atrapalhando */
+        margin-left: 0; 
+        margin-right: 0;
+    }
+}
