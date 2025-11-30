@@ -5,17 +5,16 @@ session_start();
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
+// CORREÇÃO: Usando 'id_usuario'
+if (!isset($_SESSION['id_usuario'])) {
     http_response_code(403);
-    echo json_encode(['error' => 'Acesso não autorizado. Usuário não logado.']);
+    echo json_encode(['error' => 'Usuario nao logado']);
     exit;
 }
 
-$userId = $_SESSION['user_id'];
+$userId = $_SESSION['id_usuario']; // CORRIGIDO
 
 try {
-    // Consulta a View de histórico detalhado, filtrando pelo ID do usuário
-    // vw_historico_usuario tem a lista de todas as viagens com detalhes do carro
     $sql = "SELECT 
                 dt_consulta,
                 cidade_origem,
@@ -39,7 +38,6 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    error_log("PDO Error in historico_completo: " . $e->getMessage());
-    echo json_encode(['error' => 'Erro interno ao buscar o histórico detalhado.']);
+    echo json_encode(['error' => 'Erro ao buscar historico']);
 }
 ?>
