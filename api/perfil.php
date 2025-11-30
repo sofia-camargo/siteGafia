@@ -4,8 +4,6 @@ session_start();
 
 // Verificação de segurança
 if (!isset($_SESSION['user_id'])) {
-    // Se o login.php também estiver na pasta api, use apenas 'login.php'
-    // Se o login for um HTML na raiz, use '../login.html'
     header("Location: login.php"); 
     exit;
 }
