@@ -1,31 +1,60 @@
-# Projeto Gafia: Uma Jornada Sustentável na Mobilidade Elétrica 🌍
+# GAFIA - Projeto Interdisciplinar II
 
-A Gafia é uma ferramenta inovadora desenvolvida por estudantes de Sistemas de Informação da Fundação Hermínio Ometto, criada para revolucionar o planejamento de viagens com carros elétricos. Nossa equipe, composta por Giovanna Jacobucci, Kaio Eduardo Bueno de Camargo, Kael Vicente Dipres, Rafael Cauã Delariva de Lima, Sofia Camargo Nunes e Virna Karina Amaral, idealizou um software que não apenas simplifica sua locomoção, mas também o conecta a um futuro mais sustentável.
+![Status do Projeto](https://img.shields.io/badge/Status-Concluído-brightgreen)
 
----
-
-### Por que a Gafia é Essencial?
-
-Com o rápido crescimento dos carros elétricos no Brasil, a Gafia surge como a solução perfeita para essa transição. Enquanto os veículos a combustão são grandes emissores de CO2, a Gafia alinha-se ao Objetivo de Desenvolvimento Sustentável n° 7: Energia Limpa e Acessível, oferecendo uma forma concreta de medir seu impacto positivo no planeta. Nosso sistema calcula a quantidade de CO2 que você deixa de emitir, reforçando sua contribuição para um meio ambiente mais saudável.
+Este projeto implementa um sistema CRUD para planejamento de viagens com carro elétrico utilizando PHP, JavaScript e PostgreSQL.
 
 ---
+## Sumário
 
-### Funcionalidades Principais
+1. Visão Geral do Projeto
 
-* **Planejamento de Viagem:** Calcule a melhor rota para seu carro elétrico, com a localização exata de pontos de recarga e estimativa precisa do tempo de percurso.
-* **Comparador de Veículos:** Compare a autonomia e os custos de manutenção de carros a combustão, híbridos e elétricos, ajudando você a tomar a decisão mais inteligente.
-* **Impacto Ambiental:** Visualize o CO2 economizado em cada viagem, transformando sua escolha sustentável em um dado tangível.
-* **Valores de Combustíveis:** Tenha acesso a preços atualizados de combustíveis e tarifas de energia elétrica por estado, para planejar sua viagem com total transparência de gastos.
+2. Tecnologias Utilizadas
 
+3. Requisitos e Funcionalidades
+
+4. Como Executar (Setup)
+
+5. Resultados e Lições Aprendidas
 ---
+## 🖥️ Visão Geral do Projeto
+O objetivo da disciplina é desenvolver um CRUD com o tema do Objetivo de Desenvolvimento Sustentável n° 7: Tecnologias Inovadoras para promover Energia Limpa, Sustentável e Acessível.
 
-### Tecnologias Utilizadas
-* Back-end: inicialmente desenvolvido com programação orientada a objeto (POO) com Java, atualmente está desenvolvido em PHP.
-* Front-end: HTML e CSS
-* SGBD: PostgreSQL
-qualquer coisa
----
+## ⚒️ Tecnologias Utilizadas
+### Front-end
+* HTML5
+* CSS3
+* JavaScript
 
-A Gafia é mais do que um aplicativo de planejamento de rotas; é sua parceira na construção de um futuro mais verde, oferecendo inteligência e sustentabilidade para cada quilômetro da sua jornada.
+### Back-end (Camada de Servidor)
+* PHP
 
-Visite o nosso [repositório no GitHub](https://github.com/sofia-camargo/siteGafia) para explorar o código, contribuir ou saber mais sobre o projeto.
+### Banco de Dados
+* PostgreSQL
+### APIs e Integrações de Terceiros
+* Open Charge
+* Maps JavaScript API
+
+## Funcionalidades
+* Login e cadastro do usuário;
+* O usuário pode cadastrar seus veículos na "Garagem";
+* Planejamento de viagens: cálculo da distância percorrida, tempo do trajeto, duração da bateria do carro, da necessidade de carregamento do veículo;
+* API fornece o trajeto e os pontos de carregamento.
+
+## Como Executar o Projeto (Setup)
+Para visualização e uso, o site está postado e você pode conferir no link a seguir: https://sitegafia.onrender.com/index.html 
+## Resultados e Lições Aprendidas
+### Desafios Superados
+O desenvolvimento deste projeto foi um pilar fundamental em nossa jornada de aprendizado, pois evoluiu organicamente ao longo de dois semestres (2025.1 e 2025.2). Isso permitiu que o projeto expandisse sua estrutura e suas tecnologias, incorporando a implementação da interface visual (Front-end) e novas funcionalidades de Back-end em paralelo com o currículo da graduação.
+
+Embora a gestão de tempo fosse um desafio inicial, a adoção da Metodologia Ágil (ou cite a metodologia específica, ex: Scrum) foi crucial. Essa abordagem não apenas otimizou a organização e a comunicação entre os membros da equipe, mas também garantiu a entrega contínua de valor, permitindo a conclusão bem-sucedida do projeto em sua totalidade.
+
+### Conclusão e Próximos Passos
+1. Desenvolvimento de Aplicação Mobile: A meta principal é transformar a interface web atual em um aplicativo móvel nativo (ou multi-plataforma, ex: React Native) para iOS e Android, visando otimizar a experiência do usuário em campo.
+2. Expansão da Base de Dados de Carregamento: A próxima fase focará em enriquecer os dados dos pontos de carregamento de carros elétricos. Isso inclui a implementação de novos campos na base de dados, como:
+* Disponibilidade em Tempo Real (Integração com API de terceiros);
+* Tipos de Plugues/Conectores suportados (ex: Tipo 2, CCS, CHAdeMO);
+* Potência Máxima de Carregamento (kW);
+* Sistema de Avaliação e Comentários dos usuários.
+
+Visite o nosso [repositório no GitHub]([https://github.com/sofia-camargo/siteGafia](https://github.com/VirnaKarina/siteGafia)) para explorar o código, contribuir ou saber mais sobre o projeto.
