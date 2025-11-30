@@ -1,0 +1,13 @@
+-- Fornece ao usuário uma visão sobre sua contribuição ambiental baseada nas viagens registradas (emissão de CO2 evitada e árvores "plantadas")
+CREATE OR REPLACE VIEW vw_sustentabilidade AS
+SELECT 
+    u.id_usuario,
+    COUNT(h.id_historico) AS total_viagens,
+    COALESCE(SUM(h.km_viagem), 0) AS km_rodados,
+    -- Estimativa: 0.12 kg de CO2 poupados por km
+    ROUND(COALESCE(SUM(h.km_viagem), 0) * 0.12, 2) AS kg_co2_poupados,
+    -- Estimativa: 1 árvore absorve ~20kg de CO2 por ano. Quantas árvores "plantou"?
+    ROUND((COALESCE(SUM(h.km_viagem), 0) * 0.12) / 20, 1) AS arvores_equivalentes
+FROM usuario u
+LEFT JOIN historico_viagem h ON u.id_usuario = h.id_usuario
+GROUP BY u.id_usuario;

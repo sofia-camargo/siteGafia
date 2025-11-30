@@ -1,0 +1,9 @@
+CREATE OR REPLACE VIEW vw_evolucao_mensal AS
+SELECT 
+    id_usuario,
+    TO_CHAR(dt_consulta, 'MM/YYYY') AS mes_ano,
+    SUM(km_viagem) AS km_no_mes,
+    COUNT(id_historico) AS viagens_no_mes
+FROM historico_viagem
+GROUP BY id_usuario, TO_CHAR(dt_consulta, 'MM/YYYY'), DATE_TRUNC('month', dt_consulta)
+ORDER BY DATE_TRUNC('month', dt_consulta) DESC;

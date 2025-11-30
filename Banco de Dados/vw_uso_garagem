@@ -1,0 +1,15 @@
+-- Um gráfico de "Pizza" comparando o uso dos veículos
+CREATE OR REPLACE VIEW vw_uso_garagem AS
+SELECT 
+    u.id_usuario,
+    c.id_carro,
+    m.nm_marca,
+    mo.nm_modelo,
+    COUNT(h.id_historico) AS viagens_realizadas,
+    COALESCE(SUM(h.km_viagem), 0) AS total_km_rodados
+FROM usuario u
+JOIN carro c ON u.id_usuario = c.id_usuario
+JOIN marca m ON c.id_marca = m.id_marca
+JOIN modelo mo ON c.id_modelo = mo.id_modelo
+LEFT JOIN historico_viagem h ON c.id_carro = h.id_carro
+GROUP BY u.id_usuario, c.id_carro, m.nm_marca, mo.nm_modelo;
