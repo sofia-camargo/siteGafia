@@ -1,0 +1,21 @@
+CREATE OR REPLACE VIEW vw_resumo_usuario AS
+SELECT 
+    u.id_usuario,
+    -- Contagem total de viagens
+    COUNT(h.id_historico) AS total_viagens,
+    
+    -- Soma total de Km percorridos (se nulo, retorna 0)
+    COALESCE(SUM(h.km_viagem), 0) AS total_km,
+    
+    -- Soma total de recargas feitas
+    COALESCE(SUM(h.qnt_abastecimento), 0) AS total_abastecimentos,
+    
+    -- Média de Km por viagem
+    COALESCE(ROUND(AVG(h.km_viagem), 2), 0) AS media_km_por_viagem,
+    
+    -- Média de tempo (Convertendo intervalo para horas decimais)
+    COALESCE(ROUND(AVG(EXTRACT(EPOCH FROM h.tempo_viagem))/3600, 2), 0) AS media_tempo_viagem_horas
+
+FROM usuario u
+LEFT JOIN historico_viagem h ON u.id_usuario = h.id_usuario
+GROUP BY u.id_usuario;

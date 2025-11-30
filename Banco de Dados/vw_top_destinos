@@ -1,0 +1,9 @@
+CREATE OR REPLACE VIEW vw_top_destinos AS
+SELECT 
+    id_usuario,
+    cidade_destino,
+    COUNT(*) AS total_visitas,
+    MAX(dt_consulta) AS ultima_visita
+FROM historico_viagem
+GROUP BY id_usuario, cidade_destino
+ORDER BY total_visitas DESC;
