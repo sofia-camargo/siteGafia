@@ -279,7 +279,7 @@ body {
   min-height: 360px;
 }
 .hero-img .carro{
-  width: min(150%, 210%);
+  width: min(100%, 210%);
   height: auto;
   filter: drop-shadow(0 12px 30px rgba(0,0,0,.45));
   animation: float 6s ease-in-out infinite;
@@ -357,39 +357,82 @@ body {
 }
 
 /* ===== FOOTER ===== */
-.site-footer{
+/* ===== FOOTER ===== */
+.site-footer {
   background: #240a35;
   border-top: 1px solid var(--stroke);
-  padding: 28px 0;
+  padding: 40px 0;
   color: #ccc;
-}
-.footer-grid{
-  display:grid; gap: 18px;
-  grid-template-columns: 1fr auto;
-  align-items: start;
-}
-.footer-grid nav{ 
-  display:flex; 
-  gap: 14px; 
-  flex-wrap: wrap; 
-}
-.footer-grid nav a{ 
-  color:#ddd; 
-  text-decoration:none; 
-}
-.footer-grid nav a:hover{ 
-  color:#fff; 
-  text-decoration: underline; 
-}
-.copyright{ 
-  grid-column: 1 / -1; 
-  color:#aaa; 
-  margin-top: 6px; 
-  font-size:.95rem; 
+  margin-top: auto; /* Garante que o footer vá para baixo se a pág for curta */
 }
 
-@media (max-width: 720px){
-  .footer-grid{ grid-template-columns: 1fr; }
+.footer-grid {
+  display: flex; /* Mudado de Grid para Flex para facilitar o alinhamento */
+  justify-content: space-between; /* Empurra um grupo para cada ponta */
+  align-items: center; /* Centraliza verticalmente com o menu */
+  gap: 30px;
+  flex-wrap: wrap; /* Permite quebrar linha no celular */
+}
+
+/* --- ESTILO DO GRUPO ESQUERDO --- */
+.footer-left-content {
+  display: flex;
+  flex-direction: column; /* Empilha um embaixo do outro */
+  gap: 4px; /* Espaço pequeno entre as linhas */
+  text-align: left;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.footer-left-content .muted {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.copyright {
+  color: #777; /* Cor mais apagada para o copyright */
+  font-size: 0.85rem;
+  margin-top: 15px; /* Espaço maior para separar do slogan */
+}
+
+/* --- ESTILO DO MENU (DIREITA) --- */
+.site-footer nav {
+  display: flex;
+  gap: 20px;
+}
+
+.site-footer nav a {
+  color: #ddd;
+  text-decoration: none;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+.site-footer nav a:hover {
+  color: var(--brand); /* Rosa Neon */
+  text-decoration: underline;
+}
+
+/* --- RESPONSIVO (CELULAR) --- */
+@media (max-width: 768px) {
+  .footer-grid {
+    flex-direction: column; /* Empilha tudo verticalmente */
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-left-content {
+    text-align: center;
+    align-items: center; /* Centraliza a pilha no celular */
+  }
+
+  .copyright {
+    margin-top: 10px;
+  }
 }
 
 /* ===== ACCESSIBILITY ===== */
@@ -573,6 +616,173 @@ a:focus-visible{
     background: var(--brand); /* Fundo roxo ao passar o mouse */
     transform: scale(1.1);
 }
+/* ===== DASHBOARD (USER AREA) ===== */
 
+/* Layout Lado a Lado */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; /* Esquerda maior, Direita menor */
+  gap: 40px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* --- LADO ESQUERDO --- */
+.text-brand {
+  color: var(--brand); /* Usa o Rosa Neon */
+  text-shadow: 0 0 15px rgba(255, 46, 252, 0.4);
+}
+
+/* Barra de Pesquisa Estilo Vidro */
+.search-glass {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background: var(--card); /* Fundo transparente */
+  border: 1px solid var(--stroke);
+  border-radius: 50px; /* Bem redondo */
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  transition: 0.3s ease;
+}
+
+.search-glass:hover, .search-glass:focus-within {
+  border-color: var(--brand); /* Borda rosa ao passar o mouse */
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.search-icon {
+  margin-left: 20px;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 15px;
+  color: #fff;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-search {
+  border-radius: 40px;
+  padding: 12px 30px;
+  margin-right: 4px;
+}
+
+/* --- LADO DIREITO (CARD DO CARRO) --- */
+.car-glass-card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  transition: 0.3s;
+}
+
+.car-glass-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.status-badge {
+  background: rgba(16, 185, 129, 0.2); /* Verde translúcido */
+  color: #34d399; /* Verde Neon */
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.car-image-frame {
+  width: 100%;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.car-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.car-info-row h3 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.specs-row {
+  display: flex;
+  gap: 12px;
+}
+
+.spec-tag {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stroke);
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.3s;
+}
+
+.spec-tag:hover {
+  background: rgba(255, 46, 252, 0.1); /* Rosa bem suave no hover */
+  color: #fff;
+  border-color: var(--brand);
+}
+
+.spec-tag i {
+  color: var(--brand);
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* Um em cima do outro no celular */
+    text-align: center;
+  }
+  
+  .search-glass {
+    margin: 0 auto; /* Centraliza a busca */
+  }
+
+  .specs-row {
+    justify-content: center;
+  }
+}
 
 
