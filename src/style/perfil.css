@@ -20,7 +20,9 @@
     --shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
 
-html, body { height: 100%; }
+html, body { 
+  height: 100%; 
+}
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -56,9 +58,14 @@ body {
     font-weight: 600;
     font-size: 1.05rem;
 }
-.menu-lateral .brand i { color: #e0b3ff; }
+.menu-lateral .brand i { 
+  color: #e0b3ff; 
+}
 
-.menu-lateral nav ul { list-style: none; margin-top: 6px; }
+.menu-lateral nav ul { 
+  list-style: none; 
+  margin-top: 6px; 
+}
 
 .menu-lateral nav a {
     display: block;
@@ -219,7 +226,9 @@ body {
     display: flex;
     justify-content: space-between;
 }
-.sugestao-item:hover { background: rgba(255, 0, 204, 0.2); }
+.sugestao-item:hover { 
+  background: rgba(255, 0, 204, 0.2); 
+}
 
 /* =======================================================
    5. BOTÕES
@@ -287,8 +296,13 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.search-input { padding: 10px; }
-.search-icon { margin-left: 20px; color: #ccc; }
+.search-input { 
+  padding: 10px; 
+}
+.search-icon { 
+  margin-left: 20px;
+  color: #ccc; 
+}
 
 .btn-search {
     background: var(--brand);
@@ -329,9 +343,16 @@ body {
     margin-top: 40px;
     margin-bottom: 20px;
 }
-.car-image-frame img { width: 100%; height: 100%; object-fit: cover; }
+.car-image-frame img {
+   width: 100%; 
+   height: 100%; 
+   object-fit: cover; 
+  }
 
-.specs-row { display: flex; gap: 10px; }
+.specs-row { 
+  display: flex; 
+  gap: 10px; 
+}
 .spec-tag {
     flex: 1;
     background: rgba(255, 255, 255, 0.05);
@@ -467,3 +488,4 @@ body {
     width: 0;
     height: 0;
 }
+
