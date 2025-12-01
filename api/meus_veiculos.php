@@ -8,7 +8,6 @@ header('Content-Type: application/json');
 $action = $_GET['action'] ?? null;
 
 // Verificação de Autenticação Padronizada
-// Nota: Padronizamos a sessão para 'id_usuario' nos arquivos anteriores
 $userId = $_SESSION['id_usuario'] ?? null;
 
 // Lista de ações que exigem login
@@ -22,13 +21,8 @@ if (in_array($action, $requiresAuth) && !$userId) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ==================================================================
-// 1. LISTAR VEÍCULOS (GET) - Corrigido para nova estrutura
-// ==================================================================
 if ($action === 'list_garage' && $method === 'GET') {
     try {
-        // NÃO EXISTE MAIS JOIN COM GARAGEM
-        // Buscamos direto na tabela CARRO onde o id_usuario for igual ao da sessão
         $sql = "SELECT 
                     c.id_carro, 
                     c.ano_carro, 
@@ -46,7 +40,6 @@ if ($action === 'list_garage' && $method === 'GET') {
         $stmt->execute([':user_id' => $userId]);
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Garante valor padrão para eficiência se vier nulo
         foreach ($veiculos as &$veiculo) {
             if (empty($veiculo['eficiencia_wh_km'])) {
                 $veiculo['eficiencia_wh_km'] = 200; 
@@ -63,37 +56,91 @@ if ($action === 'list_garage' && $method === 'GET') {
     exit;
 }
 
-if ($action === 'add_veiculo' && $method === 'POST') {
-    $data = json_decode(file_get_contents('php://input'), true);
+if ($action === 'search_veiculos' && $method === 'GET') {
+    $query = $_GET['q'] ?? '';
 
-    // Validação básica
-    if (empty($data['marca_id']) || empty($data['modelo_id'])) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Marca e Modelo são obrigatórios.']);
+    if (strlen($query) < 3) {
+        echo json_encode([]);
         exit;
     }
 
     try {
-        // AGORA INSERIMOS DIRETO NA TABELA CARRO COM O ID_USUARIO
-        $sql = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km) 
-                VALUES (:user_id, :marca_id, :modelo_id, :ano, :bateria, :eficiencia)";
-        
+
+        $sql = "SELECT 
+                    c.id_carro, 
+                    c.ano_carro, 
+                    c.dur_bat, 
+                    c.eficiencia_wh_km,
+                    m.nm_marca, 
+                    mo.nm_modelo
+                FROM carro c
+                JOIN marca m ON c.id_marca = m.id_marca
+                JOIN modelo mo ON c.id_modelo = mo.id_modelo
+                WHERE c.id_usuario IS NULL -- Filtra apenas carros do catálogo mestre
+                AND (m.nm_marca ILIKE :query_like OR mo.nm_modelo ILIKE :query_like)
+                LIMIT 10";
+
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':user_id'    => $userId,
-            ':marca_id'   => $data['marca_id'],
-            ':modelo_id'  => $data['modelo_id'],
-            ':ano'        => $data['ano'] ?? date('Y'),
-            ':bateria'    => $data['autonomia'] ?? 300,
-            ':eficiencia' => $data['eficiencia'] ?? 200
-        ]);
+        $stmt->execute([':query_like' => '%' . $query . '%']);
+        $carros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        http_response_code(200);
-        echo json_encode(['message' => 'Veículo cadastrado com sucesso!']);
-
+        echo json_encode($carros);
     } catch (PDOException $e) {
         http_response_code(500);
-        error_log("Erro add_veiculo: " . $e->getMessage());
+        error_log("Erro search_veiculos: " . $e->getMessage());
+        echo json_encode(['error' => 'Erro ao buscar catálogo de veículos.']);
+    }
+    exit;
+}
+
+if ($action === 'add_veiculo' && $method === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $masterCarroId = $data['carro_id'] ?? null; // ID do carro mestre selecionado
+
+    if (!$masterCarroId) {
+        http_response_code(400);
+        echo json_encode(['error' => 'ID do carro mestre não fornecido.']);
+        exit;
+    }
+
+    try {
+        $pdo->beginTransaction();
+
+        $sqlSelect = "SELECT id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km 
+                      FROM carro 
+                      WHERE id_carro = :id AND id_usuario IS NULL";
+        $stmtSelect = $pdo->prepare($sqlSelect);
+        $stmtSelect->execute([':id' => $masterCarroId]);
+        $masterCarro = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+
+        if (!$masterCarro) {
+            $pdo->rollBack();
+            http_response_code(404);
+            echo json_encode(['error' => 'Carro mestre não encontrado ou já cadastrado.']);
+            exit;
+        }
+
+        $sqlInsert = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km) 
+                      VALUES (:user_id, :id_marca, :id_modelo, :ano, :bateria, :eficiencia)";
+        
+        $stmtInsert = $pdo->prepare($sqlInsert);
+        $stmtInsert->execute([
+            ':user_id'       => $userId,
+            ':id_marca'      => $masterCarro['id_marca'],
+            ':id_modelo'     => $masterCarro['id_modelo'],
+            ':ano'           => $masterCarro['ano_carro'],
+            ':bateria'       => $masterCarro['dur_bat'],
+            ':eficiencia'    => $masterCarro['eficiencia_wh_km']
+        ]);
+
+        $pdo->commit();
+        http_response_code(200);
+        echo json_encode(['message' => 'Veículo adicionado à sua garagem!']);
+
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        http_response_code(500);
+        error_log("Erro add_veiculo (copy): " . $e->getMessage());
         echo json_encode(['error' => 'Erro ao salvar veículo.']);
     }
     exit;
@@ -128,8 +175,6 @@ if ($action === 'delete_veiculo' && $method === 'DELETE') {
     exit;
 }
 
-
-// Listar Marcas
 if ($action === 'list_marcas' && $method === 'GET') {
     try {
         $stmt = $pdo->query("SELECT id_marca, nm_marca FROM marca ORDER BY nm_marca");
@@ -138,7 +183,6 @@ if ($action === 'list_marcas' && $method === 'GET') {
     exit;
 }
 
-// Listar Modelos de uma Marca
 if ($action === 'list_modelos' && $method === 'GET') {
     $marcaId = $_GET['marca_id'] ?? null;
     try {
@@ -148,6 +192,7 @@ if ($action === 'list_modelos' && $method === 'GET') {
     } catch (PDOException $e) { echo json_encode([]); }
     exit;
 }
+
 
 // Se nenhuma ação for encontrada
 http_response_code(404);
