@@ -1,5 +1,5 @@
 /* =======================================================
-   1. RESET E ESTRUTURA BÁSICA
+   1. RESET E ESTRUTURA GERAL
    ======================================================= */
 * { 
     box-sizing: border-box; 
@@ -21,14 +21,14 @@
 }
 
 html, body { 
-  height: 100%; 
+    height: 100%; 
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background: radial-gradient(circle at top left, #3f0d64, #1b0330 80%);
     color: var(--text);
-    display: flex; /* Layout Lado a Lado no Desktop */
+    display: flex;
     min-height: 100vh;
     overflow: auto;
 }
@@ -39,16 +39,16 @@ body {
 .menu-lateral {
     width: 240px;
     min-width: 200px;
-    background: rgba(63, 13, 100, 0.18);
+    background: rgba(63,13,100,0.18);
     backdrop-filter: blur(12px);
     padding: 28px 18px;
     border-right: 1px solid var(--stroke);
     display: flex;
     flex-direction: column;
     gap: 18px;
-    height: 100vh; /* Ocupa altura toda no desktop */
     position: sticky;
     top: 0;
+    height: 100vh;
 }
 
 .menu-lateral .brand {
@@ -58,14 +58,9 @@ body {
     font-weight: 600;
     font-size: 1.05rem;
 }
-.menu-lateral .brand i { 
-  color: #e0b3ff; 
-}
+.menu-lateral .brand i { color: #e0b3ff; }
 
-.menu-lateral nav ul { 
-  list-style: none; 
-  margin-top: 6px; 
-}
+.menu-lateral nav ul { list-style: none; margin-top: 6px; }
 
 .menu-lateral nav a {
     display: block;
@@ -92,18 +87,24 @@ body {
     transform: translateX(4px);
 }
 
+.menu-lateral nav a.active:hover {
+    transform: translateX(6px);
+    filter: brightness(1.1);
+}
+
+/* Botão Voltar */
 .btn-voltar {
     margin-bottom: 20px; 
-    width: 100%;
+    width: 100%; 
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; 
     padding: 10px 18px;
     font-size: 16px;
     font-weight: 500;
     background: rgba(255, 255, 255, 0.20);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1); 
     border-radius: 12px;
     color: #fff;
     cursor: pointer;
@@ -112,8 +113,12 @@ body {
 
 .btn-voltar:hover {
     background: rgba(255, 255, 255, 0.35);
-    transform: translateX(2px);
+    transform: translateX(2px); 
 }
+
+/* Scrollbar invisível no menu (Desktop e Mobile) */
+.menu-lateral { scrollbar-width: none; -ms-overflow-style: none; }
+.menu-lateral::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* =======================================================
    3. ÁREA PRINCIPAL E VIDRO
@@ -128,7 +133,7 @@ body {
 
 .vidro {
     width: 760px;
-    max-width: calc(100% - 40px);
+    max-width: calc(100% - 80px);
     background: var(--card);
     backdrop-filter: blur(18px);
     border-radius: 18px;
@@ -141,16 +146,8 @@ body {
     font-size: 1.6rem;
     margin-bottom: 14px;
     color: #fff;
-    border-bottom: 2px solid rgba(199, 125, 255, 0.12);
+    border-bottom: 2px solid rgba(199,125,255,0.12);
     padding-bottom: 12px;
-}
-
-.section-title {
-    font-size: 1.05rem;
-    color: #e6d6ff;
-    margin-bottom: 8px;
-    width: 100%;
-    margin-top: 20px;
 }
 
 /* =======================================================
@@ -163,20 +160,24 @@ body {
     align-items: start;
 }
 
-.full {
-   grid-column: 1 / -1;
-   }
+.full { grid-column: 1 / -1; }
+
+.section-title {
+    font-size: 1.05rem;
+    color: #e6d6ff;
+    margin-bottom: 8px;
+    grid-column: 1 / -1;
+}
 
 .input-group {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255,255,255,0.04);
     padding: 10px 14px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--stroke);
     transition: all .22s ease;
-    width: 100%;
 }
 
 .input-group i {
@@ -197,41 +198,13 @@ body {
 }
 
 .input-group:focus-within {
-    box-shadow: 0 6px 18px rgba(127, 63, 191, 0.12);
-    border-color: rgba(199, 125, 255, 0.5);
+    box-shadow: 0 6px 18px rgba(127,63,191,0.12);
+    border-color: rgba(199,125,255,0.5);
     transform: translateY(-2px);
 }
 
-.suggestions-dropdown {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: rgba(45, 13, 70, 0.95);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--stroke);
-    border-radius: 0 0 12px 12px;
-    max-height: 250px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-    box-shadow: var(--shadow);
-}
-
-.sugestao-item {
-    padding: 12px 15px;
-    border-bottom: 1px solid var(--stroke);
-    cursor: pointer;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-}
-.sugestao-item:hover { 
-  background: rgba(255, 0, 204, 0.2); 
-}
-
 /* =======================================================
-   5. BOTÕES
+   5. BOTÕES DE AÇÃO
    ======================================================= */
 .actions {
     display: flex;
@@ -250,7 +223,7 @@ body {
     border-radius: 40px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(255, 0, 204, 0.18);
+    box-shadow: 0 10px 30px rgba(255,0,204,0.18);
     transition: transform .18s ease;
 }
 .save-btn:hover {
@@ -270,11 +243,48 @@ body {
 }
 
 /* =======================================================
-   6. DASHBOARD (HOME LOGADA)
+   6. AUTOCOMPLETE (PESQUISA VEÍCULOS)
+   ======================================================= */
+.suggestions-dropdown {
+    position: absolute;
+    top: 60px; 
+    left: 0;
+    width: 100%;
+    background: rgba(45, 13, 70, 0.95); 
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--stroke);
+    border-radius: 0 0 12px 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.sugestao-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--stroke);
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+}
+.sugestao-item:hover { background: rgba(255, 0, 204, 0.2); }
+
+.sugestao-item strong {
+    color: #e6d6ff;
+    font-weight: 600;
+}
+
+.suggestions-dropdown::-webkit-scrollbar { width: 6px; }
+.suggestions-dropdown::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+
+/* =======================================================
+   7. DASHBOARD E CARDS
    ======================================================= */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1.2fr 0.8fr; 
     gap: 40px;
     align-items: center;
     width: 100%;
@@ -296,13 +306,8 @@ body {
     backdrop-filter: blur(10px);
 }
 
-.search-input { 
-  padding: 10px; 
-}
-.search-icon { 
-  margin-left: 20px;
-  color: #ccc; 
-}
+.search-input { padding: 10px; }
+.search-icon { margin-left: 20px; color: #ccc; }
 
 .btn-search {
     background: var(--brand);
@@ -320,8 +325,10 @@ body {
     padding: 24px;
     backdrop-filter: blur(12px);
     max-width: 500px;
-    margin-left: auto;
+    margin-left: auto; 
+    transition: transform .2s;
 }
+.car-glass-card:hover { transform: translateY(-3px); }
 
 .status-badge {
     background: rgba(16, 185, 129, 0.2);
@@ -332,27 +339,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    float: right;
+    float: right; 
 }
 
-.car-image-frame {
-    width: 100%;
-    height: 200px;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-top: 40px;
-    margin-bottom: 20px;
-}
-.car-image-frame img {
-   width: 100%; 
-   height: 100%; 
-   object-fit: cover; 
-  }
+.specs-row { display: flex; gap: 10px; }
+.car-image-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-.specs-row { 
-  display: flex; 
-  gap: 10px; 
-}
 .spec-tag {
     flex: 1;
     background: rgba(255, 255, 255, 0.05);
@@ -364,12 +356,11 @@ body {
 }
 
 /* =======================================================
-   7. RESPONSIVIDADE FORÇADA (MOBILE & TABLET)
-   (Isso sobrescreve tudo para funcionar no celular)
+   8. RESPONSIVIDADE (MOBILE & TABLET)
    ======================================================= */
 @media screen and (max-width: 960px) {
 
-    /* CORPO E ESTRUTURA VERTICAL */
+    /* --- 1. ESTRUTURA GERAL --- */
     body {
         display: flex !important;
         flex-direction: column !important;
@@ -377,28 +368,38 @@ body {
         overflow-x: hidden !important;
     }
 
-    .main-wrap {
+    .main-wrap { 
+        padding: 20px; 
         width: 100% !important;
-        padding: 15px !important;
         display: block !important;
     }
 
-    /* MENU NO TOPO */
+    .vidro { 
+        width: 100% !important; 
+        padding: 22px !important; 
+        max-width: 100% !important; 
+    }
+
+    /* --- 2. MENU NO TOPO --- */
     .menu-lateral {
         width: 100% !important;
         height: auto !important;
+        min-height: auto !important;
         position: sticky !important;
         top: 0 !important;
         z-index: 9999 !important;
+        
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
-        justify-content: space-between;
-        padding: 10px 15px !important;
-        background: rgba(27, 3, 48, 0.98) !important;
+        padding: 15px !important;
+        
         border-right: none !important;
-        border-bottom: 1px solid var(--stroke) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        background: rgba(27, 3, 48, 0.95) !important;
+        
         overflow-x: auto !important;
+        white-space: nowrap !important;
     }
 
     .menu-lateral .brand { display: none !important; }
@@ -407,31 +408,37 @@ body {
         display: flex !important;
         flex-direction: row !important;
         gap: 10px !important;
-        margin: 0 !important; padding: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
     .menu-lateral nav a {
-        white-space: nowrap !important;
-        padding: 8px 14px !important;
-        font-size: 0.85rem !important;
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
         background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
         border-radius: 20px;
+        display: flex !important;
+        align-items: center;
+        gap: 8px;
+        border-left: none !important;
+        transform: none !important;
     }
 
+    .menu-lateral nav a.active {
+        background: var(--brand) !important;
+        color: #fff !important;
+    }
+    
     .btn-voltar {
-        margin: 0 15px 0 0 !important;
+        margin-bottom: 0 !important;
+        margin-left: 15px !important;
         width: auto !important;
     }
 
-    /* VIDRO E FORMULÁRIOS */
-    .vidro {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 20px !important;
-    }
-
-    .profile-grid, .full {
+    /* --- 3. FORMULÁRIOS E INPUTS --- */
+    .profile-grid, .full { 
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
@@ -441,51 +448,40 @@ body {
         width: 100% !important;
     }
 
-    /* GARAGEM E LISTAS */
+    .actions { 
+        flex-direction: column !important; 
+        gap: 15px !important; 
+    }
+
+    .save-btn, .delete-btn { 
+        width: 100% !important; 
+        margin: 0 !important; 
+    }
+
+    /* --- 4. GARAGEM (LISTA DE VEÍCULOS) --- */
     #lista-veiculos {
         display: flex !important;
         flex-direction: column !important;
         gap: 20px !important;
     }
     
-    #lista-veiculos > div { width: 100% !important; }
+    #lista-veiculos > div, .veiculo-card, .card {
+        width: 100% !important;
+        margin: 0 !important;
+        display: block !important;
+    }
 
-    /* DASHBOARD */
+    /* --- 5. DASHBOARD --- */
     .dashboard-grid {
         display: flex !important;
         flex-direction: column !important;
         gap: 30px !important;
+        text-align: center;
     }
     
     .car-glass-card {
         margin: 0 auto !important;
         width: 100% !important;
+        max-width: none !important;
     }
-
-    .actions { 
-      flex-direction: column !important; 
-      gap: 15px !important; 
-    }
-    .save-btn, .delete-btn {
-       width: 100% !important; 
-       margin: 0 !important; 
-      }
 }
-/* =======================================================
-   REMOVER BARRA DE ROLAGEM (MAS MANTER O SCROLL)
-   Cole isso no final do arquivo CSS
-   ======================================================= */
-
-/* 1. Para Firefox */
-.menu-lateral {
-    scrollbar-width: none; /* Esconde a barra */
-    -ms-overflow-style: none; /* Para IE e Edge antigo */
-}
-
-/* 2. Para Chrome, Safari e Edge novo */
-.menu-lateral::-webkit-scrollbar {
-    display: none; /* Remove visualmente a barra */
-    width: 0;
-    height: 0;
-}
-
