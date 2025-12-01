@@ -44,6 +44,8 @@ try {
         $_SESSION['user_name'] = $usuario['nome'];
         $_SESSION['logged_in'] = true;
 
+        $_SESSION['id_usuario'] = $usuario['id_usuario'];
+
         http_response_code(200);
         echo json_encode(['message' => 'Login bem-sucedido!']);
     } else {
