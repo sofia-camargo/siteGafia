@@ -8,6 +8,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="src/style/perfil.css"> 
   <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -75,7 +76,48 @@
     </div>
     
     <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
+    
+    <h2 class="section-title full" style="margin-top: 20px;">Comparativo de Uso da Garagem</h2>
+    <div class="charts-container full" style="max-width: 400px; margin: 0 auto 30px;">
+        <canvas id="usoGaragemChart"></canvas>
+        <p id="loading-uso-garagem" style="text-align: center; color: #ddd; padding: 10px;">Carregando uso dos veículos...</p>
+    </div>
 
+    <h2 class="section-title full" style="margin-top: 20px;">Desempenho por Carro</h2>
+    <div class="table-responsive">
+        <table id="tabela-desempenho" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Veículo</th>
+                    <th>KM Total</th>
+                    <th>Viagens</th>
+                    <th>Vel. Média</th>
+                    <th>KM/Recarga</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title full" style="margin-top: 20px;">Evolução Mensal</h2>
+    <div class="table-responsive" style="margin-bottom: 30px;">
+        <table id="tabela-evolucao" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Mês/Ano</th>
+                    <th>KM no Mês</th>
+                    <th>Viagens no Mês</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+
+    <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
+    
     <h2 class="section-title full" style="margin-top: 20px;">Detalhes de Todas as Viagens</h2>
     
     <div id="historico-loading" class="full" style="text-align: center; color: #ddd; padding: 10px;">
@@ -106,17 +148,23 @@
             width: 100%;
             grid-column: 1 / -1;
         }
-        #tabela-historico th, #tabela-historico td {
+        #tabela-historico th, #tabela-historico td,
+        #tabela-desempenho th, #tabela-desempenho td,
+        #tabela-evolucao th, #tabela-evolucao td {
             padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 0.9rem;
         }
-        #tabela-historico th {
+        #tabela-historico th, 
+        #tabela-desempenho th,
+        #tabela-evolucao th {
             background-color: rgba(255, 255, 255, 0.05);
             font-weight: 600;
         }
-        #tabela-historico tbody tr:hover {
+        #tabela-historico tbody tr:hover,
+        #tabela-desempenho tbody tr:hover,
+        #tabela-evolucao tbody tr:hover {
             background-color: rgba(255, 255, 255, 0.03);
         }
     </style>

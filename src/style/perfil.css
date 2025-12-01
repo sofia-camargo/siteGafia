@@ -502,12 +502,6 @@ body {
         font-size: 1.8rem;
     }
 }
-
-/* =======================================================
-   CORREÇÃO DE RESPONSIVIDADE DO FORMULÁRIO
-   Cole isso no final do seu arquivo CSS
-   ======================================================= */
-
 /* 1. Garante que o padding não aumente a largura total */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -547,10 +541,7 @@ body {
         margin-right: 0;
     }
 }
-/* =======================================================
-   RESPONSIVIDADE GERAL E MENU MÓVEL
-   (Substitui o bloco antigo)
-   ======================================================= */
+
 @media (max-width: 960px) {
 
     /* 1. Ajustes Gerais de Layout (Mantidos do antigo) */
@@ -566,7 +557,6 @@ body {
         flex-direction: column;
     }
 
-    /* 3. Configura a Barra de Menu no Topo (Scroll Horizontal) */
     .menu-lateral {
         display: flex !important; /* Força aparecer */
         width: 100%;
@@ -622,5 +612,52 @@ body {
     .btn-voltar {
         margin-bottom: 0;
         margin-left: 15px;
+    }
+}
+
+/* --- ESTILOS PARA O NOVO BLOCO DE RESUMO (HISTORICO.HTML) --- */
+.resumo-historico {
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.resumo-historico .card {
+    background: linear-gradient(135deg, #2a1b4e 0%, #150a26 100%); 
+    padding: 20px; 
+    border-radius: 12px; 
+    text-align: center; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform .2s;
+}
+.resumo-historico .card:hover {
+    transform: translateY(-3px);
+}
+
+.resumo-historico .card h3 { 
+    margin: 0; 
+    font-size: 2em; 
+    font-weight: bold; 
+    color: var(--brand); /* Usa a cor de destaque */
+    text-shadow: 0 0 8px rgba(255, 46, 252, 0.5);
+}
+.resumo-historico .card p { 
+    margin: 5px 0 0; 
+    font-size: 0.9em; 
+    opacity: 0.8; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+}
+/* Estiliza o card de tempo médio para ocupar o centro em telas maiores */
+.resumo-historico .card.full {
+    grid-column: span 2; 
+    max-width: 400px;
+    justify-self: center; 
+}
+@media (max-width: 600px) {
+    .resumo-historico .card.full {
+        grid-column: span 1; /* Ocupa 1 coluna no mobile */
+        max-width: none;
     }
 }
