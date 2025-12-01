@@ -1,7 +1,3 @@
-/* =======================================================
-   1. RESET E ESTRUTURA BÁSICA
-   ======================================================= */
-* { 
     box-sizing: border-box; 
     margin: 0; 
     padding: 0; 
@@ -348,6 +344,128 @@ body {
    ======================================================= */
 @media screen and (max-width: 960px) {
 
+    /* CORPO E ESTRUTURA VERTICAL */
+    body {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    .main-wrap {
+        width: 100% !important;
+        padding: 15px !important;
+        display: block !important;
+    }
+
+    /* MENU NO TOPO */
+    .menu-lateral {
+        width: 100% !important;
+        height: auto !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 9999 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between;
+        padding: 10px 15px !important;
+        background: rgba(27, 3, 48, 0.98) !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--stroke) !important;
+        overflow-x: auto !important;
+    }
+}
+/* 1. Garante que o padding não aumente a largura total */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* 2. Ajusta o contêiner do formulário (a caixa roxa) */
+.vidro {
+    /* Remove largura fixa se houver e deixa fluido */
+    width: 100%; 
+    max-width: 500px; /* Define um limite máximo para não ficar gigante no PC */
+    margin: 0 auto; /* Centraliza */
+    /* Garante que o conteúdo interno não vaze */
+    overflow: hidden; 
+}
+
+    .menu-lateral .brand { display: none !important; }
+
+    .menu-lateral nav ul {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        margin: 0 !important; padding: 0 !important;
+    }
+
+    .save-btn,
+    .delete-btn {
+        width: 100%; /* Faz os botões ocuparem a largura total */
+        /* Remove margens laterais que possam estar atrapalhando */
+        margin-left: 0; 
+        margin-right: 0;
+    }
+
+@media (max-width: 960px) {
+
+    /* 1. Ajustes Gerais de Layout (Mantidos do antigo) */
+    .profile-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .main-wrap { 
+        padding: 20px; 
+    }
+
+    .btn-voltar {
+        margin: 0 15px 0 0 !important;
+        width: auto !important;
+    }
+
+    .menu-lateral {
+        display: flex !important; /* Força aparecer */
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        flex-direction: row;      /* Itens lado a lado */
+        align-items: center;
+        overflow-x: auto;         /* Rolagem lateral */
+        white-space: nowrap;
+        padding: 15px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: sticky;         /* Gruda no topo */
+        top: 0;
+        z-index: 100;
+        background: rgba(27, 3, 48, 0.95); /* Fundo escuro para leitura */
+    }
+
+    .profile-grid, .full {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .input-group, .input-group input, .input-group select {
+        width: 100% !important;
+    }
+
+    /* GARAGEM E LISTAS */
+    #lista-veiculos {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    #lista-veiculos > div { width: 100% !important; }
+
+    /* DASHBOARD */
+    .dashboard-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px !important;
+    }
     /* CORPO E ESTRUTURA VERTICAL */
     body {
         display: flex !important;
