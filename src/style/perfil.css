@@ -547,3 +547,80 @@ body {
         margin-right: 0;
     }
 }
+/* =======================================================
+   RESPONSIVIDADE GERAL E MENU MÓVEL
+   (Substitui o bloco antigo)
+   ======================================================= */
+@media (max-width: 960px) {
+
+    /* 1. Ajustes Gerais de Layout (Mantidos do antigo) */
+    .profile-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .main-wrap { 
+        padding: 20px; 
+    }
+
+    /* 2. Transforma o Layout em Coluna (Menu em cima, Conteúdo embaixo) */
+    body {
+        flex-direction: column;
+    }
+
+    /* 3. Configura a Barra de Menu no Topo (Scroll Horizontal) */
+    .menu-lateral {
+        display: flex !important; /* Força aparecer */
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        flex-direction: row;      /* Itens lado a lado */
+        align-items: center;
+        overflow-x: auto;         /* Rolagem lateral */
+        white-space: nowrap;
+        padding: 15px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        position: sticky;         /* Gruda no topo */
+        top: 0;
+        z-index: 100;
+        background: rgba(27, 3, 48, 0.95); /* Fundo escuro para leitura */
+    }
+
+    /* Esconde a marca no menu móvel para caber mais botões */
+    .menu-lateral .brand {
+        display: none; 
+    }
+
+    /* Ajusta a lista para ficar horizontal */
+    .menu-lateral nav ul {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        margin-top: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    /* Estilo dos Botões (Pills) */
+    .menu-lateral nav a {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Botão Ativo */
+    .menu-lateral nav a.active {
+        border-left: 1px solid rgba(255,255,255,0.1);
+        background: var(--brand, #ff00cc);
+    }
+    
+    /* Botão Voltar */
+    .btn-voltar {
+        margin-bottom: 0;
+        margin-left: 15px;
+    }
+}
