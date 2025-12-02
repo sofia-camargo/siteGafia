@@ -3,180 +3,109 @@
 function checkSession() {
     fetch('../api/verificar_sessao.php')
         .then(response => {
-            // Verifica se a resposta HTTP foi bem sucedida (status 200-299)
-            if (!response.ok) {
-                throw new Error('Erro no servidor: ' + response.status);
-            }
+            if (!response.ok) throw new Error('Erro servidor: ' + response.status);
             return response.json();
         })
         .then(data => {
-            // CORREÇÃO: O PHP retorna 'loggedIn' (camelCase), não 'logged_in'
+            // Se não estiver logado, redireciona
             if (!data.loggedIn) {
-                console.warn('Usuário não autenticado. Redirecionando...');
+                console.warn('Sessão expirada ou inválida.');
                 window.location.href = 'login.html';
-            } else {
-                console.log('Sessão ativa para o usuário ID: ' + data.userId);
             }
         })
         .catch(error => {
-            console.error('Erro ao verificar sessão:', error);
-            // IMPORTANTE: Comentamos o redirecionamento forçado no erro 
-            // para evitar que você fique preso num loop se o servidor falhar.
-            
-            // window.location.href = 'login.html'; 
-            
-            alert('Houve um erro ao verificar sua sessão. Verifique o console (F12) para detalhes.');
+            console.error('Erro de sessão:', error);
+            // Evita redirecionar em caso de erro de rede para não criar loop, 
+            // mas avisa o usuário
         });
 }
-
-
-function carregarEstados() {
-    fetch('../api/buscar_estados.php')
-        .then(response => response.json())
-        .then(estados => {
-            const selectEstado = document.getElementById('estado');
-            if (selectEstado) {
-                selectEstado.innerHTML = '<option value="">Selecione o Estado</option>';
-                estados.forEach(estado => {
-                    const option = document.createElement('option');
-                    option.value = estado.sigla; // Certifique-se que o PHP retorna 'sigla' ou ajuste para 'id_estado'
-                    option.textContent = estado.nm_estado; // Certifique-se que o PHP retorna 'nm_estado'
-                    selectEstado.appendChild(option);
-                });
-                // Recarrega o perfil após carregar os estados para pré-selecionar o valor se necessário
-                carregarPerfil();
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao carregar estados:', error);
-        });
-}
-
-function logout() {
-    fetch('../api/logout.php')
-        .then(response => response.json())
-        .then(data => {
-            // Verifica sucesso (considerando que seu logout.php retorne JSON, senão apenas o status 200 basta)
-            window.location.href = 'login.html';
-        })
-        .catch(error => {
-            console.error('Erro na requisição de logout:', error);
-            // Força a saída mesmo com erro de rede
-            window.location.href = 'login.html';
-        });
-}
-
 
 function carregarPerfil() {
     fetch('../api/buscar_perfil.php')
         .then(response => {
-             if(!response.ok) throw new Error("Erro ao buscar perfil: " + response.status);
+             if(!response.ok) throw new Error("Erro API Perfil: " + response.status);
              return response.json();
         })
-        .then(data => {
-            // Ajuste conforme o retorno real do seu buscar_perfil.php
-            // Se o PHP retornar direto o objeto do perfil:
-            const perfil = data; 
+        .then(perfil => {
+            // O PHP retorna o objeto direto, então usamos 'perfil' diretamente.
             
             if (perfil && !perfil.error) {
+                // Preenche os campos se o elemento existir no HTML e o dado existir no JSON
+                
+                // Nome e Sobrenome
                 if(document.getElementById('nome')) document.getElementById('nome').value = perfil.nome || '';
+                if(document.getElementById('sobrenome')) document.getElementById('sobrenome').value = perfil.sobrenome || '';
+                
+                // Contato
                 if(document.getElementById('email')) document.getElementById('email').value = perfil.email || '';
-                if(document.getElementById('cpf')) document.getElementById('cpf').value = perfil.cpf || ''; // Se houver
                 if(document.getElementById('telefone')) document.getElementById('telefone').value = perfil.telefone || '';
+                
+                // Data de Nascimento
+                if(document.getElementById('dt_nasc')) document.getElementById('dt_nasc').value = perfil.dt_nasc || '';
+
+                // OBS: O seu PHP atual (buscar_perfil.php) NÃO retorna CEP, Cidade ou País.
+                // Eles ficarão em branco até que você altere o PHP para buscar essas colunas no banco.
                 if(document.getElementById('cep')) document.getElementById('cep').value = perfil.cep || '';
-                if(document.getElementById('endereco')) document.getElementById('endereco').value = perfil.endereco || '';
-                if(document.getElementById('numero')) document.getElementById('numero').value = perfil.numero || '';
-                if(document.getElementById('complemento')) document.getElementById('complemento').value = perfil.complemento || '';
-                if(document.getElementById('bairro')) document.getElementById('bairro').value = perfil.bairro || '';
                 if(document.getElementById('cidade')) document.getElementById('cidade').value = perfil.cidade || '';
                 
-                // Preenche o estado no dropdown se existir e estiver carregado
-                if(document.getElementById('estado')) document.getElementById('estado').value = perfil.estado || ''; 
             } else {
-                console.warn('Perfil não encontrado ou erro:', data.error);
+                console.warn('Perfil não encontrado:', perfil.error);
             }
         })
         .catch(error => {
-            console.error('Erro na requisição de buscar perfil:', error);
+            console.error('Erro ao buscar perfil:', error);
         });
 }
 
-
 function salvarPerfil() {
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    // Adicione os outros campos conforme necessário para enviar ao PHP
-    const telefone = document.getElementById('telefone') ? document.getElementById('telefone').value : '';
-    const dt_nasc = document.getElementById('dt_nasc') ? document.getElementById('dt_nasc').value : '';
-    // Adicione outros campos se o seu atualizar_perfil.php esperar por eles
-
-    const data = {
-        nome: nome,
-        email: email,
-        telefone: telefone,
-        dt_nasc: dt_nasc
-        // ... outros campos
+    // Pega os valores atuais dos inputs
+    const dados = {
+        nome: document.getElementById('nome')?.value,
+        sobrenome: document.getElementById('sobrenome')?.value,
+        email: document.getElementById('email')?.value,
+        telefone: document.getElementById('telefone')?.value,
+        dt_nasc: document.getElementById('dt_nasc')?.value
+        // Adicione cep/cidade aqui se você implementar no PHP depois
     };
 
     fetch('../api/atualizar_perfil.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados),
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message) { // Seu PHP retorna 'message' em caso de sucesso
+        if (data.message) {
             alert('Perfil atualizado com sucesso! ✅');
         } else if (data.error) {
-            alert('Erro ao atualizar perfil: ' + data.error);
+            alert('Erro: ' + data.error);
         }
     })
     .catch(error => {
-        console.error('Erro na requisição de salvar perfil:', error);
-        alert('Erro de conexão ao tentar salvar o perfil.');
+        console.error('Erro ao salvar:', error);
+        alert('Erro de conexão ao salvar.');
     });
 }
 
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     checkSession(); 
-    
-    // Se a página tiver o dropdown de estados, carrega.
-    if(document.getElementById('estado')) {
-        carregarEstados(); 
-    } else {
-        // Se não tiver estados para carregar, carrega o perfil direto
-        carregarPerfil();
-    }
+    carregarPerfil();
 
-    const formPerfil = document.getElementById('form-perfil'); // ID corrigido conforme seu HTML (form-perfil)
-    if (formPerfil) {
-        formPerfil.addEventListener('submit', function (event) {
-            event.preventDefault();
+    const form = document.getElementById('form-perfil');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
             salvarPerfil();
         });
     }
 
-    // Botão de excluir conta (se existir)
-    const btnDelete = document.querySelector('.delete-btn');
-    if(btnDelete) {
-        btnDelete.addEventListener('click', () => {
-            if(confirm('Tem certeza que deseja excluir sua conta?')) {
-                // Implementar lógica de exclusão aqui se necessário
-                alert('Funcionalidade em desenvolvimento.');
-            }
-        });
-    }
-
-    // Botão de Logout no menu lateral (se houver ID específico ou classe)
-    // No seu HTML não vi um ID específico para logout no menu lateral, 
-    // mas se tiver um botão com id="logoutButton", use:
-    const logoutBtn = document.getElementById('logoutButton');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            logout();
+    // Botão de Logout (se houver no menu)
+    const btnLogout = document.querySelector('a[href*="logout.php"]'); 
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            // Deixa o link funcionar normalmente (ir para o PHP), 
+            // ou você pode interceptar e fazer fetch se preferir.
         });
     }
 });

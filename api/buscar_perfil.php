@@ -13,7 +13,7 @@ $userId = $_SESSION['user_id'];
 
 try {
     // Confirme se o nome da tabela no seu banco é 'usuarios' ou 'usuario'
-    $sql = "SELECT nome, sobrenome, email, telefone, dt_nasc FROM usuarios WHERE id_usuario = :id";
+    $sql = "SELECT nome, sobrenome, email, telefone, dt_nasc, cep, cidade FROM usuarios WHERE id_usuario = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id' => $userId]);
     $perfil = $stmt->fetch(PDO::FETCH_ASSOC);

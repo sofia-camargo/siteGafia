@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Atualiza o nome na saudação
-        document.getElementById('user-greeting').textContent = `Olá, ${session.userName}! ⚡`;
+        document.getElementById('user-greeting').textContent = `Olá, ${session.userName}!`;
         
         // 2. Carregar Histórico Recente (Pré-visualização)
         carregarHistoricoRecente();
