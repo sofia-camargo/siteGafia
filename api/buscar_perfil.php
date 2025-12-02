@@ -4,6 +4,7 @@ require_once 'db_connection.php';
 session_start();
 header('Content-Type: application/json');
 
+// Verifica se o usuário está logado
 if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Não autorizado']);
@@ -13,11 +14,16 @@ if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['user_id'])) {
 $userId = $_SESSION['id_usuario'] ?? $_SESSION['user_id'];
 
 try {
-    // CORREÇÃO: Busca os nomes novos e entrega como 'nome' e 'sobrenome' para o JS
+    // CORREÇÃO:
+    // 1. Uso da tabela 'usuarios' (no plural, igual ao login/cadastro)
+    // 2. Colunas 'nome' e 'sobrenome' (igual ao banco)
+    // 3. Adição de 'telefone' e 'dt_nasc' para preencher o formulário completo
     $sql = "SELECT 
-                nm_usuario AS nome, 
-                sobrenome_usuario AS sobrenome, 
+                nome, 
+                sobrenome, 
                 email, 
+                telefone,
+                dt_nasc,
                 cep, 
                 cidade
             FROM usuarios 
