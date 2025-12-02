@@ -1,91 +1,112 @@
-/* ===== RESET ===== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ===== FUNDO GERAL ===== */
-html, body { height: 100%; }
-body {
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at top left, #3f0d64, #1b0330 80%);
-  color: #fff;
-  display: flex;
-  min-height: 100vh;
-  overflow: auto;
+/* =======================================================
+   1. RESET E ESTRUTURA GERAL
+   ======================================================= */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
 }
 
-/* ===== MENU LATERAL ===== */
+:root {
+    --bg-1: #1b0330;
+    --bg-2: #3f0d64;
+    --card: rgba(255, 255, 255, 0.06);
+    --stroke: rgba(255, 255, 255, 0.1);
+    --text: #ffffff;
+    --muted: #d9d9d9;
+    --brand: #ff2efc;
+    --brand-2: #9b5cff;
+    --radius: 16px;
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+html, body { 
+    height: 100%; 
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top left, #3f0d64, #1b0330 80%);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+/* =======================================================
+   2. MENU LATERAL (DESKTOP)
+   ======================================================= */
 .menu-lateral {
-  width: 240px;
-  min-width: 200px;
-  background: rgba(63,13,100,0.18);
-  backdrop-filter: blur(12px);
-  padding: 28px 18px;
-  border-right: 1px solid rgba(255,255,255,0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  /* Fixa o menu no desktop */
-  position: sticky;
-  top: 0;
-  height: 100vh;
+    width: 240px;
+    min-width: 200px;
+    background: rgba(63,13,100,0.18);
+    backdrop-filter: blur(12px);
+    padding: 28px 18px;
+    border-right: 1px solid var(--stroke);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
 }
 
 .menu-lateral .brand {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:600;
-  font-size:1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.05rem;
 }
 .menu-lateral .brand i { color: #e0b3ff; }
 
-.menu-lateral nav ul { list-style:none; margin-top:6px; }
-.menu-lateral nav a{
-  display:block;
-  color: #ffffffcc;
-  text-decoration:none;
-  padding:10px 12px;
-  border-radius:10px;
-  transition: all .25s ease;
-  font-weight:500;
+.menu-lateral nav ul { list-style: none; margin-top: 6px; }
+
+.menu-lateral nav a {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: all .25s ease;
+    font-weight: 500;
 }
-.menu-lateral nav a:hover{
-  transform: translateX(6px);
-  background: linear-gradient(90deg, #ff00cc22, #7b2cbf22);
-  color: #fff;
+
+.menu-lateral nav a:hover {
+    transform: translateX(6px);
+    background: linear-gradient(90deg, rgba(255, 0, 204, 0.13), rgba(123, 44, 191, 0.13));
+    color: #fff;
 }
-/* ===== MENU SELECIONADO ===== */
+
 .menu-lateral nav a.active {
-  background: linear-gradient(90deg, #ff00cc55, #7b2cbf55);
-  border-left: 4px solid #ff00cc;
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 0 12px rgba(255, 0, 204, 0.2);
-  transform: translateX(4px);
+    background: linear-gradient(90deg, rgba(255, 0, 204, 0.33), rgba(123, 44, 191, 0.33));
+    border-left: 4px solid var(--brand);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(255, 0, 204, 0.2);
+    transform: translateX(4px);
 }
 
 .menu-lateral nav a.active:hover {
-  transform: translateX(6px);
-  filter: brightness(1.1);
+    transform: translateX(6px);
+    filter: brightness(1.1);
 }
 
-/* ===== BOTÃO VOLTAR (MENU LATERAL) ===== */
+/* Botão Voltar */
 .btn-voltar {
     margin-bottom: 20px; 
     width: 100%; 
     display: flex;
     align-items: center;
     gap: 10px; 
-    
     padding: 10px 18px;
     font-size: 16px;
     font-weight: 500;
-
     background: rgba(255, 255, 255, 0.20);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1); 
     border-radius: 12px;
     color: #fff;
-
     cursor: pointer;
     transition: 0.2s ease-in-out;
 }
@@ -95,197 +116,135 @@ body {
     transform: translateX(2px); 
 }
 
+/* Scrollbar invisível no menu (Desktop e Mobile) */
+.menu-lateral { scrollbar-width: none; -ms-overflow-style: none; }
+.menu-lateral::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
-/* ===== AREA PRINCIPAL ===== */
+/* =======================================================
+   3. ÁREA PRINCIPAL E VIDRO
+   ======================================================= */
 .main-wrap {
-  flex:1;
-  padding: 36px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
+    flex: 1;
+    padding: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
-/* ===== PAINEL VIDRO ===== */
 .vidro {
-  width: 760px;
-  max-width: calc(100% - 80px);
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(18px);
-  border-radius: 18px;
-  padding: 30px 30px;
-  border: 1px solid rgba(255,255,255,0.07);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+    width: 760px;
+    max-width: calc(100% - 80px);
+    background: var(--card);
+    backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 30px;
+    border: 1px solid var(--stroke);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.45);
 }
 
 .vidro h1 {
-  font-size: 1.6rem;
-  margin-bottom: 14px;
-  color: #fff;
-  border-bottom: 2px solid rgba(199,125,255,0.12);
-  padding-bottom: 12px;
+    font-size: 1.6rem;
+    margin-bottom: 14px;
+    color: #fff;
+    border-bottom: 2px solid rgba(199,125,255,0.12);
+    padding-bottom: 12px;
 }
 
-/* ===== FORM LAYOUT ===== */
+/* =======================================================
+   4. FORMULÁRIOS E INPUTS
+   ======================================================= */
 .profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 30px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 30px;
+    align-items: start;
 }
 
-.full {
-  grid-column: 1 / -1;
-}
+.full { grid-column: 1 / -1; }
 
 .section-title {
-  font-size: 1.05rem;
-  color: #e6d6ff;
-  margin-bottom: 8px;
-  grid-column: 1 / -1;
+    font-size: 1.05rem;
+    color: #e6d6ff;
+    margin-bottom: 8px;
+    grid-column: 1 / -1;
 }
 
-/* ===== INPUT GROUP ===== */
 .input-group {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  background: rgba(255,255,255,0.04);
-  padding:10px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: all .22s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.04);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--stroke);
+    transition: all .22s ease;
 }
+
 .input-group i {
-  color: #c77dff;
-  min-width:18px;
-  text-align:center;
-  font-size:1.05rem;
+    color: #c77dff;
+    min-width: 18px;
+    text-align: center;
+    font-size: 1.05rem;
 }
+
 .input-group input,
 .input-group select {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #fff;
-  width:100%;
-  font-size: .95rem;
-}
-.input-group:focus-within {
-  box-shadow: 0 6px 18px rgba(127,63,191,0.12);
-  border-color: rgba(199,125,255,0.5);
-  transform: translateY(-2px);
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    width: 100%;
+    font-size: .95rem;
 }
 
-/* ===== BOTÕES ===== */
+.input-group:focus-within {
+    box-shadow: 0 6px 18px rgba(127,63,191,0.12);
+    border-color: rgba(199,125,255,0.5);
+    transform: translateY(-2px);
+}
+
+/* =======================================================
+   5. BOTÕES DE AÇÃO
+   ======================================================= */
 .actions {
-  display:flex;
-  gap:14px;
-  margin-top: 8px;
-  grid-column: 1 / -1;
-  align-items:center;
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+    grid-column: 1 / -1;
+    align-items: center;
 }
 
 .save-btn {
-  flex:1;
-  background: linear-gradient(90deg,#ff00cc,#7b2cbf);
-  color: #fff;
-  border:none;
-  padding:12px 18px;
-  border-radius: 40px;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow: 0 10px 30px rgba(255,0,204,0.18);
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    flex: 1;
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 40px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(255,0,204,0.18);
+    transition: transform .18s ease;
 }
-.save-btn:hover{
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(255,0,204,0.28);
-  filter: brightness(1.06);
+.save-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    filter: brightness(1.06);
 }
 
 .delete-btn {
-  background: linear-gradient(90deg,#ff6b6b,#9f4bbf);
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius: 40px;
-  font-weight:600;
-  cursor:pointer;
-  width:180px;
-}
-
-
-/* ===== DONUT CHART (Historico) ===== */
-.donut-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.donut-card {
-    text-align: center;
+    background: linear-gradient(90deg, #ff6b6b, #9f4bbf);
     color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 180px;
 }
 
-.donut {
-    --progress: 0deg;
-
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-
-    background: conic-gradient(
-        #c000ff var(--progress),
-        #512b52 0deg
-    );
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-    transition: 0.4s ease;
-
-    box-shadow: 0 0 25px rgba(170, 0, 255, 0.6),
-                inset 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-/* Furo no meio */
-.donut .center {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: #16021f;
-    position: absolute;
-    z-index: 1;
-    box-shadow: inset 0 0 12px rgba(138, 0, 255, 0.5);
-}
-
-.donut span {
-    position: absolute;
-    z-index: 2;
-    font-size: 1.4rem;
-    font-weight: bold;
-}
-
-.donut:hover {
-    transform: scale(1.06);
-    box-shadow: 0 0 35px rgba(190, 0, 255, 0.7);
-}
-
-.donut-card p {
-    margin-top: 10px;
-    font-size: 1rem;
-    opacity: 0.9;
-}
-
-
-/* ===== BUSCA ESTILO GOOGLE (AUTOCOMPLETE - Veiculos) ===== */
-
-/* Container da lista de sugestões */
+/* =======================================================
+   6. AUTOCOMPLETE (PESQUISA VEÍCULOS)
+   ======================================================= */
 .suggestions-dropdown {
     position: absolute;
     top: 60px; 
@@ -293,7 +252,7 @@ body {
     width: 100%;
     background: rgba(45, 13, 70, 0.95); 
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--stroke);
     border-radius: 0 0 12px 12px;
     max-height: 250px;
     overflow-y: auto;
@@ -302,46 +261,27 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Item individual da lista */
 .sugestao-item {
     padding: 12px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--stroke);
     cursor: pointer;
-    transition: background 0.2s;
     color: #fff;
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
-
-.sugestao-item:last-child {
-    border-bottom: none;
-}
-
-.sugestao-item:hover {
-    background: rgba(255, 0, 204, 0.2); 
-}
+.sugestao-item:hover { background: rgba(255, 0, 204, 0.2); }
 
 .sugestao-item strong {
     color: #e6d6ff;
     font-weight: 600;
 }
 
-/* Scrollbar personalizada para a lista */
-.suggestions-dropdown::-webkit-scrollbar {
-    width: 6px;
-}
-.suggestions-dropdown::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.1);
-}
-.suggestions-dropdown::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
-}
+.suggestions-dropdown::-webkit-scrollbar { width: 6px; }
+.suggestions-dropdown::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
-/* ===== ESTILO DO PAINEL / CARDS (Garagem/Home) ===== */
-
-/* 1. CONFIGURAÇÃO GERAL DO GRID (COMPUTADOR) */
+/* =======================================================
+   7. DASHBOARD E CARDS
+   ======================================================= */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr; 
@@ -350,10 +290,37 @@ body {
     width: 100%;
 }
 
-/* Card do Carro (Usado em veiculos.js) */
+.text-brand {
+    color: var(--brand);
+    text-shadow: 0 0 15px rgba(255, 46, 252, 0.4);
+}
+
+.search-glass {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--stroke);
+    border-radius: 50px;
+    padding: 8px;
+    margin-top: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.search-input { padding: 10px; }
+.search-icon { margin-left: 20px; color: #ccc; }
+
+.btn-search {
+    background: var(--brand);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
 .car-glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--stroke);
     border-radius: 22px;
     padding: 24px;
     backdrop-filter: blur(12px);
@@ -361,10 +328,7 @@ body {
     margin-left: auto; 
     transition: transform .2s;
 }
-.car-glass-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(255, 0, 204, 0.1);
-}
+.car-glass-card:hover { transform: translateY(-3px); }
 
 .status-badge {
     background: rgba(16, 185, 129, 0.2);
@@ -378,10 +342,8 @@ body {
     float: right; 
 }
 
-.specs-row {
-    display: flex;
-    gap: 10px;
-}
+.specs-row { display: flex; gap: 10px; }
+.car-image-frame img { width: 100%; height: 100%; object-fit: cover; }
 
 .spec-tag {
     flex: 1;
@@ -392,159 +354,183 @@ body {
     font-size: 0.9rem;
     color: #ddd;
 }
-
-
-/* ===== ESTILOS PARA O NOVO BLOCO DE RESUMO (HISTORICO.HTML) ===== */
-.resumo-historico {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-    gap: 15px;
-    margin-bottom: 25px;
-}
-.resumo-historico .card {
-    background: linear-gradient(135deg, #2a1b4e 0%, #150a26 100%); 
-    padding: 20px; 
-    border-radius: 12px; 
-    text-align: center; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: transform .2s;
-}
-.resumo-historico .card:hover {
-    transform: translateY(-3px);
-}
-
-.resumo-historico .card h3 { 
-    margin: 0; 
-    font-size: 2em; 
-    font-weight: bold; 
-    color: #ff2efc; 
-    text-shadow: 0 0 8px rgba(255, 46, 252, 0.5);
-}
-.resumo-historico .card p { 
-    margin: 5px 0 0; 
-    font-size: 0.9em; 
-    opacity: 0.8; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
+/* =======================================================
+   BOTÃO ESTILO VIDRO (GLASSMORPHISM)
+   ======================================================= */
+.btn-glass {
+    /* Visual de Vidro */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Borda sutil */
+    
+    /* Texto e Fonte */
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* Tamanho e Forma */
+    padding: 14px 24px;
+    border-radius: 50px; /* Bem redondo */
+    width: 100%; /* Para ocupar o espaço todo (já que você usa a classe .full) */
+    
+    /* Comportamento */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    
+    /* Centralizar texto/ícones */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.resumo-historico .card.full {
-    grid-column: span 2; 
-    max-width: 400px;
-    justify-self: center; 
+/* Estado: Hover (Passar o mouse) */
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.15); /* Fica mais claro */
+    border-color: #ff2efc;                 /* Borda Rosa Neon */
+    box-shadow: 0 0 20px rgba(255, 46, 252, 0.4); /* Brilho Neon */
+    transform: translateY(-2px);           /* Sobe um pouquinho */
 }
 
+/* Estado: Desabilitado (Quando não tem nada escrito) */
+.btn-glass:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+/* =======================================================
+   8. RESPONSIVIDADE (MOBILE & TABLET)
+   ======================================================= */
+@media screen and (max-width: 960px) {
 
-/* ===== RESPONSIVIDADE GERAL E MENU MÓVEL ===== */
-@media (max-width: 960px) {
-
-    /* 1. Transforma o Layout em Coluna (Menu em cima, Conteúdo embaixo) */
+    /* --- 1. ESTRUTURA GERAL --- */
     body {
-        flex-direction: column;
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        overflow-x: hidden !important;
     }
 
-    /* 2. Ajustes Gerais de Layout */
-    .profile-grid { 
-        grid-template-columns: 1fr; /* Coluna única para formulários */
-    }
     .main-wrap { 
         padding: 20px; 
+        width: 100% !important;
+        display: block !important;
     }
 
-    .vidro { width:100%; padding: 22px; max-width: 100%; }
+    .vidro { 
+        width: 100% !important; 
+        padding: 22px !important; 
+        max-width: 100% !important; 
+    }
 
-    /* 3. Configura a Barra de Menu no Topo (Scroll Horizontal) */
+    /* --- 2. MENU NO TOPO --- */
     .menu-lateral {
-        display: flex !important; 
-        width: 100%;
-        height: auto;
-        min-height: auto;
-        flex-direction: row;      
-        align-items: center;
-        overflow-x: auto;         
-        white-space: nowrap;
-        padding: 15px;
-        border-right: none;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        position: sticky;         
-        top: 0;
-        z-index: 100;
-        background: rgba(27, 3, 48, 0.95); 
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 9999 !important;
+        
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding: 15px !important;
+        
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        background: rgba(27, 3, 48, 0.95) !important;
+        
+        overflow-x: auto !important;
+        white-space: nowrap !important;
     }
 
-    /* Esconde a marca no menu móvel para caber mais botões */
-    .menu-lateral .brand {
-        display: none; 
-    }
+    .menu-lateral .brand { display: none !important; }
 
-    /* Ajusta a lista para ficar horizontal */
     .menu-lateral nav ul {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        margin-top: 0;
-        padding: 0;
-        width: 100%;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
-    /* Estilo dos Botões (Pills) */
     .menu-lateral nav a {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
         background: rgba(255,255,255,0.05);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 20px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         gap: 8px;
-        border-left: none; /* Remove a barra lateral */
-        transform: none; /* Remove o translate da animação */
-        box-shadow: none;
+        border-left: none !important;
+        transform: none !important;
     }
 
-    /* Botão Ativo */
     .menu-lateral nav a.active {
-        background: #ff00cc;
-        color: #fff;
+        background: var(--brand) !important;
+        color: #fff !important;
     }
     
-    /* Botão Voltar */
     .btn-voltar {
-        margin-bottom: 0;
-        margin-left: 15px;
+        margin-bottom: 0 !important;
+        margin-left: 15px !important;
+        width: auto !important;
+    }
+
+    /* --- 3. FORMULÁRIOS E INPUTS --- */
+    .profile-grid, .full { 
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .input-group, .input-group input, .input-group select {
+        width: 100% !important;
+    }
+
+    .actions { 
+        flex-direction: column !important; 
+        gap: 15px !important; 
+    }
+
+    .save-btn, .delete-btn { 
+        width: 100% !important; 
+        margin: 0 !important; 
+    }
+
+    /* --- 4. GARAGEM (LISTA DE VEÍCULOS) --- */
+    #lista-veiculos {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
     }
     
-    /* 4. Ajuste de Botões de Ação (vertical no mobile) */
-    .actions {
-        flex-direction: column; 
-        gap: 15px; 
+    #lista-veiculos > div, .veiculo-card, .card {
+        width: 100% !important;
+        margin: 0 !important;
+        display: block !important;
     }
 
-    .save-btn, .delete-btn {
-        width: 100%; 
-        margin: 0; 
-    }
-
-    /* 5. Ajuste de Layout da Garagem/Dashboard */
+    /* --- 5. DASHBOARD --- */
     .dashboard-grid {
-        grid-template-columns: 1fr; 
-        text-align: center; 
-        gap: 30px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px !important;
+        text-align: center;
     }
+    
     .car-glass-card {
-        margin: 0 auto; 
-        width: 100%;
-        max-width: none;
-    }
-
-    /* 6. Ajuste do Histórico para 1 coluna no celular */
-    .resumo-historico .card.full {
-        grid-column: span 1; 
-        max-width: none;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: none !important;
     }
 }
-
-/* REMOÇÃO DA BARRA DE ROLAGEM NO MENU LATERAL (Mobile) */
-.menu-lateral { scrollbar-width: none; -ms-overflow-style: none; }
-.menu-lateral::-webkit-scrollbar { display: none; width: 0; height: 0; }
