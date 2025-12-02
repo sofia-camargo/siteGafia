@@ -37,9 +37,9 @@ O objetivo da disciplina é desenvolver um CRUD com o tema do Objetivo de Desenv
 
 ## Funcionalidades
 * Login e cadastro do usuário;
-* O usuário pode cadastrar seus veículos na "Garagem";
+* O usuário tem uma garagem, onde estão localizados os seus carros elétricos cadastrados;
 * Planejamento de viagens: cálculo da distância percorrida, tempo do trajeto, duração da bateria do carro, da necessidade de carregamento do veículo;
-* API fornece o trajeto e os pontos de carregamento.
+* APIs fornecem o trajeto e os pontos de carregamento desse trajeto.
 
 ## Como Executar o Projeto (Setup)
 Para visualização e uso, o site está postado e você pode conferir no link a seguir: https://sitegafia.onrender.com/index.html 
