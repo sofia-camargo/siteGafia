@@ -103,8 +103,8 @@ async function carregarVeiculos(selectElement) {
                 option.textContent = `${carro.nm_marca} ${carro.nm_modelo}`;
                 
                 if (index === 0) {
-                     option.selected = true;
-                     veiculoSelecionado = JSON.parse(option.value);
+                    option.selected = true;
+                    veiculoSelecionado = JSON.parse(option.value);
                 }
                 selectElement.appendChild(option);
             });
