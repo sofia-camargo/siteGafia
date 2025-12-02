@@ -19,12 +19,11 @@ if (!$input) {
 }
 
 try {
-    // 3. Query de Inserção
-    // OBS: O id_estado está fixo em 1. É necessário ter rodado o SQL acima no banco.
+    // 3. Query de Inserção CORRIGIDA (Sem id_estado)
     $sql = "INSERT INTO historico_viagem 
-            (id_usuario, id_carro, cidade_origem, cidade_destino, km_viagem, tempo_viagem, qnt_abastecimento, dt_consulta, id_estado) 
+            (id_usuario, id_carro, cidade_origem, cidade_destino, km_viagem, tempo_viagem, qnt_abastecimento, dt_consulta) 
             VALUES 
-            (:id_usuario, :id_carro, :origem, :destino, :km, :tempo, :recargas, NOW(), 1)";
+            (:id_usuario, :id_carro, :origem, :destino, :km, :tempo, :recargas, NOW())";
 
     $stmt = $pdo->prepare($sql);
     
@@ -46,7 +45,6 @@ try {
 
 } catch (PDOException $e) {
     http_response_code(500);
-    // Retorna o erro detalhado para ajudar no debug
     echo json_encode([
         'success' => false, 
         'message' => 'Erro SQL ao salvar: ' . $e->getMessage()

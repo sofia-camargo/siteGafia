@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Histórico de Viagens</title>
-
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="src/style/perfil.css"> 
   <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
@@ -12,118 +11,40 @@
 </head>
 <body>
 
+<input type="checkbox" id="nav-toggle-internal">
+
 <aside class="menu-lateral">
-    <button class="btn-voltar" onclick="window.location.href='index.html'">
-    <i class="fa-solid fa-arrow-left"></i> Início
-  </button>
-  <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
-  <nav>
-    <ul>
-      <li><a href="perfil.html">Minha conta</a></li>
-      <li><a href="senha.html">Alterar senha</a></li>
-      <li><a href="historico.html" class="active">Históricos</a></li>
-      <li><a href="veiculos.html">Garagem</a></li>
-    </ul>
-  </nav>
+    <button class="btn-voltar" id="btn-voltar-dinamico">
+        <i class="fa-solid fa-arrow-left"></i> Início
+    </button>
+    <div class="brand"><i class="fa-solid fa-clock-rotate-left"></i> Histórico</div>
+    
+    <label for="nav-toggle-internal" class="hamburger-label">
+        <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+        <ul>
+          <li><a href="perfil.html"><i class="fa-solid fa-user"></i> Minha conta</a></li>
+          <li><a href="senha.html"><i class="fa-solid fa-lock"></i> Alterar senha</a></li>
+          <li><a href="historico.html" class="active"><i class="fa-solid fa-clock-rotate-left"></i> Históricos</a></li>
+          <li><a href="veiculos.html"><i class="fa-solid fa-car"></i> Garagem</a></li>
+        </ul>
+    </nav>
 </aside>
 
 <div class="main-wrap">
   <section class="vidro">
     <h1>Histórico de Atividades</h1>
-
     <div class="profile-grid full">
-      <p style="color:#e6d6ff; font-size:1rem;">
-        • Total de rotas percorridas: <strong id="total-viagens">...</strong> <br>
-        • Total de abastecimentos: <strong id="total-abastecimentos">...</strong><br>
-        • Total de Km rodados: <strong id="total-km">...</strong> <br> 
-        • Média KM por Viagem: <strong id="media-km">...</strong> km <br>
-        • Tempo Médio por Viagem: <strong id="media-tempo">...</strong> 
-      </p>
+        <p style="color:#e6d6ff; font-size:1rem;">
+          • Total de rotas: <strong id="total-viagens">...</strong> <br>
+          • Total de Km: <strong id="total-km">...</strong>
+        </p>
     </div>
-
-    <div class="donut-container">
-        <div class="donut-card">
-            <div class="donut" id="donut-viagens" data-progress="0">
-                <div class="center"></div>
-                <span>0%</span>
-            </div>
-            <p>Viagens</p>
-        </div>
-
-        <div class="donut-card">
-            <div class="donut" id="donut-recargas" data-progress="0">
-                <div class="center"></div>
-                <span>0%</span>
-            </div>
-            <p>Recargas</p>
-        </div>
-
-        <div class="donut-card">
-            <div class="donut" id="donut-km" data-progress="0">
-                <div class="center"></div>
-                <span>0%</span>
-            </div>
-            <p>Km Rodados</p>
-        </div>
-
-        <div class="donut-card">
-            <div class="donut" id="donut-tempo" data-progress="0">
-                <div class="center"></div>
-                <span>0%</span>
-            </div>
-            <p>Média de Tempo</p>
-        </div>
-    </div>
-    
-    <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
-    
-    <h2 class="section-title full" style="margin-top: 20px;">Comparativo de Uso da Garagem</h2>
-    <div class="charts-container full" style="max-width: 400px; margin: 0 auto 30px;">
-        <canvas id="usoGaragemChart"></canvas>
-        <p id="loading-uso-garagem" style="text-align: center; color: #ddd; padding: 10px;">Carregando uso dos veículos...</p>
-    </div>
-
-    <h2 class="section-title full" style="margin-top: 20px;">Desempenho por Carro</h2>
-    <div class="table-responsive">
-        <table id="tabela-desempenho" style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th>Veículo</th>
-                    <th>KM Total</th>
-                    <th>Viagens</th>
-                    <th>Vel. Média</th>
-                    <th>KM/Recarga</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-    </div>
-
-    <h2 class="section-title full" style="margin-top: 20px;">Evolução Mensal</h2>
-    <div class="table-responsive" style="margin-bottom: 30px;">
-        <table id="tabela-evolucao" style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th>Mês/Ano</th>
-                    <th>KM no Mês</th>
-                    <th>Viagens no Mês</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-    </div>
-
-
-    <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
-    
-    <h2 class="section-title full" style="margin-top: 20px;">Detalhes de Todas as Viagens</h2>
-    
     <div id="historico-loading" class="full" style="text-align: center; color: #ddd; padding: 10px;">
         Carregando histórico...
     </div>
-
     <div class="table-responsive">
         <table id="tabela-historico" style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -132,48 +53,15 @@
                     <th>Origem/Destino</th>
                     <th>Veículo</th>
                     <th>KM</th>
-                    <th>Tempo</th>
-                    <th>Recargas</th>
                 </tr>
             </thead>
-            <tbody>
-                </tbody>
+            <tbody></tbody>
         </table>
     </div>
-    
-    <style>
-        /* Estilos básicos para a tabela, complementando perfil.css */
-        .table-responsive {
-            overflow-x: auto;
-            width: 100%;
-            grid-column: 1 / -1;
-        }
-        #tabela-historico th, #tabela-historico td,
-        #tabela-desempenho th, #tabela-desempenho td,
-        #tabela-evolucao th, #tabela-evolucao td {
-            padding: 12px 10px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.9rem;
-        }
-        #tabela-historico th, 
-        #tabela-desempenho th,
-        #tabela-evolucao th {
-            background-color: rgba(255, 255, 255, 0.05);
-            font-weight: 600;
-        }
-        #tabela-historico tbody tr:hover,
-        #tabela-desempenho tbody tr:hover,
-        #tabela-evolucao tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
-    </style>
-
   </section>
 </div>
 
 <script src="src/js/main.js"></script>
 <script src="src/js/historico.js"></script>
-
 </body>
 </html>
