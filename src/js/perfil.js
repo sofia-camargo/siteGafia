@@ -1,149 +1,149 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Verifica sessão
-    fetch('api/verificar_sessao.php')
-        .then(res => res.json())
-        .then(session => {
-            if (!session.loggedIn) {
+function checkSession() {
+    fetch('../api/verificar_sessao.php')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
                 window.location.href = 'login.html';
-            } else {
-                carregarPerfil();
-                // Chama a função de resumo após verificar a sessão (Nova funcionalidade)
-                carregarResumoUsuario(); 
             }
         })
-        .catch(err => console.error("Erro sessão:", err));
-
-    // 2. Configura o formulário para salvar
-    const formPerfil = document.getElementById('form-perfil');
-    if (formPerfil) {
-        formPerfil.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Coleta os dados de TODOS os campos (incluindo email e data de nascimento)
-            const dadosAtualizados = {
-                nome: document.getElementById('nome').value,
-                sobrenome: document.getElementById('sobrenome').value,
-                email: document.getElementById('email').value,    // Adicionado
-                telefone: document.getElementById('telefone').value,
-                dt_nasc: document.getElementById('dt_nasc').value  // Adicionado
-            };
-
-            const mensagemEl = document.getElementById('perfil-mensagem');
-            mensagemEl.textContent = "Salvando...";
-            mensagemEl.style.color = "#ccc";
-
-            try {
-                const response = await fetch('api/atualizar_perfil.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dadosAtualizados)
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    mensagemEl.textContent = result.message;
-                    mensagemEl.style.color = "#4CAF50"; // Verde (Sucesso)
-                } else {
-                    mensagemEl.textContent = result.error || "Erro ao salvar.";
-                    mensagemEl.style.color = "#ff6b6b"; // Vermelho (Erro)
-                }
-            } catch (error) {
-                console.error("Erro na requisição:", error);
-                mensagemEl.textContent = "Erro de conexão com o servidor.";
-                mensagemEl.style.color = "#ff6b6b";
-            }
+        .catch(error => {
+            console.error('Erro ao verificar sessão:', error);
+            // Mesmo em caso de erro de rede, redireciona para login por segurança
+            window.location.href = 'login.html'; 
         });
-    }
+}
+
+
+function carregarEstados() {
+    fetch('../api/buscar_estados.php')
+        .then(response => response.json())
+        .then(estados => {
+            const selectEstado = document.getElementById('estado');
+            if (selectEstado) {
+                selectEstado.innerHTML = '<option value="">Selecione o Estado</option>';
+                estados.forEach(estado => {
+                    const option = document.createElement('option');
+                    option.value = estado.sigla;
+                    option.textContent = estado.nome;
+                    selectEstado.appendChild(option);
+                });
+                // Recarrega o perfil após carregar os estados para pré-selecionar o valor
+                carregarPerfil();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar estados:', error);
+        });
+}
+
+function logout() {
+    fetch('../api/logout.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'login.html';
+            } else {
+                alert('Erro ao fazer logout.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição de logout:', error);
+            alert('Erro de conexão ao tentar fazer logout.');
+        });
+}
+
+
+function carregarPerfil() {
+    fetch('../api/buscar_perfil.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.perfil) {
+                const perfil = data.perfil;
+                document.getElementById('nome').value = perfil.nome || '';
+                document.getElementById('email').value = perfil.email || '';
+                document.getElementById('cpf').value = perfil.cpf || '';
+                document.getElementById('telefone').value = perfil.telefone || '';
+                document.getElementById('cep').value = perfil.cep || '';
+                document.getElementById('endereco').value = perfil.endereco || '';
+                document.getElementById('numero').value = perfil.numero || '';
+                document.getElementById('complemento').value = perfil.complemento || '';
+                document.getElementById('bairro').value = perfil.bairro || '';
+                document.getElementById('cidade').value = perfil.cidade || '';
+                // Preenche o estado no dropdown
+                document.getElementById('estado').value = perfil.estado || ''; 
+            } else if (!data.session_active) {
+                window.location.href = 'login.html'; // Redireciona se a sessão cair
+            } else {
+                console.error('Erro ao carregar perfil:', data.message);
+                // alert('Não foi possível carregar os dados do perfil.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição de buscar perfil:', error);
+            // alert('Erro de conexão ao tentar carregar o perfil.');
+        });
+}
+
+
+function salvarPerfil() {
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const cpf = document.getElementById('cpf').value;
+    const telefone = document.getElementById('telefone').value;
+    const cep = document.getElementById('cep').value;
+    const endereco = document.getElementById('endereco').value;
+    const numero = document.getElementById('numero').value;
+    const complemento = document.getElementById('complemento').value;
+    const bairro = document.getElementById('bairro').value;
+    const cidade = document.getElementById('cidade').value;
+    const estado = document.getElementById('estado').value;
+
+    const data = {
+        nome: nome,
+        email: email,
+        cpf: cpf,
+        telefone: telefone,
+        cep: cep,
+        endereco: endereco,
+        numero: numero,
+        complemento: complemento,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado,
+    };
+
+    fetch('../api/atualizar_perfil.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Perfil atualizado com sucesso! ✅');
+        } else {
+            alert('Erro ao atualizar perfil: ' + (data.message || 'Erro desconhecido.'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição de salvar perfil:', error);
+        alert('Erro de conexão ao tentar salvar o perfil.');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    checkSession(); 
+    
+    carregarEstados(); 
+
+    document.getElementById('formPerfil').addEventListener('submit', function (event) {
+        event.preventDefault();
+        salvarPerfil();
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        logout();
+    });
 });
-
-// Função para buscar e preencher os dados do perfil
-async function carregarPerfil() {
-    try {
-        const response = await fetch('api/buscar_perfil.php');
-        const data = await response.json();
-        
-        if (data.error) {
-            console.error("Erro API:", data.error);
-            return;
-        }
-
-        // Preenche o formulário com os dados do utilizador
-        // Usamos verificações (if) para evitar erros caso algum campo não exista no HTML
-        if(document.getElementById('nome')) document.getElementById('nome').value = data.nome || '';
-        if(document.getElementById('sobrenome')) document.getElementById('sobrenome').value = data.sobrenome || '';
-        if(document.getElementById('email')) document.getElementById('email').value = data.email || '';
-        if(document.getElementById('telefone')) document.getElementById('telefone').value = data.telefone || '';
-        if(document.getElementById('dt_nasc')) document.getElementById('dt_nasc').value = data.dt_nasc || '';
-
-    } catch (error) {
-        console.error("Erro ao carregar perfil:", error);
-    }
-}
-
-// Função auxiliar para converter horas decimais (ex: 1.5h) para formato HHh MMm
-function formatarTempoHoras(horasDecimais) {
-    if (horasDecimais <= 0 || isNaN(horasDecimais)) return '0h 0m';
-    const horas = Math.floor(horasDecimais);
-    const minutosDecimais = (horasDecimais - horas) * 60;
-    const minutos = Math.round(minutosDecimais);
-    return `${horas}h ${minutos}m`;
-}
-
-// Atualiza o Donut Chart (função adaptada do seu código original)
-function atualizarDonut(id, porcentagem) {
-    const donut = document.getElementById(id);
-    if (!donut) return;
-
-    donut.querySelector("span").textContent = porcentagem + "%";
-    // Converte porcentagem para ângulo para o CSS (100% = 360deg)
-    donut.style.setProperty("--progress", (porcentagem * 3.6) + "deg");
-}
-
-// Função principal para buscar e exibir os dados da View de resumo
-async function carregarResumoUsuario() {
-    const resumoUrl = 'api/resumo_usuario.php';
-
-    try {
-        const response = await fetch(resumoUrl);
-        const data = await response.json();
-        
-        if (data.error) {
-            console.error("Erro ao carregar resumo:", data.error);
-            return;
-        }
-
-        // --- 1. ATUALIZAR O BLOCO DE RESUMO (HTML) ---
-        const totalKm = parseFloat(data.total_km);
-        
-        if(document.getElementById('total-viagens')) document.getElementById('total-viagens').textContent = data.total_viagens || '0';
-        if(document.getElementById('total-abastecimentos')) document.getElementById('total-abastecimentos').textContent = data.total_abastecimentos || '0';
-        if(document.getElementById('total-km')) document.getElementById('total-km').textContent = totalKm.toFixed(0);
-        if(document.getElementById('media-tempo')) document.getElementById('media-tempo').textContent = formatarTempoHoras(data.media_tempo_viagem_horas);
-        if(document.getElementById('media-km')) document.getElementById('media-km').textContent = parseFloat(data.media_km_por_viagem).toFixed(2);
-        
-        // --- 2. ATUALIZAR OS DONUT CHARTS ---
-        
-        const limites = {
-            viagens: 50,
-            recargas: 20,
-            km: 500,
-            tempo: 60 // Limite de 60 minutos (1h) para o exemplo da média
-        };
-        
-        function calcularPorcentagem(valor, limite) {
-            return Math.min(Math.round((valor / limite) * 100), 100);
-        }
-
-        // Usando os dados da View para popular os Donut Charts
-        const tempoMedioEmMinutos = data.media_tempo_viagem_horas * 60;
-        
-        atualizarDonut("donut-viagens", calcularPorcentagem(data.total_viagens, limites.viagens));
-        atualizarDonut("donut-recargas", calcularPorcentagem(data.total_abastecimentos, limites.recargas));
-        atualizarDonut("donut-km", calcularPorcentagem(totalKm, limites.km));
-        atualizarDonut("donut-tempo", calcularPorcentagem(tempoMedioEmMinutos, limites.tempo)); 
-
-    } catch (error) {
-        console.error("Erro de comunicação com a API de resumo:", error);
-    }
-}
