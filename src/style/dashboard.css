@@ -7,19 +7,22 @@
     gap: 30px;
     min-height: 400px;
     margin-bottom: 60px;
+    margin-top: 20px; /* Espaço extra no topo */
 }
 
-/* Estilo Base dos Cards (efeito vidro reutilizado) */
+/* Estilo Base dos Cards */
 .dash-card {
     display: flex;
     flex-direction: column;
     padding: 30px;
     border-radius: 22px;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 1px solid var(--stroke); /* Garante borda visível */
 }
 
 .dash-card:hover {
-    border-color: var(--brand); /* Borda rosa ao passar o mouse */
+    border-color: var(--brand);
+    transform: translateY(-2px); /* Pequeno movimento ao passar o mouse */
 }
 
 /* --- BLOCO DA ESQUERDA (Planejamento) --- */
@@ -28,18 +31,23 @@
     align-items: center;
     text-align: center;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 46, 252, 0.05));
+    backdrop-filter: blur(10px);
 }
 
 .action-content h2 {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem); /* Fonte responsiva: cresce com a tela */
     margin-bottom: 15px;
     color: #fff;
+    line-height: 1.2;
 }
 
 .action-content p {
     color: var(--muted);
     font-size: 1.1rem;
     margin-bottom: 40px;
+    max-width: 400px; /* Limita largura do texto para leitura */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Botão Gigante */
@@ -48,11 +56,17 @@
     padding: 18px 40px;
     border-radius: 50px;
     box-shadow: 0 0 20px rgba(255, 46, 252, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* --- BLOCO DA DIREITA (Histórico) --- */
 .history-card {
     background: rgba(20, 5, 40, 0.6);
+    backdrop-filter: blur(10px);
+    max-height: 500px; /* Limita altura se a lista for grande */
+    overflow-y: auto;  /* Scroll se necessário */
 }
 
 .card-header {
@@ -64,10 +78,16 @@
     padding-bottom: 10px;
 }
 
+.card-header h3 {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
 .link-ver-mais {
     color: var(--brand);
     text-decoration: none;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .history-list {
@@ -84,11 +104,17 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    transition: background 0.2s;
+}
+
+.history-item-mini:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .history-icon {
     width: 40px;
     height: 40px;
+    min-width: 40px; /* Impede que o ícone amasse */
     background: rgba(255, 46, 252, 0.1);
     color: var(--brand);
     border-radius: 50%;
@@ -97,10 +123,17 @@
     justify-content: center;
 }
 
+.history-info {
+    overflow: hidden; /* Previne que texto longo quebre o layout */
+}
+
 .history-info strong {
     display: block;
     font-size: 0.95rem;
     color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona "..." se o texto for longo demais */
 }
 
 .history-info span {
@@ -108,13 +141,41 @@
     color: var(--muted);
 }
 
-/* Responsividade para Celular */
+/* =========================================
+   RESPONSIVIDADE (Tablets e Celulares)
+   ========================================= */
+
 @media (max-width: 900px) {
     .dashboard-layout {
-        grid-template-columns: 1fr; /* Empilha um embaixo do outro */
+        grid-template-columns: 1fr; /* Empilha os cards (um embaixo do outro) */
+        gap: 20px;
         height: auto;
     }
+
     .action-card {
         padding: 40px 20px;
+        min-height: 300px;
+    }
+
+    .history-card {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes finos para telas muito pequenas */
+    .btn-giant {
+        width: 100%; /* Botão ocupa toda a largura */
+        justify-content: center;
+        padding: 15px;
+        font-size: 1rem;
+    }
+
+    .dash-card {
+        padding: 20px;
+    }
+    
+    .action-content h2 {
+        font-size: 1.8rem;
     }
 }
