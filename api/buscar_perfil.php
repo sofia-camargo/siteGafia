@@ -11,13 +11,18 @@ if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Tenta pegar o ID de uma das duas variáveis de sessão possíveis
 $userId = $_SESSION['id_usuario'] ?? $_SESSION['user_id'];
 
 try {
-    // Busca TODOS os campos do perfil
-    $sql = "SELECT nome, sobrenome, email, telefone, dt_nasc, 
-                   cep, endereco, numero, complemento, bairro, cidade, estado 
+    // CORREÇÃO: Usando os nomes das colunas conforme sua imagem (nm_usuario, sobrenome_usuario)
+    // Usamos "AS" para renomear na saída, assim o JavaScript não quebra.
+    $sql = "SELECT 
+                nm_usuario AS nome, 
+                sobrenome_usuario AS sobrenome, 
+                email, 
+                cep, 
+                cidade
+                -- Telefone e Data de Nascimento foram removidos pois não existem na sua tabela atual
             FROM usuarios 
             WHERE id_usuario = :id";
             
@@ -28,12 +33,10 @@ try {
     if ($perfil) {
         echo json_encode($perfil);
     } else {
-        // Se não achou o usuário, retorna erro 404
         http_response_code(404);
-        echo json_encode(['error' => 'Usuário não encontrado no banco.']);
+        echo json_encode(['error' => 'Usuário não encontrado.']);
     }
 } catch (PDOException $e) {
-    // Retorna erro 500 se o SQL falhar (ex: coluna não existe)
     http_response_code(500);
     echo json_encode(['error' => 'Erro SQL: ' . $e->getMessage()]);
 }

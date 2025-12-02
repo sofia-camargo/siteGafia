@@ -5,37 +5,35 @@ session_start();
 header('Content-Type: application/json');
 
 // Verifica se está logado
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Acesso não autorizado']);
     exit;
 }
 
-// Recebe o JSON do JavaScript
 $data = json_decode(file_get_contents('php://input'), true);
-$userId = $_SESSION['user_id'];
+$userId = $_SESSION['id_usuario'] ?? $_SESSION['user_id'];
 
-// Pega os dados enviados (os nomes aqui devem bater com os IDs do HTML)
+// Recebe os dados do front-end
 $nome      = $data['nome'] ?? null;
 $sobrenome = $data['sobrenome'] ?? null;
 $email     = $data['email'] ?? null;
-$telefone  = $data['telefone'] ?? null;
-$dt_nasc   = $data['dt_nasc'] ?? null;
+$cep       = $data['cep'] ?? null;     // Adicionado
+$cidade    = $data['cidade'] ?? null;  // Adicionado
 
 // Validação básica
-if (!$nome || !$sobrenome || !$email) {
+if (!$nome || !$email) {
     http_response_code(400);
-    echo json_encode(['error' => 'Nome, Sobrenome e Email são obrigatórios.']);
+    echo json_encode(['error' => 'Nome e Email são obrigatórios.']);
     exit;
 }
 
 try {
+    // CORREÇÃO: Atualiza apenas as colunas que existem na imagem enviada
     $sql = "UPDATE usuarios SET 
-                nome = :nome, 
-                sobrenome = :sobrenome, 
+                nm_usuario = :nome, 
+                sobrenome_usuario = :sobrenome, 
                 email = :email, 
-                telefone = :telefone, 
-                dt_nasc = :dt_nasc,
                 cep = :cep,
                 cidade = :cidade
             WHERE id_usuario = :id";
@@ -46,26 +44,23 @@ try {
         ':nome'      => $nome,
         ':sobrenome' => $sobrenome,
         ':email'     => $email,
-        ':telefone'  => $telefone,
-        ':dt_nasc'   => $dt_nasc,
-        ':id'        => $userId,
         ':cep'       => $cep,
-        ':cidade'    => $cidade
+        ':cidade'    => $cidade,
+        ':id'        => $userId
     ]);
 
-    // Atualiza a sessão se necessário
+    // Atualiza a sessão com o novo nome para o "Olá, [Nome]"
     $_SESSION['user_name'] = $nome;
 
     echo json_encode(['message' => 'Perfil atualizado com sucesso!']);
 
 } catch (PDOException $e) {
-    // Erro comum: Email duplicado
     if ($e->getCode() == '23505') { 
         http_response_code(409);
-        echo json_encode(['error' => 'Este e-mail já está em uso por outra conta.']);
+        echo json_encode(['error' => 'Este e-mail já está em uso.']);
     } else {
         http_response_code(500);
-        error_log("Erro update perfil: " . $e->getMessage()); // Grava no log do servidor
+        error_log("Erro update perfil: " . $e->getMessage());
         echo json_encode(['error' => 'Erro ao atualizar o perfil.']);
     }
 }
