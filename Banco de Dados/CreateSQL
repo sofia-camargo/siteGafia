@@ -30,6 +30,7 @@ CREATE TABLE carro (
     ano_carro INT,
     dur_bat INT,
     id_marca INT,
+    passageiros INT,
     id_modelo INT,
 
     CONSTRAINT fk_marca FOREIGN KEY (id_marca) REFERENCES marca (id_marca),
