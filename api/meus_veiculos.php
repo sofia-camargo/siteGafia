@@ -21,6 +21,7 @@ if (in_array($action, $requiresAuth) && !$userId) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+// --- LISTAR GARAGEM ---
 if ($action === 'list_garage' && $method === 'GET') {
     try {
         $sql = "SELECT 
@@ -39,8 +40,6 @@ if ($action === 'list_garage' && $method === 'GET') {
         $stmt->execute([':user_id' => $userId]);
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        }
-        
         echo json_encode($veiculos);
 
     } catch (PDOException $e) {
@@ -51,6 +50,7 @@ if ($action === 'list_garage' && $method === 'GET') {
     exit;
 }
 
+// --- PESQUISAR VEÍCULOS (CATÁLOGO) ---
 if ($action === 'search_veiculos' && $method === 'GET') {
     $query = $_GET['q'] ?? '';
 
@@ -60,7 +60,6 @@ if ($action === 'search_veiculos' && $method === 'GET') {
     }
 
     try {
-
         $sql = "SELECT 
                     c.id_carro, 
                     c.ano_carro, 
@@ -87,6 +86,7 @@ if ($action === 'search_veiculos' && $method === 'GET') {
     exit;
 }
 
+// --- ADICIONAR VEÍCULO ---
 if ($action === 'add_veiculo' && $method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     $masterCarroId = $data['carro_id'] ?? null; // ID do carro mestre selecionado
@@ -100,6 +100,7 @@ if ($action === 'add_veiculo' && $method === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // 1. Busca os dados do carro mestre
         $sqlSelect = "SELECT id_marca, id_modelo, ano_carro, dur_bat
                       FROM carro 
                       WHERE id_carro = :id AND id_usuario IS NULL";
@@ -114,7 +115,8 @@ if ($action === 'add_veiculo' && $method === 'POST') {
             exit;
         }
 
-        $sqlInsert = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km) 
+        // 2. Insere na garagem do usuário (SEM eficiencia_wh_km)
+        $sqlInsert = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat) 
                       VALUES (:user_id, :id_marca, :id_modelo, :ano, :bateria)";
         
         $stmtInsert = $pdo->prepare($sqlInsert);
@@ -133,12 +135,13 @@ if ($action === 'add_veiculo' && $method === 'POST') {
     } catch (PDOException $e) {
         $pdo->rollBack();
         http_response_code(500);
-        error_log("Erro add_veiculo (copy): " . $e->getMessage());
+        error_log("Erro add_veiculo: " . $e->getMessage());
         echo json_encode(['error' => 'Erro ao salvar veículo.']);
     }
     exit;
 }
 
+// --- DELETAR VEÍCULO ---
 if ($action === 'delete_veiculo' && $method === 'DELETE') {
     $data = json_decode(file_get_contents('php://input'), true);
     $carroId = $data['carro_id'] ?? null;
@@ -150,7 +153,6 @@ if ($action === 'delete_veiculo' && $method === 'DELETE') {
     }
 
     try {
-        // Remove da tabela CARRO, garantindo que pertence ao usuário logado (Segurança)
         $sql = "DELETE FROM carro WHERE id_carro = :carro_id AND id_usuario = :user_id";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':carro_id' => $carroId, ':user_id' => $userId]);
@@ -168,6 +170,7 @@ if ($action === 'delete_veiculo' && $method === 'DELETE') {
     exit;
 }
 
+// --- LISTAS AUXILIARES ---
 if ($action === 'list_marcas' && $method === 'GET') {
     try {
         $stmt = $pdo->query("SELECT id_marca, nm_marca FROM marca ORDER BY nm_marca");
@@ -185,7 +188,6 @@ if ($action === 'list_modelos' && $method === 'GET') {
     } catch (PDOException $e) { echo json_encode([]); }
     exit;
 }
-
 
 // Se nenhuma ação for encontrada
 http_response_code(404);

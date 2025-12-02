@@ -4,7 +4,7 @@ require_once 'db_connection.php';
 session_start();
 header('Content-Type: application/json');
 
-// 1. CORREÇÃO: Padronização da sessão para 'id_usuario'
+// 1. Verificação de sessão
 if (!isset($_SESSION['id_usuario'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Acesso não autorizado. Usuário não logado.']);
@@ -14,22 +14,20 @@ if (!isset($_SESSION['id_usuario'])) {
 $userId = $_SESSION['id_usuario'];
 
 try {
-    
     $sql = "SELECT 
                 c.id_carro, 
                 c.ano_carro, 
-                c.dur_bat,           -- Necessário para calcular autonomia
+                c.dur_bat,
                 m.nm_marca, 
                 mo.nm_modelo
             FROM carro c
             JOIN marca m ON c.id_marca = m.id_marca
             JOIN modelo mo ON c.id_modelo = mo.id_modelo
-            WHERE c.id_usuario = :userid"; // Vínculo direto agora
+            WHERE c.id_usuario = :userid"; 
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':userid' => $userId]);
     $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     echo json_encode($veiculos);
 
