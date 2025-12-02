@@ -33,7 +33,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (navUser) navUser.style.display = 'none';
     }
 
-    // A lógica de carrossel JS foi removida
-    // pois sua index.html usa um carrossel 100% CSS
-    // com a classe '.infinite-carousel'.
+    // --- LÓGICA DO BOTÃO DE VOLTAR DINÂMICO ---
+    const btnVoltar = document.getElementById('btn-voltar-dinamico');
+
+    if (btnVoltar) {
+        // Remove listeners antigos
+        const novoBtn = btnVoltar.cloneNode(true);
+        btnVoltar.parentNode.replaceChild(novoBtn, btnVoltar);
+
+        // Adiciona o novo evento de clique
+        novoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Verifica a sessão novamente no momento do clique
+            fetch('api/verificar_sessao.php')
+                .then(res => res.json())
+                .then(session => {
+                    if (session.loggedIn) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(() => {
+                    window.location.href = 'index.html';
+                });
+        });
+    }
 });

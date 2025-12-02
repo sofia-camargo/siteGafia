@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <title>Minha Garagem</title>
 
-    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Seu CSS principal (o grande roxo) -->
     <link rel="stylesheet" href="src/style/perfil.css">
     <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
 </head>
@@ -21,15 +19,30 @@
   <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
   <nav>
     <ul>
-      <li><a href="perfil.html">Minha conta</a></li>
-      <li><a href="senha.html">Alterar senha</a></li>
-      <li><a href="historico.html">Históricos</a></li>
-      <li><a href="veiculos.html" class="active">Garagem</a></li>
+      <li>
+          <a href="perfil.html">
+              <i class="fa-solid fa-user"></i> <span>Minha conta</span>
+          </a>
+      </li>
+      <li>
+          <a href="senha.html">
+              <i class="fa-solid fa-lock"></i> <span>Senha</span>
+          </a>
+      </li>
+      <li>
+          <a href="historico.html">
+              <i class="fa-solid fa-clock-rotate-left"></i> <span>Históricos</span>
+          </a>
+      </li>
+      <li>
+          <a href="veiculos.html" class="active">
+              <i class="fa-solid fa-car"></i> <span>Garagem</span>
+          </a>
+      </li>
     </ul>
   </nav>
 </aside>
 
-<!-- ===== CONTEÚDO PRINCIPAL ===== -->
 <div class="main-wrap">
     <section class="vidro">
 
@@ -41,17 +54,14 @@
             </p>
         </div>
 
-        <!-- LISTA DE VEÍCULOS -->
         <h2 class="section-title">Meus Veículos</h2>
 
         <div id="lista-veiculos" class="profile-grid full" style="gap:20px;">
-            <!-- Veículos serão carregados aqui -->
-        </div>
+            </div>
 
         <hr class="full" style="margin: 35px 0; border-color: rgba(255,255,255,0.15);">
 
-                <!-- ADICIONAR NOVO VEÍCULO -->
-                <h2 class="section-title">Adicionar Veículo</h2>
+        <h2 class="section-title">Adicionar Veículo</h2>
 
         <form id="form-add-veiculo" class="profile-grid full" style="position: relative;">
             
@@ -65,22 +75,20 @@
                     placeholder="Digite o nome do carro (ex: BYD Seal, Volvo...)" 
                     autocomplete="off"
                 >
-                
-                </div>
+            </div>
 
-                <div id="sugestoes-veiculos" class="suggestions-dropdown">
-                     </div>
+            <div id="sugestoes-veiculos" class="suggestions-dropdown">
+            </div>
 
             <button type="submit" id="btn-adicionar" class="btn-glass full" style="margin-top:25px;" disabled>
                 <i class="fa-solid fa-plus"></i> Adicionar à Garagem
-                 </button>
+            </button>
 
         </form> 
 
     </section>
 </div>
 
-<!-- SCRIPTS -->
 <script src="src/js/main.js"></script>
 <script src="src/js/veiculos.js"></script>
 
