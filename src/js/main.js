@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // --- ALTERAÇÃO: Lógica para mostrar botão Admin ---
             if (session.isAdmin) {
-                // Verifica se o botão já existe para não duplicar
-                if (!document.getElementById('btn-admin-link')) {
+                // Verifica se o menu navUser existe E se o botão ainda não foi criado
+                if (navUser && !document.getElementById('btn-admin-link')) {
                     const adminLink = document.createElement('a');
                     adminLink.id = 'btn-admin-link';
                     adminLink.href = 'admin.html';
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     adminLink.style.color = '#ffd700'; // Dourado para destacar
                     
                     // Insere o botão no menu do usuário (antes do botão Sair, se quiser)
-                    // Aqui estamos adicionando ao final da lista de links do usuário
                     navUser.insertBefore(adminLink, navUser.lastElementChild);
                 }
             }

@@ -115,7 +115,8 @@ if ($action === 'add_veiculo' && $method === 'POST') {
             exit;
         }
 
-        // 2. Insere na garagem do usuário (SEM eficiencia_wh_km)
+        // 2. Insere na garagem do usuário
+        // ATENÇÃO: Se o erro persistir, verifique se seu banco exige a coluna 'tipo' ou outra não listada aqui.
         $sqlInsert = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat) 
                       VALUES (:user_id, :id_marca, :id_modelo, :ano, :bateria)";
         
@@ -136,7 +137,8 @@ if ($action === 'add_veiculo' && $method === 'POST') {
         $pdo->rollBack();
         http_response_code(500);
         error_log("Erro add_veiculo: " . $e->getMessage());
-        echo json_encode(['error' => 'Erro ao salvar veículo.']);
+        // --- ALTERAÇÃO: Retorna a mensagem real do erro SQL para facilitar o debug ---
+        echo json_encode(['error' => 'Erro SQL: ' . $e->getMessage()]);
     }
     exit;
 }
