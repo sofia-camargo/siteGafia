@@ -130,7 +130,7 @@ if ($action === 'add_veiculo' && $method === 'POST') {
             ':id_modelo'     => $masterCarro['id_modelo'],
             ':ano'           => $masterCarro['ano_carro'],
             ':bateria'       => $masterCarro['dur_bat'],
-            ':eficiencia'    => $masterCarro['eficiencia_wh_km']
+            ':eficiencia'    => $masterCarro['eficiencia_wh_km'] ?? 200 // <--- Correção: Valor padrão se for null
         ]);
 
         $pdo->commit();
