@@ -16,8 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
-      /* Estilo exclusivo Admin */
-      .admin-header { border-bottom: 2px solid #ffd700; } /* Dourado */
+      .admin-header { border-bottom: 2px solid #ffd700; }
       
       .kpi-grid { 
           display: grid; 
@@ -75,9 +74,9 @@
 
     <div class="dashboard-layout">
         <section class="glass dash-card">
-            <h3 class="admin-section-title">Viagens por Estado</h3>
+            <h3 class="admin-section-title">Top Destinos (Cidades)</h3>
             <div style="height: 300px;">
-                <canvas id="chartEstados"></canvas>
+                <canvas id="chartDestinos"></canvas>
             </div>
         </section>
 
@@ -92,7 +91,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        // 1. Verifica se é admin antes de mostrar qualquer coisa
+        // 1. Verifica sessão
         try {
             const session = await fetch('api/verificar_sessao.php').then(r => r.json());
             if (!session.loggedIn || !session.isAdmin) {
@@ -100,26 +99,21 @@
                 window.location.href = 'dashboard.html';
                 return;
             }
-        } catch(e) {
-            window.location.href = 'login.html';
-        }
+        } catch(e) { window.location.href = 'login.html'; }
 
-        // 2. Busca dados administrativos
+        // 2. Busca dados
         try {
             const res = await fetch('api/admin_dados.php');
             const dados = await res.json();
 
-            if(dados.error) { 
-                alert(dados.error); 
-                return; 
-            }
+            if(dados.error) { alert(dados.error); return; }
 
-            // 3. Preenche KPIs
+            // KPIs
             document.getElementById('kpi-users').innerText = dados.kpis.total_users || 0;
             document.getElementById('kpi-viagens').innerText = dados.kpis.total_viagens || 0;
             document.getElementById('kpi-carros').innerText = dados.kpis.total_carros || 0;
 
-            // 4. Preenche Lista de Usuários
+            // Lista de Usuários
             const lista = document.getElementById('lista-users');
             lista.innerHTML = '';
             
@@ -141,11 +135,12 @@
                 });
             }
 
-            // 5. Gráfico Chart.js (Estados)
-            const ctx = document.getElementById('chartEstados').getContext('2d');
+            // ALTERAÇÃO: Gráfico Chart.js usando dados de DESTINOS
+            const ctx = document.getElementById('chartDestinos').getContext('2d');
             
-            const labels = dados.estados.map(e => e.nm_estado);
-            const values = dados.estados.map(e => e.total_viagens);
+            // Mapeia cidade_destino e total_viagens
+            const labels = dados.destinos.map(d => d.cidade_destino);
+            const values = dados.destinos.map(d => d.total_viagens);
 
             new Chart(ctx, {
                 type: 'bar',
@@ -162,25 +157,15 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false } 
-                    },
+                    plugins: { legend: { display: false } },
                     scales: { 
-                        y: { 
-                            ticks: { color: '#fff' }, 
-                            grid: { color: 'rgba(255,255,255,0.1)' } 
-                        },
-                        x: { 
-                            ticks: { color: '#fff' },
-                            grid: { display: false }
-                        }
+                        y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#fff' }, grid: { display: false } }
                     }
                 }
             });
 
-        } catch (e) {
-            console.error("Erro ao carregar dashboard admin:", e);
-        }
+        } catch (e) { console.error("Erro dashboard admin:", e); }
     });
   </script>
 </body>
