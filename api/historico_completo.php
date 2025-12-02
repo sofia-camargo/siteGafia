@@ -13,9 +13,11 @@ if (!isset($_SESSION['id_usuario'])) {
 $idUsuario = $_SESSION['id_usuario'];
 
 try {
-    // Busca os dados da View
-    // Certifique-se que a view vw_historico_usuario existe no banco
+    // Consulta a View de histórico
+    // ALTERAÇÃO: Ordenar por id_historico DESC garante que a última viagem salva
+    // (maior ID) apareça sempre em primeiro lugar, mesmo se for no mesmo dia.
     $sql = "SELECT 
+                id_historico, 
                 dt_consulta,
                 cidade_origem,
                 cidade_destino,
@@ -27,7 +29,7 @@ try {
                 ano_carro
             FROM vw_historico_usuario 
             WHERE id_usuario = :id_usuario
-            ORDER BY dt_consulta DESC";
+            ORDER BY id_historico DESC"; // <--- MUDANÇA AQUI (Era dt_consulta)
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':id_usuario' => $idUsuario]);
