@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     alert('Login realizado com sucesso! Redirecionando...');
                     // Crie esta página depois, será a área logada do seu site
-                    window.location.href = 'index.html'; 
+                    window.location.href = 'dashboard.html'; 
                 } else {
                     alert(`Erro: ${data.error}`);
                 }

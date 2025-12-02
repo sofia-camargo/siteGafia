@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início - GAFIA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="src/style/style.css">
+    <link rel="stylesheet" href="src/style/dashboard.css"> <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="dashboard.html">
+                <img src="src/img/Gafialogo.png" alt="Logo GAFIA" width="54" height="54" />
+                <span>GAFIA</span>
+            </a>
+            
+            <nav class="nav">
+                <a href="planejamento.html">Planejar Viagem</a>
+                <a href="veiculos.html">Garagem</a>
+                <a href="perfil.html">Perfil</a>
+                <a href="api/logout.php" class="btn btn-outline">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-top: 40px; margin-bottom: 20px;">
+            <h1 id="user-greeting">Olá, Motorista! ⚡</h1>
+            <p class="muted">Bem-vindo de volta ao seu painel.</p>
+        </div>
+
+        <div class="dashboard-layout">
+            
+            <section class="glass dash-card action-card">
+                <div class="action-content">
+                    <h2>Para onde vamos hoje?</h2>
+                    <p>Calcule a melhor rota elétrica agora mesmo.</p>
+                    <a href="planejamento.html" class="btn btn-primary btn-giant">
+                        <i class="fa-solid fa-map-location-dot"></i> Planejar Viagem
+                    </a>
+                </div>
+            </section>
+
+            <section class="glass dash-card history-card">
+                <div class="card-header">
+                    <h3>Últimas Viagens</h3>
+                    <a href="historico.html" class="link-ver-mais">Ver tudo</a>
+                </div>
+
+                <div id="lista-historico-recente" class="history-list">
+                    <p class="loading-text">Carregando histórico...</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <strong>GAFIA</strong>
+            <p class="copyright">© 2025 GAFIA — Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="src/js/dashboard.js"></script>
+</body>
+</html>

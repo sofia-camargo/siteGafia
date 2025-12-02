@@ -1,0 +1,120 @@
+/* src/style/dashboard.css */
+
+/* Layout principal em Grid (2 colunas) */
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr; /* Esquerda maior, Direita menor */
+    gap: 30px;
+    min-height: 400px;
+    margin-bottom: 60px;
+}
+
+/* Estilo Base dos Cards (efeito vidro reutilizado) */
+.dash-card {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 22px;
+    transition: transform 0.3s ease;
+}
+
+.dash-card:hover {
+    border-color: var(--brand); /* Borda rosa ao passar o mouse */
+}
+
+/* --- BLOCO DA ESQUERDA (Planejamento) --- */
+.action-card {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 46, 252, 0.05));
+}
+
+.action-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.action-content p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+/* Botão Gigante */
+.btn-giant {
+    font-size: 1.2rem;
+    padding: 18px 40px;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(255, 46, 252, 0.4);
+}
+
+/* --- BLOCO DA DIREITA (Histórico) --- */
+.history-card {
+    background: rgba(20, 5, 40, 0.6);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--stroke);
+    padding-bottom: 10px;
+}
+
+.link-ver-mais {
+    color: var(--brand);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Item individual do histórico */
+.history-item-mini {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.history-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 46, 252, 0.1);
+    color: var(--brand);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-info strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+.history-info span {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* Responsividade para Celular */
+@media (max-width: 900px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr; /* Empilha um embaixo do outro */
+        height: auto;
+    }
+    .action-card {
+        padding: 40px 20px;
+    }
+}
