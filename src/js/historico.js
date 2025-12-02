@@ -1,16 +1,14 @@
+// src/js/historico.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Assegurando que o usuário está logado
     fetch('api/verificar_sessao.php')
         .then(res => res.json())
         .then(session => {
             if (session.loggedIn) {
-                // Funções de carregamento do Dashboard
+                // Carrega todas as novas seções
                 carregarResumoUsuario();
-                carregarSustentabilidade(); // <<<<< CORREÇÃO: Chama a função de Sustentabilidade
                 carregarHistoricoDetalhado();
-                carregarDesempenhoCarros();
-                carregarUsoGaragem();
-                carregarEvolucaoMensal();
+                carregarGraficosFrota(); // Essa função cria os 4 gráficos novos
             } else {
                 window.location.href = 'login.html'; 
             }
@@ -18,331 +16,165 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Erro de sessão:', error));
 });
 
-// FUNÇÕES DE FORMATAÇÃO
-function formatarTempoHoras(horasDecimais) {
-    if (horasDecimais === null || horasDecimais <= 0) return '0h 0m';
-    
-    const horas = Math.floor(horasDecimais);
-    const minutosDecimais = (horasDecimais - horas) * 60;
-    const minutos = Math.round(minutosDecimais);
-    return `${horas}h ${minutos}m`;
-}
-
-function formatarTempoInterval(intervalStr) {
-    if (!intervalStr) return '0m';
-    
-    const timeMatch = intervalStr.match(/(\d{1,2}):(\d{2}):(\d{2})/);
-    let totalSeconds = 0;
-    
-    if (timeMatch) {
-        totalSeconds += parseInt(timeMatch[1]) * 3600;
-        totalSeconds += parseInt(timeMatch[2]) * 60;
-        totalSeconds += parseInt(timeMatch[3]);
-    }
-
-    const daysMatch = intervalStr.match(/(\d+)\s+day/);
-    if (daysMatch) {
-        totalSeconds += parseInt(daysMatch[1]) * 24 * 3600;
-    }
-    
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-    let output = [];
-    if (hours > 0) output.push(`${hours}h`);
-    if (minutes > 0) output.push(`${minutes}m`);
-
-    return output.join(' ') || '0m';
-}
-
-function atualizarDonut(id, porcentagem) {
-    const donut = document.getElementById(id);
-    if (!donut) return;
-
-    const finalPorcentagem = Math.min(Math.max(porcentagem, 0), 100);
-
-    donut.querySelector("span").textContent = finalPorcentagem + "%";
-    donut.style.setProperty("--progress", (finalPorcentagem * 3.6) + "deg");
-}
-
-
-// ==========================================================
-// 1. CARREGAR DADOS DE SUSTENTABILIDADE
-// ==========================================================
-async function carregarSustentabilidade() {
-    const url = 'api/dados_sustentabilidade.php';
-
-    document.getElementById('eco-co2').textContent = '...';
-    document.getElementById('eco-arvores').textContent = '...';
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (data.error) throw new Error(data.error);
-
-        const co2Evitado = parseFloat(data.co2_total_evitado) || 0;
-        const arvores = parseInt(data.arvores_equivalentes) || 0;
-        
-        // Preenche os elementos com os IDs #eco-co2 e #eco-arvores
-        document.getElementById('eco-co2').textContent = co2Evitado.toFixed(1) + ' kg';
-        document.getElementById('eco-arvores').textContent = arvores;
-
-    } catch (error) {
-        console.error("Erro ao carregar sustentabilidade:", error);
-        document.getElementById('eco-co2').textContent = 'N/A';
-        document.getElementById('eco-arvores').textContent = 'N/A';
-    }
-}
-
-
-// ==========================================================
-// 2. CARREGAR RESUMO
-// ==========================================================
+// --- 1. RESUMO GERAL (Topo da página) ---
 async function carregarResumoUsuario() {
-    const resumoUrl = 'api/resumo_usuario.php';
-
-    document.getElementById('total-viagens').textContent = '...';
-    document.getElementById('total-abastecimentos').textContent = '...';
-    document.getElementById('total-km').textContent = '...';
-    document.getElementById('media-km').textContent = '...';
-    document.getElementById('media-tempo').textContent = '...';
-
     try {
-        const response = await fetch(resumoUrl);
+        const response = await fetch('api/resumo_usuario.php');
         const data = await response.json();
         
-        if (data.error) throw new Error(data.error);
-
-        const totalKm = parseFloat(data.total_km);
-        const mediaTempoHoras = parseFloat(data.media_tempo_viagem_horas);
-        
-        document.getElementById('total-viagens').textContent = data.total_viagens;
-        document.getElementById('total-abastecimentos').textContent = data.total_abastecimentos;
-        document.getElementById('total-km').textContent = totalKm.toFixed(0) + ' km';
-        document.getElementById('media-km').textContent = parseFloat(data.media_km_por_viagem).toFixed(2) + ' km'; 
-        document.getElementById('media-tempo').textContent = formatarTempoHoras(mediaTempoHoras);
-        
-        const limites = { viagens: 50, recargas: 20, km: 5000 };
-        
-        function calcularPorcentagem(valor, limite) {
-            const valorCalculo = Math.min(valor, limite); 
-            return Math.round((valorCalculo / limite) * 100);
+        if (!data.error) {
+            document.getElementById('total-viagens').textContent = data.total_viagens || 0;
+            document.getElementById('total-km').textContent = parseFloat(data.total_km || 0).toFixed(0) + ' km';
+            document.getElementById('total-abastecimentos').textContent = data.total_abastecimentos || 0;
         }
-
-        atualizarDonut("donut-viagens", calcularPorcentagem(data.total_viagens, limites.viagens));
-        atualizarDonut("donut-recargas", calcularPorcentagem(data.total_abastecimentos, limites.recargas));
-        atualizarDonut("donut-km", calcularPorcentagem(totalKm, limites.km));
-        
-        const kmPorAbastecimento = totalKm / Math.max(data.total_abastecimentos, 1);
-        atualizarDonut("donut-tempo", calcularPorcentagem(kmPorAbastecimento, 100));
-        document.querySelector('#donut-tempo + p').textContent = 'KM por Recarga';
-
-    } catch (error) {
-        console.error("Erro ao carregar resumo:", error);
-        document.getElementById('total-viagens').textContent = 'N/A';
-        document.getElementById('total-abastecimentos').textContent = 'N/A';
-        document.getElementById('total-km').textContent = 'N/A';
-        document.getElementById('media-km').textContent = 'N/A';
-        document.getElementById('media-tempo').textContent = 'N/A';
-    }
+    } catch (e) { console.error("Erro resumo:", e); }
 }
 
-// ==========================================================
-// 3. CARREGAR HISTÓRICO DETALHADO
-// ==========================================================
-async function carregarHistoricoDetalhado() {
-    const historicoUrl = 'api/historico_completo.php';
-    const tbody = document.getElementById('tabela-historico').querySelector('tbody');
-    const loadingMessage = document.getElementById('historico-loading');
-
-    tbody.innerHTML = ''; 
-    if(loadingMessage) loadingMessage.style.display = 'block';
-
+// --- 2. GRÁFICOS E TABELA DE DESEMPENHO (Meio da página) ---
+async function carregarGraficosFrota() {
     try {
-        const response = await fetch(historicoUrl);
-        const historico = await response.json();
+        // Usa a view atualizada que tem todos os dados (tempo, recargas, km)
+        const response = await fetch('api/desempenho_carros.php');
+        const dados = await response.json();
+
+        if (dados.error || dados.length === 0) return;
+
+        // Preencher Tabela de Desempenho
+        const tbody = document.getElementById('tabela-desempenho').querySelector('tbody');
+        tbody.innerHTML = '';
         
-        if(loadingMessage) loadingMessage.style.display = 'none';
+        // Arrays para alimentar os Gráficos
+        const labels = [];
+        const dataViagens = [];
+        const dataKM = [];
+        const dataTempo = [];
+        const dataRecargas = [];
 
-        if (historico.error) throw new Error(historico.error);
-
-        if (historico.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ddd;">Nenhum histórico de viagem encontrado.</td></tr>`;
-            return;
-        }
-
-        historico.forEach(viagem => {
+        dados.forEach(carro => {
+            // Preenche a Tabela
             const row = tbody.insertRow();
-            
-            const dtConsulta = new Date(viagem.dt_consulta).toLocaleDateString('pt-BR');
-            row.insertCell().textContent = dtConsulta;
-            
-            row.insertCell().textContent = `${viagem.nm_marca} ${viagem.nm_modelo} (${viagem.ano_carro})`;
-            
-            row.insertCell().textContent = `${viagem.cidade_origem} -> ${viagem.cidade_destino}`;
-            
-            row.insertCell().textContent = `${parseFloat(viagem.km_viagem).toFixed(2)} km`;
-            
-            row.insertCell().textContent = formatarTempoInterval(viagem.tempo_viagem);
-            
-            row.insertCell().textContent = viagem.qnt_abastecimento;
+            row.insertCell().textContent = carro.nome_veiculo;
+            row.insertCell().textContent = `${parseFloat(carro.km_total_rodado).toFixed(0)} km`;
+            row.insertCell().textContent = carro.total_viagens;
+            row.insertCell().textContent = `${carro.total_horas} h`;
+            row.insertCell().textContent = carro.total_recargas;
+
+            // Preenche os Arrays dos Gráficos
+            // Pega apenas a primeira parte do nome para o gráfico não ficar poluido
+            labels.push(carro.nome_veiculo.split(' ')[0]); 
+            dataViagens.push(carro.total_viagens);
+            dataKM.push(parseFloat(carro.km_total_rodado));
+            dataTempo.push(parseFloat(carro.total_horas));
+            dataRecargas.push(carro.total_recargas);
         });
 
-    } catch (error) {
-        if(loadingMessage) loadingMessage.style.display = 'none';
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ff6b6b;">Erro ao carregar histórico: ${error.message}</td></tr>`;
-        console.error("Erro na comunicação com a API de histórico:", error);
-    }
-}
+        // Configuração Visual Comum dos Gráficos
+        const cores = ['#ff2efc', '#9b5cff', '#34d399', '#fbbf24', '#f87171'];
+        const commonOptions = {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { color: '#ddd' }, grid: { color: '#ffffff1a' } },
+                x: { ticks: { color: '#ddd' }, grid: { display: false } }
+            }
+        };
 
-
-// ==========================================================
-// 4. DESEMPENHO POR CARRO
-// ==========================================================
-async function carregarDesempenhoCarros() {
-    const desempenhoUrl = 'api/desempenho_carros.php';
-    const tbody = document.getElementById('tabela-desempenho').querySelector('tbody');
-    if (!tbody) return; // Se a tabela não existir na página
-
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ddd;">Carregando desempenho...</td></tr>'; 
-
-    try {
-        const response = await fetch(desempenhoUrl);
-        const desempenho = await response.json();
-        
-        tbody.innerHTML = ''; 
-
-        if (desempenho.error) throw new Error(desempenho.error);
-
-        if (desempenho.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ddd;">Nenhum carro com histórico de viagem.</td></tr>`;
-            return;
-        }
-
-        desempenho.forEach(d => {
-            const row = tbody.insertRow();
-            row.insertCell().textContent = d.nome_veiculo;
-            row.insertCell().textContent = `${parseFloat(d.km_total_rodado).toFixed(0)} km`;
-            row.insertCell().textContent = d.total_viagens;
-            row.insertCell().textContent = `${parseFloat(d.velocidade_media_geral).toFixed(1)} km/h`;
-            row.insertCell().textContent = `${parseFloat(d.km_por_paragem_recarga).toFixed(1)} km/recarga`;
+        // 1. Gráfico de Viagens (Barra Vertical)
+        new Chart(document.getElementById('chartViagens'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{ label: 'Viagens', data: dataViagens, backgroundColor: '#ff2efc', borderRadius: 5 }]
+            },
+            options: commonOptions
         });
 
-    } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #ff6b6b;">Erro ao carregar desempenho.</td></tr>`;
-        console.error("Erro na comunicação com a API de desempenho:", error);
-    }
-}
-
-// ==========================================================
-// 5. USO DA GARAGEM
-// ==========================================================
-let usoGaragemChartInstance; 
-
-async function carregarUsoGaragem() {
-    const usoUrl = 'api/uso_garagem.php';
-    const chartCtx = document.getElementById('usoGaragemChart');
-    const loadingMessage = document.getElementById('loading-uso-garagem');
-    if (!chartCtx || !loadingMessage) return; // Se a seção não existir
-
-    loadingMessage.style.display = 'block';
-
-    try {
-        const response = await fetch(usoUrl);
-        const uso = await response.json();
-        
-        loadingMessage.style.display = 'none';
-
-        if (uso.error) throw new Error(uso.error);
-
-        if (uso.length === 0) {
-             chartCtx.style.display = 'none';
-             loadingMessage.textContent = 'Adicione carros e viaje para ver o comparativo.';
-             loadingMessage.style.display = 'block';
-            return;
-        }
-        
-        if (usoGaragemChartInstance) usoGaragemChartInstance.destroy();
-
-        // Preparar dados para o Chart.js
-        const labels = uso.map(item => `${item.nm_modelo} (${item.total_km_rodados} km)`);
-        const dataKm = uso.map(item => parseFloat(item.total_km_rodados));
-        
-        const backgroundColors = [
-            'rgba(255, 99, 132, 0.8)', 
-            'rgba(54, 162, 235, 0.8)', 
-            'rgba(255, 206, 86, 0.8)', 
-            'rgba(75, 192, 192, 0.8)', 
-            'rgba(153, 102, 255, 0.8)', 
-            'rgba(255, 159, 64, 0.8)' 
-        ];
-
-        usoGaragemChartInstance = new Chart(chartCtx, {
+        // 2. Gráfico de KM (Rosca/Donut)
+        new Chart(document.getElementById('chartKM'), {
             type: 'doughnut',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'KM Rodados',
-                    data: dataKm,
-                    backgroundColor: backgroundColors.slice(0, labels.length),
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                datasets: [{ 
+                    data: dataKM, 
+                    backgroundColor: cores,
+                    borderColor: '#2b0e47',
                     borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { color: 'white' }
-                    },
-                    title: {
-                        display: false
-                    }
-                }
+                plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
             }
         });
 
-    } catch (error) {
-        loadingMessage.textContent = 'Erro ao carregar gráfico.';
-        console.error("Erro na comunicação com a API de uso da garagem:", error);
-    }
+        // 3. Gráfico de Tempo (Barra Horizontal)
+        new Chart(document.getElementById('chartTempo'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{ label: 'Horas', data: dataTempo, backgroundColor: '#34d399', borderRadius: 5 }]
+            },
+            options: { ...commonOptions, indexAxis: 'y' } // 'y' faz a barra ficar deitada
+        });
+
+        // 4. Gráfico de Recargas (Pizza/Pie)
+        new Chart(document.getElementById('chartRecargas'), {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{ 
+                    data: dataRecargas, 
+                    backgroundColor: cores,
+                    borderColor: '#2b0e47',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
+            }
+        });
+
+    } catch (e) { console.error("Erro ao gerar gráficos:", e); }
 }
 
-
-// ==========================================================
-// 6. EVOLUÇÃO MENSAL
-// ==========================================================
-async function carregarEvolucaoMensal() {
-    const evolucaoUrl = 'api/evolucao_mensal.php';
-    const tbody = document.getElementById('tabela-evolucao').querySelector('tbody');
-    if (!tbody) return; // Se a tabela não existir na página
-
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ddd;">Carregando evolução...</td></tr>'; 
+// --- 3. HISTÓRICO DETALHADO (Lista no final da página) ---
+async function carregarHistoricoDetalhado() {
+    const tbody = document.getElementById('tabela-historico').querySelector('tbody');
+    const loading = document.getElementById('historico-loading');
 
     try {
-        const response = await fetch(evolucaoUrl);
-        const evolucao = await response.json();
+        const response = await fetch('api/historico_completo.php');
+        const historico = await response.json();
         
-        tbody.innerHTML = ''; 
+        loading.style.display = 'none';
+        tbody.innerHTML = '';
 
-        if (evolucao.error) throw new Error(evolucao.error);
-
-        if (evolucao.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #ddd;">Nenhum histórico mensal registrado.</td></tr>`;
+        if (!historico || historico.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">Nenhuma viagem encontrada.</td></tr>';
             return;
         }
 
-        evolucao.forEach(e => {
+        historico.forEach(v => {
             const row = tbody.insertRow();
-            row.insertCell().textContent = e.mes_ano;
-            row.insertCell().textContent = `${parseFloat(e.km_no_mes).toFixed(0)} km`;
-            row.insertCell().textContent = e.viagens_no_mes;
+            
+            // Formata data
+            const dataF = new Date(v.dt_consulta).toLocaleDateString('pt-BR');
+            
+            row.insertCell().textContent = dataF;
+            
+            // Formata trajeto com setinha
+            row.insertCell().innerHTML = `
+                <div style="font-weight:600; color:#fff">${v.cidade_destino}</div>
+                <div style="font-size:0.85rem; color:#aaa">De: ${v.cidade_origem}</div>
+            `;
+            
+            row.insertCell().textContent = `${v.nm_marca} ${v.nm_modelo}`;
+            row.insertCell().textContent = `${parseFloat(v.km_viagem).toFixed(1)} km`;
         });
 
-    } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #ff6b6b;">Erro ao carregar evolução mensal.</td></tr>`;
-        console.error("Erro na comunicação com a API de evolução:", error);
+    } catch (e) { 
+        loading.textContent = 'Erro ao carregar histórico.';
+        console.error(e); 
     }
 }

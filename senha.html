@@ -11,19 +11,28 @@
 </head>
 <body>
 
+<input type="checkbox" id="nav-toggle-internal">
+
 <aside class="menu-lateral">
+    
     <button class="btn-voltar" onclick="window.location.href='index.html'">
-    <i class="fa-solid fa-arrow-left"></i> Início
-  </button>
-  <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
-  <nav>
-    <ul>
-      <li><a href="perfil.html">Minha conta</a></li>
-      <li><a href="senha.html" class="active">Alterar senha</a></li>
-      <li><a href="historico.html">Históricos</a></li>
-      <li><a href="veiculos.html">Garagem</a></li>
-    </ul>
-  </nav>
+        <i class="fa-solid fa-arrow-left"></i> Início
+    </button>
+
+    <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
+
+    <label for="nav-toggle-internal" class="hamburger-label">
+        <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+        <ul>
+            <li><a href="perfil.html" class="link-perfil">Minha conta</a></li>
+            <li><a href="senha.html" class="link-senha">Alterar senha</a></li>
+            <li><a href="historico.html" class="link-historico">Históricos</a></li>
+            <li><a href="veiculos.html" class="link-veiculos">Garagem</a></li>
+        </ul>
+    </nav>
 </aside>
 
 <div class="main-wrap">
@@ -55,6 +64,8 @@
 
   </section>
 </div>
+
+<script src="src/js/main.js"></script>
 
 </body>
 </html>

@@ -4,20 +4,28 @@ require_once 'db_connection.php';
 session_start();
 header('Content-Type: application/json');
 
-// Verifica login
+// Verifica se o usuário está logado
 if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['user_id'])) {
     http_response_code(403);
     echo json_encode(['error' => 'Não autorizado']);
     exit;
 }
 
-// Tenta pegar o ID de uma das duas variáveis de sessão possíveis
 $userId = $_SESSION['id_usuario'] ?? $_SESSION['user_id'];
 
 try {
-    // Busca TODOS os campos do perfil
-    $sql = "SELECT nome, sobrenome, email, telefone, dt_nasc, 
-                   cep, endereco, numero, complemento, bairro, cidade, estado 
+    // CORREÇÃO:
+    // 1. Uso da tabela 'usuarios' (no plural, igual ao login/cadastro)
+    // 2. Colunas 'nome' e 'sobrenome' (igual ao banco)
+    // 3. Adição de 'telefone' e 'dt_nasc' para preencher o formulário completo
+    $sql = "SELECT 
+                nome, 
+                sobrenome, 
+                email, 
+                telefone,
+                dt_nasc,
+                cep, 
+                cidade
             FROM usuarios 
             WHERE id_usuario = :id";
             
@@ -28,12 +36,10 @@ try {
     if ($perfil) {
         echo json_encode($perfil);
     } else {
-        // Se não achou o usuário, retorna erro 404
         http_response_code(404);
-        echo json_encode(['error' => 'Usuário não encontrado no banco.']);
+        echo json_encode(['error' => 'Usuário não encontrado.']);
     }
 } catch (PDOException $e) {
-    // Retorna erro 500 se o SQL falhar (ex: coluna não existe)
     http_response_code(500);
     echo json_encode(['error' => 'Erro SQL: ' . $e->getMessage()]);
 }
