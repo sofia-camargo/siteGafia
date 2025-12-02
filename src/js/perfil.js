@@ -1,149 +1,111 @@
+// src/js/perfil.js
+
 function checkSession() {
     fetch('../api/verificar_sessao.php')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error('Erro servidor: ' + response.status);
+            return response.json();
+        })
         .then(data => {
-            if (!data.logged_in) {
+            // Se não estiver logado, redireciona
+            if (!data.loggedIn) {
+                console.warn('Sessão expirada ou inválida.');
                 window.location.href = 'login.html';
             }
         })
         .catch(error => {
-            console.error('Erro ao verificar sessão:', error);
-            // Mesmo em caso de erro de rede, redireciona para login por segurança
-            window.location.href = 'login.html'; 
+            console.error('Erro de sessão:', error);
+            // Evita redirecionar em caso de erro de rede para não criar loop, 
+            // mas avisa o usuário
         });
 }
-
-
-function carregarEstados() {
-    fetch('../api/buscar_estados.php')
-        .then(response => response.json())
-        .then(estados => {
-            const selectEstado = document.getElementById('estado');
-            if (selectEstado) {
-                selectEstado.innerHTML = '<option value="">Selecione o Estado</option>';
-                estados.forEach(estado => {
-                    const option = document.createElement('option');
-                    option.value = estado.sigla;
-                    option.textContent = estado.nome;
-                    selectEstado.appendChild(option);
-                });
-                // Recarrega o perfil após carregar os estados para pré-selecionar o valor
-                carregarPerfil();
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao carregar estados:', error);
-        });
-}
-
-function logout() {
-    fetch('../api/logout.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = 'login.html';
-            } else {
-                alert('Erro ao fazer logout.');
-            }
-        })
-        .catch(error => {
-            console.error('Erro na requisição de logout:', error);
-            alert('Erro de conexão ao tentar fazer logout.');
-        });
-}
-
 
 function carregarPerfil() {
     fetch('../api/buscar_perfil.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.perfil) {
-                const perfil = data.perfil;
-                document.getElementById('nome').value = perfil.nome || '';
-                document.getElementById('email').value = perfil.email || '';
-                document.getElementById('cpf').value = perfil.cpf || '';
-                document.getElementById('telefone').value = perfil.telefone || '';
-                document.getElementById('cep').value = perfil.cep || '';
-                document.getElementById('endereco').value = perfil.endereco || '';
-                document.getElementById('numero').value = perfil.numero || '';
-                document.getElementById('complemento').value = perfil.complemento || '';
-                document.getElementById('bairro').value = perfil.bairro || '';
-                document.getElementById('cidade').value = perfil.cidade || '';
-                // Preenche o estado no dropdown
-                document.getElementById('estado').value = perfil.estado || ''; 
-            } else if (!data.session_active) {
-                window.location.href = 'login.html'; // Redireciona se a sessão cair
+        .then(response => {
+             if(!response.ok) throw new Error("Erro API Perfil: " + response.status);
+             return response.json();
+        })
+        .then(perfil => {
+            // O PHP retorna o objeto direto, então usamos 'perfil' diretamente.
+            
+            if (perfil && !perfil.error) {
+                // Preenche os campos se o elemento existir no HTML e o dado existir no JSON
+                
+                // Nome e Sobrenome
+                if(document.getElementById('nome')) document.getElementById('nome').value = perfil.nome || '';
+                if(document.getElementById('sobrenome')) document.getElementById('sobrenome').value = perfil.sobrenome || '';
+                
+                // Contato
+                if(document.getElementById('email')) document.getElementById('email').value = perfil.email || '';
+                if(document.getElementById('telefone')) document.getElementById('telefone').value = perfil.telefone || '';
+                
+                // Data de Nascimento
+                if(document.getElementById('dt_nasc')) document.getElementById('dt_nasc').value = perfil.dt_nasc || '';
+
+                // OBS: O seu PHP atual (buscar_perfil.php) NÃO retorna CEP, Cidade ou País.
+                // Eles ficarão em branco até que você altere o PHP para buscar essas colunas no banco.
+                if(document.getElementById('cep')) document.getElementById('cep').value = perfil.cep || '';
+                if(document.getElementById('cidade')) document.getElementById('cidade').value = perfil.cidade || '';
+                
             } else {
-                console.error('Erro ao carregar perfil:', data.message);
-                // alert('Não foi possível carregar os dados do perfil.');
+                console.warn('Perfil não encontrado:', perfil.error);
             }
         })
         .catch(error => {
-            console.error('Erro na requisição de buscar perfil:', error);
-            // alert('Erro de conexão ao tentar carregar o perfil.');
+            console.error('Erro ao buscar perfil:', error);
         });
 }
 
-
 function salvarPerfil() {
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const cpf = document.getElementById('cpf').value;
-    const telefone = document.getElementById('telefone').value;
-    const cep = document.getElementById('cep').value;
-    const endereco = document.getElementById('endereco').value;
-    const numero = document.getElementById('numero').value;
-    const complemento = document.getElementById('complemento').value;
-    const bairro = document.getElementById('bairro').value;
-    const cidade = document.getElementById('cidade').value;
-    const estado = document.getElementById('estado').value;
-
-    const data = {
-        nome: nome,
-        email: email,
-        cpf: cpf,
-        telefone: telefone,
-        cep: cep,
-        endereco: endereco,
-        numero: numero,
-        complemento: complemento,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
+    // Pega os valores atuais dos inputs
+    const dados = {
+        nome: document.getElementById('nome')?.value,
+        sobrenome: document.getElementById('sobrenome')?.value,
+        email: document.getElementById('email')?.value,
+        telefone: document.getElementById('telefone')?.value,
+        dt_nasc: document.getElementById('dt_nasc')?.value
+        // Adicione cep/cidade aqui se você implementar no PHP depois
     };
 
     fetch('../api/atualizar_perfil.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados),
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.message) {
             alert('Perfil atualizado com sucesso! ✅');
-        } else {
-            alert('Erro ao atualizar perfil: ' + (data.message || 'Erro desconhecido.'));
+        } else if (data.error) {
+            alert('Erro: ' + data.error);
         }
     })
     .catch(error => {
-        console.error('Erro na requisição de salvar perfil:', error);
-        alert('Erro de conexão ao tentar salvar o perfil.');
+        console.error('Erro ao salvar:', error);
+        alert('Erro de conexão ao salvar.');
     });
 }
 
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     checkSession(); 
-    
-    carregarEstados(); 
+    carregarPerfil();
 
-    document.getElementById('formPerfil').addEventListener('submit', function (event) {
-        event.preventDefault();
-        salvarPerfil();
-    });
+    const form = document.getElementById('form-perfil');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            salvarPerfil();
+        });
+    }
 
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        logout();
-    });
+    // Botão de Logout (se houver no menu)
+    const btnLogout = document.querySelector('a[href*="logout.php"]'); 
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            // Deixa o link funcionar normalmente (ir para o PHP), 
+            // ou você pode interceptar e fazer fetch se preferir.
+        });
+    }
 });
