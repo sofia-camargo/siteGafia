@@ -14,8 +14,8 @@ if (!isset($_SESSION['id_usuario'])) {
 $input = json_decode(file_get_contents("php://input"), true);
 
 try {
-    $sql = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km) 
-            VALUES (:id_usuario, :id_marca, :id_modelo, :ano, :bateria, :eficiencia)";
+    $sql = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat) 
+            VALUES (:id_usuario, :id_marca, :id_modelo, :ano, :bateria)";
             
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -24,7 +24,6 @@ try {
         ':id_modelo'  => $input['modelo_id'],
         ':ano'        => $input['ano'],
         ':bateria'    => $input['autonomia'], // km totais
-        ':eficiencia' => 200 // Valor padrão ou vindo do input
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Carro adicionado à garagem!']);

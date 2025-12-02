@@ -19,7 +19,6 @@ try {
                 c.id_carro, 
                 c.ano_carro, 
                 c.dur_bat,           -- Necessário para calcular autonomia
-                c.eficiencia_wh_km,  -- Necessário para calcular consumo
                 m.nm_marca, 
                 mo.nm_modelo
             FROM carro c
@@ -30,11 +29,6 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':userid' => $userId]);
     $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($veiculos as &$veiculo) {
-        if (empty($veiculo['eficiencia_wh_km'])) {
-            $veiculo['eficiencia_wh_km'] = 200; // Valor padrão se não tiver no banco
-        }
     }
 
     echo json_encode($veiculos);

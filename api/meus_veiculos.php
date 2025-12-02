@@ -27,7 +27,6 @@ if ($action === 'list_garage' && $method === 'GET') {
                     c.id_carro, 
                     c.ano_carro, 
                     c.dur_bat, 
-                    c.eficiencia_wh_km,
                     m.nm_marca, 
                     mo.nm_modelo
                 FROM carro c
@@ -40,10 +39,6 @@ if ($action === 'list_garage' && $method === 'GET') {
         $stmt->execute([':user_id' => $userId]);
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        foreach ($veiculos as &$veiculo) {
-            if (empty($veiculo['eficiencia_wh_km'])) {
-                $veiculo['eficiencia_wh_km'] = 200; 
-            }
         }
         
         echo json_encode($veiculos);
@@ -69,8 +64,7 @@ if ($action === 'search_veiculos' && $method === 'GET') {
         $sql = "SELECT 
                     c.id_carro, 
                     c.ano_carro, 
-                    c.dur_bat, 
-                    c.eficiencia_wh_km,
+                    c.dur_bat,
                     m.nm_marca, 
                     mo.nm_modelo
                 FROM carro c
@@ -106,7 +100,7 @@ if ($action === 'add_veiculo' && $method === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        $sqlSelect = "SELECT id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km 
+        $sqlSelect = "SELECT id_marca, id_modelo, ano_carro, dur_bat
                       FROM carro 
                       WHERE id_carro = :id AND id_usuario IS NULL";
         $stmtSelect = $pdo->prepare($sqlSelect);
@@ -121,7 +115,7 @@ if ($action === 'add_veiculo' && $method === 'POST') {
         }
 
         $sqlInsert = "INSERT INTO carro (id_usuario, id_marca, id_modelo, ano_carro, dur_bat, eficiencia_wh_km) 
-                      VALUES (:user_id, :id_marca, :id_modelo, :ano, :bateria, :eficiencia)";
+                      VALUES (:user_id, :id_marca, :id_modelo, :ano, :bateria)";
         
         $stmtInsert = $pdo->prepare($sqlInsert);
         $stmtInsert->execute([
@@ -129,8 +123,7 @@ if ($action === 'add_veiculo' && $method === 'POST') {
             ':id_marca'      => $masterCarro['id_marca'],
             ':id_modelo'     => $masterCarro['id_modelo'],
             ':ano'           => $masterCarro['ano_carro'],
-            ':bateria'       => $masterCarro['dur_bat'],
-            ':eficiencia'    => $masterCarro['eficiencia_wh_km'] ?? 200 // <--- Correção: Valor padrão se for null
+            ':bateria'       => $masterCarro['dur_bat']
         ]);
 
         $pdo->commit();
