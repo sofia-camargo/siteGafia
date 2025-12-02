@@ -123,7 +123,7 @@ async function findChargingStations(bounds) {
     const centerLng = (bounds.getNorthEast().lng() + bounds.getSouthWest().lng()) / 2;
     
     // Define um raio de busca (em KM)
-    const distanceKm = 1000; // 1000km de raio (Para cobrir o Brasil)
+    const distanceKm = 50; // 50km de raio (Para cobrir o Brasil)
 
     // A API da OCM permite buscar por raio em torno de um ponto
     const ocmUrl = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${centerLat}&longitude=${centerLng}&distance=${distanceKm}&maxresults=100&verbose=false&countrycode=BR&key=${OCM_API_KEY}`;
