@@ -30,15 +30,14 @@ if (!$nome || !$sobrenome || !$email) {
 }
 
 try {
-    // Atualiza os dados na tabela 'usuarios' (ou 'usuario', verifique o nome exato no seu banco)
-    // Baseado no seu CreateSQL.txt, a tabela chama 'usuario' ou 'usuarios'. 
-    // O seu código antigo usava 'usuarios', vou manter.
     $sql = "UPDATE usuarios SET 
                 nome = :nome, 
                 sobrenome = :sobrenome, 
                 email = :email, 
                 telefone = :telefone, 
-                dt_nasc = :dt_nasc 
+                dt_nasc = :dt_nasc,
+                cep = :cep,
+                cidade = :cidade
             WHERE id_usuario = :id";
             
     $stmt = $pdo->prepare($sql);
@@ -49,7 +48,9 @@ try {
         ':email'     => $email,
         ':telefone'  => $telefone,
         ':dt_nasc'   => $dt_nasc,
-        ':id'        => $userId
+        ':id'        => $userId,
+        ':cep'       => $cep,
+        ':cidade'    => $cidade
     ]);
 
     // Atualiza a sessão se necessário

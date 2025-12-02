@@ -1,23 +1,47 @@
 <?php
 // api/dados_sustentabilidade.php
+
 require_once 'db_connection.php';
 session_start();
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['id_usuario'])) { echo json_encode([]); exit; }
+if (!isset($_SESSION['id_usuario'])) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Acesso negado.']);
+    exit;
+}
+
+$userId = $_SESSION['id_usuario'];
 
 try {
-    // Consulta a View que criamos
-    $sql = "SELECT * FROM vw_sustentabilidade WHERE id_usuario = :id";
+    // A query deve ser exatamente esta:
+    $sql = "SELECT 
+                co2_total_evitado, 
+                arvores_equivalentes 
+            FROM vw_sustentabilidade 
+            WHERE id_usuario = :id_usuario";
+    
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $_SESSION['id_usuario']]);
+    $stmt->execute([':id_usuario' => $userId]);
+    
     $dados = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Se não tiver dados, retorna zerado
     if (!$dados) {
-        echo json_encode(['kg_co2_poupados' => 0, 'arvores_equivalentes' => 0]);
-    } else {
-        echo json_encode($dados);
+        $dados = [
+            'co2_total_evitado' => 0.0,
+            'arvores_equivalentes' => 0
+        ];
     }
-} catch (Exception $e) { echo json_encode(['error' => $e->getMessage()]); }
+    
+    $dados['co2_total_evitado'] = round((float)$dados['co2_total_evitado'], 2);
+    $dados['arvores_equivalentes'] = (int)$dados['arvores_equivalentes'];
+    
+    echo json_encode($dados);
+
+} catch (PDOException $e) {
+    http_response_code(500);
+    error_log("Erro SQL em dados_sustentabilidade: " . $e->getMessage());
+    echo json_encode(['error' => 'Erro interno ao buscar dados de sustentabilidade.']);
+}
+
 ?>

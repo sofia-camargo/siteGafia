@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Assegurando que o usuário está logado
     fetch('api/verificar_sessao.php')
         .then(res => res.json())
         .then(session => {
             if (session.loggedIn) {
+                // Funções de carregamento do Dashboard
                 carregarResumoUsuario();
+                carregarSustentabilidade(); // <<<<< CORREÇÃO: Chama a função de Sustentabilidade
                 carregarHistoricoDetalhado();
                 carregarDesempenhoCarros();
                 carregarUsoGaragem();
@@ -15,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Erro de sessão:', error));
 });
 
+// FUNÇÕES DE FORMATAÇÃO
 function formatarTempoHoras(horasDecimais) {
     if (horasDecimais === null || horasDecimais <= 0) return '0h 0m';
     
@@ -61,6 +65,40 @@ function atualizarDonut(id, porcentagem) {
     donut.style.setProperty("--progress", (finalPorcentagem * 3.6) + "deg");
 }
 
+
+// ==========================================================
+// 1. CARREGAR DADOS DE SUSTENTABILIDADE
+// ==========================================================
+async function carregarSustentabilidade() {
+    const url = 'api/dados_sustentabilidade.php';
+
+    document.getElementById('eco-co2').textContent = '...';
+    document.getElementById('eco-arvores').textContent = '...';
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.error) throw new Error(data.error);
+
+        const co2Evitado = parseFloat(data.co2_total_evitado) || 0;
+        const arvores = parseInt(data.arvores_equivalentes) || 0;
+        
+        // Preenche os elementos com os IDs #eco-co2 e #eco-arvores
+        document.getElementById('eco-co2').textContent = co2Evitado.toFixed(1) + ' kg';
+        document.getElementById('eco-arvores').textContent = arvores;
+
+    } catch (error) {
+        console.error("Erro ao carregar sustentabilidade:", error);
+        document.getElementById('eco-co2').textContent = 'N/A';
+        document.getElementById('eco-arvores').textContent = 'N/A';
+    }
+}
+
+
+// ==========================================================
+// 2. CARREGAR RESUMO
+// ==========================================================
 async function carregarResumoUsuario() {
     const resumoUrl = 'api/resumo_usuario.php';
 
@@ -97,8 +135,8 @@ async function carregarResumoUsuario() {
         atualizarDonut("donut-km", calcularPorcentagem(totalKm, limites.km));
         
         const kmPorAbastecimento = totalKm / Math.max(data.total_abastecimentos, 1);
-        atualizarDonut("donut-tempo", calcularPorcentagem(kmPorAbastecimento, 100)); 
-        document.querySelector('#donut-tempo + p').textContent = 'KM por Recarga'; 
+        atualizarDonut("donut-tempo", calcularPorcentagem(kmPorAbastecimento, 100));
+        document.querySelector('#donut-tempo + p').textContent = 'KM por Recarga';
 
     } catch (error) {
         console.error("Erro ao carregar resumo:", error);
@@ -110,19 +148,22 @@ async function carregarResumoUsuario() {
     }
 }
 
+// ==========================================================
+// 3. CARREGAR HISTÓRICO DETALHADO
+// ==========================================================
 async function carregarHistoricoDetalhado() {
     const historicoUrl = 'api/historico_completo.php';
     const tbody = document.getElementById('tabela-historico').querySelector('tbody');
     const loadingMessage = document.getElementById('historico-loading');
 
     tbody.innerHTML = ''; 
-    loadingMessage.style.display = 'block';
+    if(loadingMessage) loadingMessage.style.display = 'block';
 
     try {
         const response = await fetch(historicoUrl);
         const historico = await response.json();
         
-        loadingMessage.style.display = 'none';
+        if(loadingMessage) loadingMessage.style.display = 'none';
 
         if (historico.error) throw new Error(historico.error);
 
@@ -137,9 +178,9 @@ async function carregarHistoricoDetalhado() {
             const dtConsulta = new Date(viagem.dt_consulta).toLocaleDateString('pt-BR');
             row.insertCell().textContent = dtConsulta;
             
-            row.insertCell().textContent = `${viagem.cidade_origem} -> ${viagem.cidade_destino}`;
-            
             row.insertCell().textContent = `${viagem.nm_marca} ${viagem.nm_modelo} (${viagem.ano_carro})`;
+            
+            row.insertCell().textContent = `${viagem.cidade_origem} -> ${viagem.cidade_destino}`;
             
             row.insertCell().textContent = `${parseFloat(viagem.km_viagem).toFixed(2)} km`;
             
@@ -149,16 +190,21 @@ async function carregarHistoricoDetalhado() {
         });
 
     } catch (error) {
-        loadingMessage.style.display = 'none';
+        if(loadingMessage) loadingMessage.style.display = 'none';
         tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ff6b6b;">Erro ao carregar histórico: ${error.message}</td></tr>`;
         console.error("Erro na comunicação com a API de histórico:", error);
     }
 }
 
 
+// ==========================================================
+// 4. DESEMPENHO POR CARRO
+// ==========================================================
 async function carregarDesempenhoCarros() {
     const desempenhoUrl = 'api/desempenho_carros.php';
     const tbody = document.getElementById('tabela-desempenho').querySelector('tbody');
+    if (!tbody) return; // Se a tabela não existir na página
+
     tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ddd;">Carregando desempenho...</td></tr>'; 
 
     try {
@@ -189,12 +235,17 @@ async function carregarDesempenhoCarros() {
     }
 }
 
+// ==========================================================
+// 5. USO DA GARAGEM
+// ==========================================================
 let usoGaragemChartInstance; 
 
 async function carregarUsoGaragem() {
     const usoUrl = 'api/uso_garagem.php';
     const chartCtx = document.getElementById('usoGaragemChart');
     const loadingMessage = document.getElementById('loading-uso-garagem');
+    if (!chartCtx || !loadingMessage) return; // Se a seção não existir
+
     loadingMessage.style.display = 'block';
 
     try {
@@ -214,6 +265,7 @@ async function carregarUsoGaragem() {
         
         if (usoGaragemChartInstance) usoGaragemChartInstance.destroy();
 
+        // Preparar dados para o Chart.js
         const labels = uso.map(item => `${item.nm_modelo} (${item.total_km_rodados} km)`);
         const dataKm = uso.map(item => parseFloat(item.total_km_rodados));
         
@@ -258,9 +310,15 @@ async function carregarUsoGaragem() {
     }
 }
 
+
+// ==========================================================
+// 6. EVOLUÇÃO MENSAL
+// ==========================================================
 async function carregarEvolucaoMensal() {
     const evolucaoUrl = 'api/evolucao_mensal.php';
     const tbody = document.getElementById('tabela-evolucao').querySelector('tbody');
+    if (!tbody) return; // Se a tabela não existir na página
+
     tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ddd;">Carregando evolução...</td></tr>'; 
 
     try {
