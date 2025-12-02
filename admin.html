@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel Administrativo - GAFIA</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="src/style/style.css">
+  <link rel="stylesheet" href="src/style/dashboard.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+      /* Estilo exclusivo Admin */
+      .admin-header { border-bottom: 2px solid #ffd700; } /* Dourado */
+      
+      .kpi-grid { 
+          display: grid; 
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+          gap: 20px; 
+          margin-bottom: 30px; 
+      }
+      
+      .kpi-card { 
+          background: rgba(255,215,0,0.1); 
+          border: 1px solid rgba(255,215,0,0.3); 
+          padding: 20px; 
+          border-radius: 16px; 
+          text-align: center; 
+      }
+      
+      .kpi-card h3 { color: #ffd700; font-size: 2rem; margin: 0; }
+      .kpi-card p { color: #fff; margin-top: 5px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+      .admin-section-title { color: #ffd700; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <header class="site-header admin-header">
+    <div class="container header-inner">
+      <a class="logo" href="dashboard.html">
+        <img src="src/img/Gafialogo.png" alt="Logo" width="54" />
+        <span>GAFIA <small style="color:#ffd700; font-size:0.6em; margin-left:5px;">ADMIN</small></span>
+      </a>
+      <nav class="nav">
+        <a href="dashboard.html">Voltar ao Site</a>
+        <a href="api/logout.php" class="btn btn-outline">Sair</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 40px; padding-bottom: 40px;">
+    <h1>Visão Geral da Empresa</h1>
+    <p class="muted" style="margin-bottom: 30px;">Estatísticas globais e gerenciamento.</p>
+    
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <h3 id="kpi-users">0</h3>
+            <p>Usuários Cadastrados</p>
+        </div>
+        <div class="kpi-card">
+            <h3 id="kpi-viagens">0</h3>
+            <p>Viagens Realizadas</p>
+        </div>
+        <div class="kpi-card">
+            <h3 id="kpi-carros">0</h3>
+            <p>Veículos na Plataforma</p>
+        </div>
+    </div>
+
+    <div class="dashboard-layout">
+        <section class="glass dash-card">
+            <h3 class="admin-section-title">Viagens por Estado</h3>
+            <div style="height: 300px;">
+                <canvas id="chartEstados"></canvas>
+            </div>
+        </section>
+
+        <section class="glass dash-card history-card">
+            <h3 class="admin-section-title">Top Usuários (Engajamento)</h3>
+            <div id="lista-users" class="history-list" style="margin-top:15px;">
+                <p>Carregando...</p>
+            </div>
+        </section>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 1. Verifica se é admin antes de mostrar qualquer coisa
+        try {
+            const session = await fetch('api/verificar_sessao.php').then(r => r.json());
+            if (!session.loggedIn || !session.isAdmin) {
+                alert('Acesso restrito! Você será redirecionado.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+        } catch(e) {
+            window.location.href = 'login.html';
+        }
+
+        // 2. Busca dados administrativos
+        try {
+            const res = await fetch('api/admin_dados.php');
+            const dados = await res.json();
+
+            if(dados.error) { 
+                alert(dados.error); 
+                return; 
+            }
+
+            // 3. Preenche KPIs
+            document.getElementById('kpi-users').innerText = dados.kpis.total_users || 0;
+            document.getElementById('kpi-viagens').innerText = dados.kpis.total_viagens || 0;
+            document.getElementById('kpi-carros').innerText = dados.kpis.total_carros || 0;
+
+            // 4. Preenche Lista de Usuários
+            const lista = document.getElementById('lista-users');
+            lista.innerHTML = '';
+            
+            if (dados.usuarios.length === 0) {
+                lista.innerHTML = '<p class="muted">Nenhum dado encontrado.</p>';
+            } else {
+                dados.usuarios.forEach(u => {
+                    lista.innerHTML += `
+                        <div class="history-item-mini" style="border-left: 3px solid #ffd700;">
+                            <div class="history-icon" style="color:#ffd700; background:rgba(255,215,0,0.1);">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="history-info">
+                                <strong style="color: #fff;">${u.nome_completo}</strong>
+                                <span>${u.email}</span>
+                                <span style="display:block; font-size:0.8em; color:#ffd700;">${u.total_viagens} viagens • ${parseFloat(u.km_total || 0).toFixed(0)} km</span>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // 5. Gráfico Chart.js (Estados)
+            const ctx = document.getElementById('chartEstados').getContext('2d');
+            
+            const labels = dados.estados.map(e => e.nm_estado);
+            const values = dados.estados.map(e => e.total_viagens);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total de Viagens',
+                        data: values,
+                        backgroundColor: '#ffd700',
+                        borderRadius: 4,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false } 
+                    },
+                    scales: { 
+                        y: { 
+                            ticks: { color: '#fff' }, 
+                            grid: { color: 'rgba(255,255,255,0.1)' } 
+                        },
+                        x: { 
+                            ticks: { color: '#fff' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+        } catch (e) {
+            console.error("Erro ao carregar dashboard admin:", e);
+        }
+    });
+  </script>
+</body>
+</html>

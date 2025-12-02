@@ -21,6 +21,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Personaliza a saudação
             if (userGreeting) userGreeting.textContent = `Olá, ${session.userName}!`;
 
+            // --- ALTERAÇÃO: Lógica para mostrar botão Admin ---
+            if (session.isAdmin) {
+                // Verifica se o botão já existe para não duplicar
+                if (!document.getElementById('btn-admin-link')) {
+                    const adminLink = document.createElement('a');
+                    adminLink.id = 'btn-admin-link';
+                    adminLink.href = 'admin.html';
+                    adminLink.innerHTML = '<i class="fa-solid fa-lock"></i> Painel Admin';
+                    adminLink.style.color = '#ffd700'; // Dourado para destacar
+                    
+                    // Insere o botão no menu do usuário (antes do botão Sair, se quiser)
+                    // Aqui estamos adicionando ao final da lista de links do usuário
+                    navUser.insertBefore(adminLink, navUser.lastElementChild);
+                }
+            }
+            // ------------------------------------------------
+
         } else {
             // Se o utilizador NÃO tem sessão iniciada...
             if (navGuest) navGuest.style.display = 'flex';  // Mostra o menu de visitante
