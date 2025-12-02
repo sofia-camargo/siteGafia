@@ -17,35 +17,28 @@
 </head>
 <body>
 
+<input type="checkbox" id="nav-toggle-internal">
+
 <aside class="menu-lateral">
-    <button class="btn-voltar" id="btn-voltar-dinamico">
+    
+    <button class="btn-voltar" onclick="window.location.href='index.html'">
         <i class="fa-solid fa-arrow-left"></i> Início
     </button>
-  <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
-  <nav>
-    <ul>
-      <li>
-          <a href="perfil.html" class="active">
-              <i class="fa-solid fa-user"></i> <span>Minha conta</span>
-          </a>
-      </li>
-      <li>
-          <a href="senha.html">
-              <i class="fa-solid fa-lock"></i> <span>Senha</span>
-          </a>
-      </li>
-      <li>
-          <a href="historico.html">
-              <i class="fa-solid fa-clock-rotate-left"></i> <span>Históricos</span>
-          </a>
-      </li>
-      <li>
-          <a href="veiculos.html">
-              <i class="fa-solid fa-car"></i> <span>Garagem</span>
-          </a>
-      </li>
-    </ul>
-  </nav>
+
+    <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
+
+    <label for="nav-toggle-internal" class="hamburger-label">
+        <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+        <ul>
+            <li><a href="perfil.html" class="link-perfil">Minha conta</a></li>
+            <li><a href="senha.html" class="link-senha">Alterar senha</a></li>
+            <li><a href="historico.html" class="link-historico">Históricos</a></li>
+            <li><a href="veiculos.html" class="link-veiculos">Garagem</a></li>
+        </ul>
+    </nav>
 </aside>
 
 <div class="main-wrap">
