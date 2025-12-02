@@ -9,8 +9,10 @@ let veiculoSelecionado = { id: null, autonomia: 300, eficiencia: 200 };
 
 const OCM_API_KEY = "c1b598ab-8144-43d6-9c74-e191d034ab21";
 
-async function initMap() {
-    // Importações das bibliotecas do Google Maps
+// --- CORREÇÃO: Torna a função global para o Google Maps encontrar ---
+window.initMap = async function() {
+    
+    // Importa as bibliotecas necessárias
     const { Map } = await google.maps.importLibrary("maps");
     const { Autocomplete } = await google.maps.importLibrary("places");
     const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("routes");
@@ -44,9 +46,9 @@ async function initMap() {
     const selectCarro = document.getElementById('select-meu-carro');
     if (selectCarro) selectCarro.addEventListener('change', updateSelectedVehicle);
 
-    // Verifica se o usuário está logado ao carregar a página
+    // Verifica sessão
     await checkSession(); 
-}
+};
 
 function updateSelectedVehicle(event) {
     const selectedValue = event.target.value;
@@ -90,7 +92,6 @@ async function carregarVeiculos(selectElement) {
         selectElement.innerHTML = '<option value="">Selecione seu Carro</option>';
         if (carros && carros.length > 0) {
             carros.forEach((carro, index) => {
-                // Define valor padrão se a eficiência não existir
                 const eficiencia = carro.eficiencia_wh_km || 200;
                 
                 const option = document.createElement('option');
@@ -101,7 +102,6 @@ async function carregarVeiculos(selectElement) {
                 });
                 option.textContent = `${carro.nm_marca} ${carro.nm_modelo}`;
                 
-                // Seleciona automaticamente o primeiro carro
                 if (index === 0) {
                      option.selected = true;
                      veiculoSelecionado = JSON.parse(option.value);
@@ -112,20 +112,51 @@ async function carregarVeiculos(selectElement) {
     } catch (e) { console.error("Erro ao carregar veículos", e); }
 }
 
+async function findChargingStations(bounds) {
+    clearMarkers(); 
+    if (!bounds) return;
+
+    const centerLat = (bounds.getNorthEast().lat() + bounds.getSouthWest().lat()) / 2;
+    const centerLng = (bounds.getNorthEast().lng() + bounds.getSouthWest().lng()) / 2;
+    const distanceKm = 1000; 
+    
+    const ocmUrl = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${centerLat}&longitude=${centerLng}&distance=${distanceKm}&maxresults=100&verbose=false&countrycode=BR&key=${OCM_API_KEY}`;
+    
+    try {
+        const response = await fetch(ocmUrl);
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            data.forEach(poi => {
+                if (poi.AddressInfo?.Latitude && poi.AddressInfo?.Longitude) {
+                    const position = { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude };
+                    
+                    const marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: poi.AddressInfo.Title || 'Ponto de Recarga'
+                    });
+                    markers.push(marker);
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Erro OCM:", error);
+    }
+}
+
 function calculateAndDisplayRoute() {
     const originInput = document.getElementById('origin-input');
     const destinationInput = document.getElementById('destination-input');
-    const origemTexto = originInput.value;
-    const destinoTexto = destinationInput.value;
     
-    if(!origemTexto || !destinoTexto) {
-        alert("Por favor, preencha origem e destino.");
+    if(!originInput.value || !destinationInput.value) {
+        alert("Preencha origem e destino.");
         return;
     }
 
     const request = {
-        origin: origemTexto,
-        destination: destinoTexto,
+        origin: originInput.value,
+        destination: destinationInput.value,
         travelMode: google.maps.TravelMode.DRIVING
     };
 
@@ -137,57 +168,42 @@ function calculateAndDisplayRoute() {
             const distanciaKm = rota.distance.value / 1000;
             const tempoSegundos = rota.duration.value;
             
-            // Variáveis do Veículo
-            const autonomiaBateriaKWh = veiculoSelecionado.autonomia || 300;
-            const eficienciaWhKm = veiculoSelecionado.eficiencia || 200;
-
-            // Exibir dados na tela
-            document.getElementById('output-distancia').innerText = rota.distance.text;
-            document.getElementById('output-duracao').innerText = rota.duration.text;
-            
-            const consumoKWh = (distanciaKm * eficienciaWhKm) / 1000;
-            document.getElementById('output-energia').innerText = `${consumoKWh.toFixed(1)} kWh`;
-
-            const distanciaPorCarga = (autonomiaBateriaKWh * 1000) / eficienciaWhKm;
+            // Cálculos
+            const consumoKWh = (distanciaKm * veiculoSelecionado.eficiencia) / 1000;
+            const distanciaPorCarga = (veiculoSelecionado.autonomia * 1000) / veiculoSelecionado.eficiencia;
             const paradas = Math.ceil(Math.max(0, distanciaKm / distanciaPorCarga) - 1);
             const tempoRecargaMin = paradas * 40; 
-
             const tempoTotalSegundos = tempoSegundos + (tempoRecargaMin * 60);
-            const tempoTotalHoras = Math.floor(tempoTotalSegundos / 3600);
-            const tempoTotalMin = Math.round((tempoTotalSegundos % 3600) / 60);
-            
-            const advancedDetails = document.getElementById('advanced-route-details');
-            if (advancedDetails) {
-                 advancedDetails.style.display = 'block'; 
-            }
 
+            // Exibição
+            document.getElementById('output-distancia').innerText = rota.distance.text;
+            document.getElementById('output-duracao').innerText = rota.duration.text;
+            document.getElementById('output-energia').innerText = `${consumoKWh.toFixed(1)} kWh`;
             document.getElementById('output-paradas').innerText = paradas;
             document.getElementById('output-tempo-recarrega').innerText = tempoRecargaMin + " min";
-            document.getElementById('output-tempo-total').innerText = `${tempoTotalHoras}h ${tempoTotalMin}m`;
+            
+            const horas = Math.floor(tempoTotalSegundos / 3600);
+            const minutos = Math.floor((tempoTotalSegundos % 3600) / 60);
+            document.getElementById('output-tempo-total').innerText = `${horas}h ${minutos}m`;
             document.getElementById('output-recarregar').innerText = (paradas > 0 ? "Sim" : "Não"); 
+            
+            document.getElementById('advanced-route-details').style.display = 'block';
 
-            // =======================================================
-            // LÓGICA DE SALVAMENTO CORRIGIDA
-            // =======================================================
-            if (usuarioEstaLogado) {
-                if (veiculoSelecionado && veiculoSelecionado.id) {
-                    console.log("Tentando salvar viagem...");
-                    const dadosViagem = {
-                        id_carro: veiculoSelecionado.id,
-                        origem: origemTexto,     
-                        destino: destinoTexto,   
-                        distancia_km: distanciaKm,
-                        tempo_viagem_segundos: tempoTotalSegundos, 
-                        paradas: paradas
-                    };
-                    salvarViagemNoHistorico(dadosViagem);
-                } else {
-                    console.warn("Usuário logado, mas nenhum veículo válido selecionado. Viagem não salva.");
-                }
-            } else {
-                console.log("Usuário não logado, viagem não será salva.");
+            // --- SALVAR NO BANCO ---
+            if (usuarioEstaLogado && veiculoSelecionado.id) {
+                const dadosViagem = {
+                    id_carro: veiculoSelecionado.id,
+                    origem: originInput.value,     
+                    destino: destinationInput.value,   
+                    distancia_km: distanciaKm,
+                    tempo_viagem_segundos: tempoTotalSegundos, 
+                    paradas: paradas
+                };
+                salvarViagemNoHistorico(dadosViagem);
             }
             
+            findChargingStations(result.routes[0].bounds);
+
         } else {
             alert('Erro ao calcular rota: ' + status);
         }
@@ -205,14 +221,16 @@ async function salvarViagemNoHistorico(dados) {
         const resultado = await response.json();
         
         if(resultado.success) {
-            console.log("Histórico atualizado com sucesso!");
+            console.log("Histórico salvo com sucesso!");
         } else {
-            console.warn("Erro ao salvar histórico (API):", resultado.message);
+            console.warn("Erro API salvar:", resultado.message);
         }
     } catch (error) {
-        console.error("Erro de conexão ao salvar histórico:", error);
+        console.error("Erro rede:", error);
     }
 }
 
-// Inicialização
-initMap();
+function clearMarkers() {
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+}
