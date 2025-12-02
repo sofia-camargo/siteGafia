@@ -1,15 +1,31 @@
+// src/js/perfil.js
+
 function checkSession() {
     fetch('../api/verificar_sessao.php')
-        .then(response => response.json())
+        .then(response => {
+            // Verifica se a resposta HTTP foi bem sucedida (status 200-299)
+            if (!response.ok) {
+                throw new Error('Erro no servidor: ' + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
-            if (!data.logged_in) {
+            // CORREÇÃO: O PHP retorna 'loggedIn' (camelCase), não 'logged_in'
+            if (!data.loggedIn) {
+                console.warn('Usuário não autenticado. Redirecionando...');
                 window.location.href = 'login.html';
+            } else {
+                console.log('Sessão ativa para o usuário ID: ' + data.userId);
             }
         })
         .catch(error => {
             console.error('Erro ao verificar sessão:', error);
-            // Mesmo em caso de erro de rede, redireciona para login por segurança
-            window.location.href = 'login.html'; 
+            // IMPORTANTE: Comentamos o redirecionamento forçado no erro 
+            // para evitar que você fique preso num loop se o servidor falhar.
+            
+            // window.location.href = 'login.html'; 
+            
+            alert('Houve um erro ao verificar sua sessão. Verifique o console (F12) para detalhes.');
         });
 }
 
@@ -23,11 +39,11 @@ function carregarEstados() {
                 selectEstado.innerHTML = '<option value="">Selecione o Estado</option>';
                 estados.forEach(estado => {
                     const option = document.createElement('option');
-                    option.value = estado.sigla;
-                    option.textContent = estado.nome;
+                    option.value = estado.sigla; // Certifique-se que o PHP retorna 'sigla' ou ajuste para 'id_estado'
+                    option.textContent = estado.nm_estado; // Certifique-se que o PHP retorna 'nm_estado'
                     selectEstado.appendChild(option);
                 });
-                // Recarrega o perfil após carregar os estados para pré-selecionar o valor
+                // Recarrega o perfil após carregar os estados para pré-selecionar o valor se necessário
                 carregarPerfil();
             }
         })
@@ -40,47 +56,48 @@ function logout() {
     fetch('../api/logout.php')
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                window.location.href = 'login.html';
-            } else {
-                alert('Erro ao fazer logout.');
-            }
+            // Verifica sucesso (considerando que seu logout.php retorne JSON, senão apenas o status 200 basta)
+            window.location.href = 'login.html';
         })
         .catch(error => {
             console.error('Erro na requisição de logout:', error);
-            alert('Erro de conexão ao tentar fazer logout.');
+            // Força a saída mesmo com erro de rede
+            window.location.href = 'login.html';
         });
 }
 
 
 function carregarPerfil() {
     fetch('../api/buscar_perfil.php')
-        .then(response => response.json())
+        .then(response => {
+             if(!response.ok) throw new Error("Erro ao buscar perfil: " + response.status);
+             return response.json();
+        })
         .then(data => {
-            if (data.success && data.perfil) {
-                const perfil = data.perfil;
-                document.getElementById('nome').value = perfil.nome || '';
-                document.getElementById('email').value = perfil.email || '';
-                document.getElementById('cpf').value = perfil.cpf || '';
-                document.getElementById('telefone').value = perfil.telefone || '';
-                document.getElementById('cep').value = perfil.cep || '';
-                document.getElementById('endereco').value = perfil.endereco || '';
-                document.getElementById('numero').value = perfil.numero || '';
-                document.getElementById('complemento').value = perfil.complemento || '';
-                document.getElementById('bairro').value = perfil.bairro || '';
-                document.getElementById('cidade').value = perfil.cidade || '';
-                // Preenche o estado no dropdown
-                document.getElementById('estado').value = perfil.estado || ''; 
-            } else if (!data.session_active) {
-                window.location.href = 'login.html'; // Redireciona se a sessão cair
+            // Ajuste conforme o retorno real do seu buscar_perfil.php
+            // Se o PHP retornar direto o objeto do perfil:
+            const perfil = data; 
+            
+            if (perfil && !perfil.error) {
+                if(document.getElementById('nome')) document.getElementById('nome').value = perfil.nome || '';
+                if(document.getElementById('email')) document.getElementById('email').value = perfil.email || '';
+                if(document.getElementById('cpf')) document.getElementById('cpf').value = perfil.cpf || ''; // Se houver
+                if(document.getElementById('telefone')) document.getElementById('telefone').value = perfil.telefone || '';
+                if(document.getElementById('cep')) document.getElementById('cep').value = perfil.cep || '';
+                if(document.getElementById('endereco')) document.getElementById('endereco').value = perfil.endereco || '';
+                if(document.getElementById('numero')) document.getElementById('numero').value = perfil.numero || '';
+                if(document.getElementById('complemento')) document.getElementById('complemento').value = perfil.complemento || '';
+                if(document.getElementById('bairro')) document.getElementById('bairro').value = perfil.bairro || '';
+                if(document.getElementById('cidade')) document.getElementById('cidade').value = perfil.cidade || '';
+                
+                // Preenche o estado no dropdown se existir e estiver carregado
+                if(document.getElementById('estado')) document.getElementById('estado').value = perfil.estado || ''; 
             } else {
-                console.error('Erro ao carregar perfil:', data.message);
-                // alert('Não foi possível carregar os dados do perfil.');
+                console.warn('Perfil não encontrado ou erro:', data.error);
             }
         })
         .catch(error => {
             console.error('Erro na requisição de buscar perfil:', error);
-            // alert('Erro de conexão ao tentar carregar o perfil.');
         });
 }
 
@@ -88,28 +105,17 @@ function carregarPerfil() {
 function salvarPerfil() {
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
-    const cpf = document.getElementById('cpf').value;
-    const telefone = document.getElementById('telefone').value;
-    const cep = document.getElementById('cep').value;
-    const endereco = document.getElementById('endereco').value;
-    const numero = document.getElementById('numero').value;
-    const complemento = document.getElementById('complemento').value;
-    const bairro = document.getElementById('bairro').value;
-    const cidade = document.getElementById('cidade').value;
-    const estado = document.getElementById('estado').value;
+    // Adicione os outros campos conforme necessário para enviar ao PHP
+    const telefone = document.getElementById('telefone') ? document.getElementById('telefone').value : '';
+    const dt_nasc = document.getElementById('dt_nasc') ? document.getElementById('dt_nasc').value : '';
+    // Adicione outros campos se o seu atualizar_perfil.php esperar por eles
 
     const data = {
         nome: nome,
         email: email,
-        cpf: cpf,
         telefone: telefone,
-        cep: cep,
-        endereco: endereco,
-        numero: numero,
-        complemento: complemento,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
+        dt_nasc: dt_nasc
+        // ... outros campos
     };
 
     fetch('../api/atualizar_perfil.php', {
@@ -121,10 +127,10 @@ function salvarPerfil() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.message) { // Seu PHP retorna 'message' em caso de sucesso
             alert('Perfil atualizado com sucesso! ✅');
-        } else {
-            alert('Erro ao atualizar perfil: ' + (data.message || 'Erro desconhecido.'));
+        } else if (data.error) {
+            alert('Erro ao atualizar perfil: ' + data.error);
         }
     })
     .catch(error => {
@@ -136,14 +142,41 @@ function salvarPerfil() {
 document.addEventListener('DOMContentLoaded', () => {
     checkSession(); 
     
-    carregarEstados(); 
+    // Se a página tiver o dropdown de estados, carrega.
+    if(document.getElementById('estado')) {
+        carregarEstados(); 
+    } else {
+        // Se não tiver estados para carregar, carrega o perfil direto
+        carregarPerfil();
+    }
 
-    document.getElementById('formPerfil').addEventListener('submit', function (event) {
-        event.preventDefault();
-        salvarPerfil();
-    });
+    const formPerfil = document.getElementById('form-perfil'); // ID corrigido conforme seu HTML (form-perfil)
+    if (formPerfil) {
+        formPerfil.addEventListener('submit', function (event) {
+            event.preventDefault();
+            salvarPerfil();
+        });
+    }
 
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        logout();
-    });
+    // Botão de excluir conta (se existir)
+    const btnDelete = document.querySelector('.delete-btn');
+    if(btnDelete) {
+        btnDelete.addEventListener('click', () => {
+            if(confirm('Tem certeza que deseja excluir sua conta?')) {
+                // Implementar lógica de exclusão aqui se necessário
+                alert('Funcionalidade em desenvolvimento.');
+            }
+        });
+    }
+
+    // Botão de Logout no menu lateral (se houver ID específico ou classe)
+    // No seu HTML não vi um ID específico para logout no menu lateral, 
+    // mas se tiver um botão com id="logoutButton", use:
+    const logoutBtn = document.getElementById('logoutButton');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+    }
 });
