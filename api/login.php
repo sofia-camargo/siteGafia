@@ -31,7 +31,8 @@ if (!$email || !$senha) {
 }
 
 try {
-    $sql = "SELECT id_usuario, nome, senha FROM usuarios WHERE email = :email";
+    // --- ALTERAÇÃO: Adicionado 'is_admin' na seleção ---
+    $sql = "SELECT id_usuario, nome, senha, is_admin FROM usuarios WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':email' => $email]);
     
@@ -39,15 +40,27 @@ try {
 
     // Verifica se o utilizador existe E se a senha digitada corresponde ao hash no banco de dados
     if ($usuario && password_verify($senha, $usuario['senha'])) {
+        
+        // Segurança: Regenerar ID da sessão para evitar fixação
+        session_regenerate_id(true);
+
         // Sucesso! Inicia a sessão
         $_SESSION['user_id'] = $usuario['id_usuario'];
         $_SESSION['user_name'] = $usuario['nome'];
         $_SESSION['logged_in'] = true;
-
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
 
+        // --- ALTERAÇÃO: Salva status de admin na sessão ---
+        // Garante que seja um valor booleano (true/false)
+        $_SESSION['is_admin'] = (bool)$usuario['is_admin']; 
+
         http_response_code(200);
-        echo json_encode(['message' => 'Login bem-sucedido!']);
+        
+        // Retorna também a flag is_admin para o frontend, se necessário
+        echo json_encode([
+            'message' => 'Login bem-sucedido!',
+            'is_admin' => $_SESSION['is_admin']
+        ]);
     } else {
         // Falha (utilizador não encontrado ou senha incorrecta)
         http_response_code(401);

@@ -21,6 +21,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Personaliza a saudação
             if (userGreeting) userGreeting.textContent = `Olá, ${session.userName}!`;
 
+            // --- ALTERAÇÃO: Lógica para mostrar botão Admin ---
+            if (session.isAdmin) {
+                // Verifica se o menu navUser existe E se o botão ainda não foi criado
+                if (navUser && !document.getElementById('btn-admin-link')) {
+                    const adminLink = document.createElement('a');
+                    adminLink.id = 'btn-admin-link';
+                    adminLink.href = 'admin.html';
+                    adminLink.innerHTML = '<i class="fa-solid fa-lock"></i> Painel Admin';
+                    adminLink.style.color = '#ffd700'; // Dourado para destacar
+                    
+                    // Insere o botão no menu do usuário (antes do botão Sair, se quiser)
+                    navUser.insertBefore(adminLink, navUser.lastElementChild);
+                }
+            }
+            // ------------------------------------------------
+
         } else {
             // Se o utilizador NÃO tem sessão iniciada...
             if (navGuest) navGuest.style.display = 'flex';  // Mostra o menu de visitante
@@ -33,7 +49,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (navUser) navUser.style.display = 'none';
     }
 
-    // A lógica de carrossel JS foi removida
-    // pois sua index.html usa um carrossel 100% CSS
-    // com a classe '.infinite-carousel'.
+    // --- LÓGICA DO BOTÃO DE VOLTAR DINÂMICO ---
+    const btnVoltar = document.getElementById('btn-voltar-dinamico');
+
+    if (btnVoltar) {
+        // Remove listeners antigos
+        const novoBtn = btnVoltar.cloneNode(true);
+        btnVoltar.parentNode.replaceChild(novoBtn, btnVoltar);
+
+        // Adiciona o novo evento de clique
+        novoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Verifica a sessão novamente no momento do clique
+            fetch('api/verificar_sessao.php')
+                .then(res => res.json())
+                .then(session => {
+                    if (session.loggedIn) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(() => {
+                    window.location.href = 'index.html';
+                });
+        });
+    }
 });

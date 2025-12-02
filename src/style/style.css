@@ -16,6 +16,31 @@
   --container: 1200px;
 }
 
+#sobre {
+
+  scroll-margin-top: 80px; 
+
+}
+
+
+#contato {
+
+  scroll-margin-top: 10px; 
+  
+}
+
+#inicio {
+
+  scroll-margin-top: 70px; 
+  
+}
+
+
+
+html {
+  scroll-behavior: smooth;
+}
+
 /*html, body { 
   height: 100%; scroll-behavior: smooth; 
 }

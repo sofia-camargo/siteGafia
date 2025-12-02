@@ -4,30 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Meu Perfil</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="src/style/perfil.css">
-  
   <link rel="icon" href="src/img/Gafialogo.png" type="image/png">
 </head>
 <body>
 
+<input type="checkbox" id="nav-toggle-internal">
+
 <aside class="menu-lateral">
-    <button class="btn-voltar" onclick="window.location.href='index.html'">
-    <i class="fa-solid fa-arrow-left"></i> Início
+  <button class="btn-voltar" id="btn-voltar-dinamico">
+      <i class="fa-solid fa-arrow-left"></i> Início
   </button>
-  <div class="brand"><i class="fa-solid fa-star"></i> Meu Perfil</div>
+  <div class="brand"><i class="fa-solid fa-user"></i> Meu Perfil</div>
+  
+  <label for="nav-toggle-internal" class="hamburger-label">
+      <span></span><span></span><span></span>
+  </label>
+
   <nav>
     <ul>
-      <li><a href="perfil.html" class="active">Minha conta</a></li>
-      <li><a href="senha.html">Alterar senha</a></li>
-      <li><a href="historico.html">Históricos</a></li>
-      <li><a href="veiculos.html">Garagem</a></li>
+      <li><a href="perfil.html" class="active"><i class="fa-solid fa-user"></i> Minha conta</a></li>
+      <li><a href="senha.html"><i class="fa-solid fa-lock"></i> Alterar senha</a></li>
+      <li><a href="historico.html"><i class="fa-solid fa-clock-rotate-left"></i> Históricos</a></li>
+      <li><a href="veiculos.html"><i class="fa-solid fa-car"></i> Garagem</a></li>
     </ul>
   </nav>
 </aside>
@@ -35,68 +35,46 @@
 <div class="main-wrap">
     <section class="vidro">
   <h1>Editar informações</h1>
-
   <form id="form-perfil" class="profile-grid">
-    
     <div class="section-title">Informações pessoais</div>
-
     <div class="input-group">
       <i class="fa-solid fa-user"></i>
       <input type="text" id="nome" placeholder="Nome" required>
     </div>
-
     <div class="input-group">
       <i class="fa-regular fa-user"></i>
       <input type="text" id="sobrenome" placeholder="Sobrenome" required>
     </div>
-
     <div class="input-group">
       <i class="fa-solid fa-envelope"></i>
       <input type="email" id="email" placeholder="E-mail" required>
     </div>
-
     <div class="input-group">
       <i class="fa-solid fa-phone"></i>
       <input type="tel" id="telefone" placeholder="Telefone">
     </div>
-
     <div class="input-group">
       <i class="fa-solid fa-calendar-days"></i>
       <input type="date" id="dt_nasc">
     </div>
-
-    <div class="section-title full">Endereço (Visual)</div>
-    <div class="input-group">
-      <i class="fa-solid fa-globe"></i>
-      <select id="pais">
-        <option value="Brasil">Brasil</option>
-        <option value="Portugal">Portugal</option>
-        <option value="EUA">EUA</option>
-      </select>
-    </div>
-
+    <div class="section-title full">Endereço</div>
     <div class="input-group">
       <i class="fa-solid fa-map-pin"></i>
       <input type="text" id="cep" placeholder="CEP">
     </div>
-
     <div class="input-group">
       <i class="fa-solid fa-city"></i>
       <input type="text" id="cidade" placeholder="Cidade">
     </div>
-
     <div class="actions full">
       <button type="submit" class="save-btn">Salvar Alterações</button>
       <button type="button" class="delete-btn">Excluir conta</button>
     </div>
-    
     <div id="perfil-mensagem" class="full" style="text-align: center; margin-top: 10px;"></div>
-
   </form>
 </section>
 </div>
-
+<script src="src/js/main.js"></script>
 <script src="src/js/perfil.js"></script>
-
 </body>
 </html>
