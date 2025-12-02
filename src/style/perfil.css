@@ -354,7 +354,56 @@ body {
     font-size: 0.9rem;
     color: #ddd;
 }
+/* =======================================================
+   BOTÃO ESTILO VIDRO (GLASSMORPHISM)
+   ======================================================= */
+.btn-glass {
+    /* Visual de Vidro */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Borda sutil */
+    
+    /* Texto e Fonte */
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    /* Tamanho e Forma */
+    padding: 14px 24px;
+    border-radius: 50px; /* Bem redondo */
+    width: 100%; /* Para ocupar o espaço todo (já que você usa a classe .full) */
+    
+    /* Comportamento */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    
+    /* Centralizar texto/ícones */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
+/* Estado: Hover (Passar o mouse) */
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.15); /* Fica mais claro */
+    border-color: #ff2efc;                 /* Borda Rosa Neon */
+    box-shadow: 0 0 20px rgba(255, 46, 252, 0.4); /* Brilho Neon */
+    transform: translateY(-2px);           /* Sobe um pouquinho */
+}
+
+/* Estado: Desabilitado (Quando não tem nada escrito) */
+.btn-glass:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.05);
+}
 /* =======================================================
    8. RESPONSIVIDADE (MOBILE & TABLET)
    ======================================================= */
